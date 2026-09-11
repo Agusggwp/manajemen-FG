@@ -95,6 +95,8 @@ export default function Index({ schedules, filters, customers, packages, photogr
     });
   };
 
+  const [viewMode, setViewMode] = useState("table"); // "table" | "calendar"
+
   const handleSearch = () => {
     router.get("/admin/schedules", { search }, { preserveState: true });
   };
@@ -111,10 +113,31 @@ export default function Index({ schedules, filters, customers, packages, photogr
               Buat jadwal baru, tentukan penugasan tim, dan tetapkan koordinat lokasi pemotretan.
             </p>
           </div>
-          <Button onClick={() => setModalOpen(true)} className="bg-slate-900 text-white shadow-sm">
-            <Plus className="h-4 w-4 mr-2" />
-            Buat Jadwal Baru
-          </Button>
+          <div className="flex items-center gap-2">
+            <div className="bg-slate-100 p-1 rounded-lg flex space-x-1 border border-slate-200">
+              <Button
+                variant={viewMode === "table" ? "default" : "ghost"}
+                size="sm"
+                onClick={() => setViewMode("table")}
+                className={viewMode === "table" ? "bg-white text-slate-900 shadow-2xs" : "text-slate-600"}
+              >
+                Tabel
+              </Button>
+              <Button
+                variant={viewMode === "calendar" ? "default" : "ghost"}
+                size="sm"
+                onClick={() => setViewMode("calendar")}
+                className={viewMode === "calendar" ? "bg-white text-slate-900 shadow-2xs" : "text-slate-600"}
+              >
+                <Calendar className="h-3.5 w-3.5 mr-1" /> Kalender
+              </Button>
+            </div>
+
+            <Button onClick={() => setModalOpen(true)} className="bg-slate-900 text-white shadow-sm">
+              <Plus className="h-4 w-4 mr-2" />
+              Buat Jadwal Baru
+            </Button>
+          </div>
         </div>
 
         {/* Search */}
@@ -137,100 +160,148 @@ export default function Index({ schedules, filters, customers, packages, photogr
           </CardContent>
         </Card>
 
-        {/* Schedules Table */}
-        <div className="overflow-x-auto bg-white rounded-xl border border-slate-200 shadow-2xs">
-          <table className="w-full text-sm text-left text-slate-600">
-            <thead className="text-xs uppercase bg-slate-50 text-slate-500 border-b border-slate-200">
-              <tr>
-                <th className="px-4 py-3">Tanggal & Waktu</th>
-                <th className="px-4 py-3">Pelanggan</th>
-                <th className="px-4 py-3">Paket Foto</th>
-                <th className="px-4 py-3">Lokasi Pemotretan (Wajib)</th>
-                <th className="px-4 py-3">Tim Bertugas</th>
-                <th className="px-4 py-3 text-center">Status</th>
-                <th className="px-4 py-3 text-center">Aksi</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {safeSchedules.data.length === 0 ? (
-                <tr>
-                  <td colSpan={6} className="text-center py-8 text-slate-400">
-                    Tidak ada jadwal pemotretan ditemukan.
-                  </td>
-                </tr>
-              ) : (
-                safeSchedules.data.map((s) => (
-                  <tr key={s.id} className="hover:bg-slate-50/50">
-                    <td className="px-4 py-3 font-medium text-slate-900 whitespace-nowrap">
-                      {formatDate(s.date)} <br />
-                      <span className="text-xs text-slate-400 flex items-center gap-1 mt-0.5">
+        {viewMode === "calendar" ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {safeSchedules.data.length === 0 ? (
+              <div className="col-span-full bg-white p-8 text-center rounded-xl border border-slate-200 text-slate-400">
+                Belum ada jadwal pemotretan pada sistem.
+              </div>
+            ) : (
+              safeSchedules.data.map((s) => (
+                <Card key={s.id} className="border-slate-200 hover:shadow-md transition-shadow">
+                  <CardContent className="p-4 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <Badge variant={s.status === "COMPLETED" ? "success" : s.status === "SHOOTING" ? "warning" : "secondary"}>
+                        {s.status}
+                      </Badge>
+                      <span className="text-xs font-mono text-slate-500 flex items-center gap-1">
                         <Clock className="h-3 w-3" /> {s.start_time?.substring(0, 5)} - {s.end_time?.substring(0, 5)}
                       </span>
-                    </td>
+                    </div>
 
-                    <td className="px-4 py-3 font-semibold text-slate-900">
-                      {s.customer?.name}
-                    </td>
+                    <div>
+                      <h3 className="font-bold text-slate-900 text-base">{s.customer?.name}</h3>
+                      <p className="text-xs text-slate-500 font-medium">{s.photo_package?.name || s.project?.package_name || "Paket Standard"}</p>
+                    </div>
 
-                    <td className="px-4 py-3 font-medium text-slate-800">
-                      {s.photo_package?.name || s.project?.package_name || "-"}
-                    </td>
-
-                    <td className="px-4 py-3 max-w-xs">
-                      <div className="font-semibold text-slate-900 flex items-center gap-1">
+                    <div className="text-xs text-slate-600 space-y-1 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
+                      <div className="flex items-center gap-1 text-slate-800 font-medium truncate">
                         <MapPin className="h-3.5 w-3.5 text-rose-500 shrink-0" />
                         <span className="truncate">{s.location_name}</span>
                       </div>
-                      <span className="text-xs text-slate-400 truncate block">{s.location_address}</span>
-                      <span className="text-[10px] text-slate-500 font-mono">
-                        Radius GPS: {s.location_radius}m
-                      </span>
-                    </td>
+                      <p className="text-[11px] text-slate-500 line-clamp-1">{s.location_address}</p>
+                    </div>
 
-                    <td className="px-4 py-3 text-xs">
-                      <div className="space-y-1">
-                        {s.project?.photographers?.map((p) => (
-                          <div key={p.id} className="flex items-center space-x-1 text-slate-800 font-medium">
-                            <Camera className="h-3 w-3 text-slate-400" />
-                            <span>{p.name}</span>
-                          </div>
-                        ))}
-                        {s.project?.muas?.map((m) => (
-                          <div key={m.id} className="flex items-center space-x-1 text-amber-700 font-medium">
-                            <Sparkles className="h-3 w-3 text-amber-500" />
-                            <span>{m.name}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </td>
-
-                    <td className="px-4 py-3 text-center">
-                      <Badge
-                        variant={
-                          s.status === "COMPLETED"
-                            ? "success"
-                            : s.status === "SHOOTING"
-                            ? "warning"
-                            : "secondary"
-                        }
-                      >
-                        {s.status}
-                      </Badge>
-                    </td>
-
-                    <td className="px-4 py-3 text-center">
+                    <div className="flex items-center justify-between pt-2 border-t border-slate-100">
+                      <span className="text-xs font-semibold text-slate-700">{formatDate(s.date)}</span>
                       <Link href={`/admin/schedules/${s.id}`}>
-                        <Button variant="ghost" size="icon" title="Lihat Detail">
-                          <Eye className="h-4 w-4 text-slate-600" />
+                        <Button size="sm" variant="outline" className="text-xs h-8">
+                          Lihat Detail <Eye className="ml-1 h-3 w-3" />
                         </Button>
                       </Link>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            )}
+          </div>
+        ) : null}
+
+        {viewMode === "table" && (
+          <div className="overflow-x-auto bg-white rounded-xl border border-slate-200 shadow-2xs">
+            <table className="w-full text-sm text-left text-slate-600">
+              <thead className="text-xs uppercase bg-slate-50 text-slate-500 border-b border-slate-200">
+                <tr>
+                  <th className="px-4 py-3">Tanggal & Waktu</th>
+                  <th className="px-4 py-3">Pelanggan</th>
+                  <th className="px-4 py-3">Paket Foto</th>
+                  <th className="px-4 py-3">Lokasi Pemotretan (Wajib)</th>
+                  <th className="px-4 py-3">Tim Bertugas</th>
+                  <th className="px-4 py-3 text-center">Status</th>
+                  <th className="px-4 py-3 text-center">Aksi</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {safeSchedules.data.length === 0 ? (
+                  <tr>
+                    <td colSpan={7} className="text-center py-8 text-slate-400">
+                      Tidak ada jadwal pemotretan ditemukan.
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+                ) : (
+                  safeSchedules.data.map((s) => (
+                    <tr key={s.id} className="hover:bg-slate-50/50">
+                      <td className="px-4 py-3 font-medium text-slate-900 whitespace-nowrap">
+                        {formatDate(s.date)} <br />
+                        <span className="text-xs text-slate-400 flex items-center gap-1 mt-0.5">
+                          <Clock className="h-3 w-3" /> {s.start_time?.substring(0, 5)} - {s.end_time?.substring(0, 5)}
+                        </span>
+                      </td>
+
+                      <td className="px-4 py-3 font-semibold text-slate-900">
+                        {s.customer?.name}
+                      </td>
+
+                      <td className="px-4 py-3 font-medium text-slate-800">
+                        {s.photo_package?.name || s.project?.package_name || "-"}
+                      </td>
+
+                      <td className="px-4 py-3 max-w-xs">
+                        <div className="font-semibold text-slate-900 flex items-center gap-1">
+                          <MapPin className="h-3.5 w-3.5 text-rose-500 shrink-0" />
+                          <span className="truncate">{s.location_name}</span>
+                        </div>
+                        <span className="text-xs text-slate-400 truncate block">{s.location_address}</span>
+                        <span className="text-[10px] text-slate-500 font-mono">
+                          Radius GPS: {s.location_radius}m
+                        </span>
+                      </td>
+
+                      <td className="px-4 py-3 text-xs">
+                        <div className="space-y-1">
+                          {s.project?.photographers?.map((p) => (
+                            <div key={p.id} className="flex items-center space-x-1 text-slate-800 font-medium">
+                              <Camera className="h-3 w-3 text-slate-400" />
+                              <span>{p.name}</span>
+                            </div>
+                          ))}
+                          {s.project?.muas?.map((m) => (
+                            <div key={m.id} className="flex items-center space-x-1 text-amber-700 font-medium">
+                              <Sparkles className="h-3 w-3 text-amber-500" />
+                              <span>{m.name}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </td>
+
+                      <td className="px-4 py-3 text-center">
+                        <Badge
+                          variant={
+                            s.status === "COMPLETED"
+                              ? "success"
+                              : s.status === "SHOOTING"
+                              ? "warning"
+                              : "secondary"
+                          }
+                        >
+                          {s.status}
+                        </Badge>
+                      </td>
+
+                      <td className="px-4 py-3 text-center">
+                        <Link href={`/admin/schedules/${s.id}`}>
+                          <Button variant="ghost" size="icon" title="Lihat Detail">
+                            <Eye className="h-4 w-4 text-slate-600" />
+                          </Button>
+                        </Link>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
 
         {/* Modal Create Schedule */}
         <Dialog open={modalOpen} onOpenChange={setModalOpen}>

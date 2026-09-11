@@ -84,4 +84,71 @@ class ReportController extends Controller
             'categories' => ['Wedding', 'Graduation', 'Portrait', 'Product', 'Event', 'Prewedding', 'Commercial', 'Other'],
         ]);
     }
+
+    public function exportCsv(Request $request)
+    {
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        $category = $request->input('category');
+
+        $packagesQuery = PhotoPackage::query();
+        if ($category) {
+            $packagesQuery->where('category', $category);
+        }
+        $packages = $packagesQuery->get();
+
+        $filename = "laporan-keuangan-artdevata-" . date('Y-m-d') . ".csv";
+
+        $headers = [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+        ];
+
+        $callback = function () use ($packages, $startDate, $endDate) {
+            $file = fopen('php://output', 'w');
+
+            // BOM for Excel UTF-8 reading
+            fputs($file, "\xEF\xBB\xBF");
+
+            // Header row
+            fputcsv($file, ['Nama Paket', 'Kategori', 'Total Project', 'Harga Paket', 'Total Revenue (Rp)', 'Total Cost (Rp)', 'Total Profit (Rp)', 'Margin (%)']);
+
+            foreach ($packages as $pkg) {
+                $projectsQuery = Project::with(['photographerSalaries', 'muaFees', 'expenses'])
+                    ->where('photo_package_id', $pkg->id)
+                    ->where('status', 'COMPLETED');
+
+                if ($startDate) {
+                    $projectsQuery->whereDate('date', '>=', $startDate);
+                }
+                if ($endDate) {
+                    $projectsQuery->whereDate('date', '<=', $endDate);
+                }
+
+                $projects = $projectsQuery->get();
+                $projectCount = $projects->count();
+                $totalRevenue = (float) $projects->sum('package_price');
+                $totalCost = (float) $projects->sum(function ($p) {
+                    return $p->actual_total_cost;
+                });
+                $totalProfit = $totalRevenue - $totalCost;
+                $margin = $totalRevenue > 0 ? round(($totalProfit / $totalRevenue) * 100, 2) : 0;
+
+                fputcsv($file, [
+                    $pkg->name,
+                    $pkg->category,
+                    $projectCount,
+                    $pkg->price,
+                    $totalRevenue,
+                    $totalCost,
+                    $totalProfit,
+                    $margin . '%',
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
 }

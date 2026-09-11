@@ -26,7 +26,9 @@ class ScheduleController extends Controller
 
         return Inertia::render('Photographer/Schedules/Index', [
             'schedules' => $schedules,
-            'filters' => $request->only(['date']),
+            'filters' => [
+                'date' => (string) $request->input('date', ''),
+            ],
         ]);
     }
 

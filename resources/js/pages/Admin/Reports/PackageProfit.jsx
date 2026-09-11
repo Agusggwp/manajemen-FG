@@ -29,13 +29,24 @@ export default function PackageProfit({ reportData, summary, filters, categories
   return (
     <AdminLayout title="Laporan Profit Per Paket">
       <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
-            Laporan Profitability Paket Foto
-          </h1>
-          <p className="text-sm text-slate-500 mt-1">
-            Analisis perbandingan revenue, total cost aktual, dan profit per paket foto ARTDEVATA.
-          </p>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+              Laporan Profitability Paket Foto
+            </h1>
+            <p className="text-sm text-slate-500 mt-1">
+              Analisis perbandingan revenue, total cost aktual, dan profit per paket foto ARTDEVATA.
+            </p>
+          </div>
+          <a
+            href={`/admin/reports/package-profit/export-csv?start_date=${startDate}&end_date=${endDate}&category=${category}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button className="bg-slate-900 text-white shadow-sm">
+              Unduh Laporan CSV
+            </Button>
+          </a>
         </div>
 
         {/* Filters */}

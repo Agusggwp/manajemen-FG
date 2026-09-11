@@ -57,6 +57,56 @@ class DashboardController extends Controller
         $unpaidPhotographerSalaries = (float) PhotographerProjectSalary::where('payment_status', 'UNPAID')->sum('amount');
         $unpaidMuaFees = (float) MuaProjectFee::where('payment_status', 'UNPAID')->sum('amount');
 
+        // Detailed Status Breakdown
+        $statusCounts = Project::selectRaw('status, count(*) as total')
+            ->groupBy('status')
+            ->pluck('total', 'status')
+            ->toArray();
+
+        // Monthly Trends (Last 6 Months)
+        $revenueTrend = [];
+        for ($i = 5; $i >= 0; $i--) {
+            $monthStart = Carbon::now()->subMonths($i)->startOfMonth();
+            $monthEnd = Carbon::now()->subMonths($i)->endOfMonth();
+            $monthLabel = $monthStart->translatedFormat('M Y');
+
+            $mProjects = Project::where('status', 'COMPLETED')
+                ->whereBetween('created_at', [$monthStart, $monthEnd])
+                ->get();
+
+            $mRevenue = (float) $mProjects->sum('package_price');
+            $mCost = (float) $mProjects->sum(function ($p) {
+                return $p->actual_total_cost;
+            });
+            $mProfit = $mRevenue - $mCost;
+
+            $revenueTrend[] = [
+                'month' => $monthLabel,
+                'revenue' => $mRevenue,
+                'profit' => $mProfit,
+                'cost' => $mCost,
+            ];
+        }
+
+        // Package Performance
+        $packagePerformance = PhotoPackage::withCount(['projects'])
+            ->get()
+            ->map(function ($pkg) {
+                $pkgProjects = Project::where('photo_package_id', $pkg->id)->where('status', 'COMPLETED')->get();
+                $pkgRevenue = (float) $pkgProjects->sum('package_price');
+                return [
+                    'id' => $pkg->id,
+                    'name' => $pkg->name,
+                    'category' => $pkg->category,
+                    'price' => $pkg->price,
+                    'projects_count' => $pkg->projects_count,
+                    'revenue' => $pkgRevenue,
+                ];
+            })
+            ->sortByDesc('projects_count')
+            ->values()
+            ->take(5);
+
         // Recent Schedules & Proofs
         $recentSchedules = Schedule::with(['customer', 'photoPackage'])
             ->orderBy('date', 'desc')
@@ -85,7 +135,10 @@ class DashboardController extends Controller
                 'margin' => $margin,
                 'unpaidPhotographerSalaries' => $unpaidPhotographerSalaries,
                 'unpaidMuaFees' => $unpaidMuaFees,
+                'statusCounts' => $statusCounts,
             ],
+            'revenueTrend' => $revenueTrend,
+            'packagePerformance' => $packagePerformance,
             'recentSchedules' => $recentSchedules,
             'pendingProofs' => $pendingProofs,
         ]);

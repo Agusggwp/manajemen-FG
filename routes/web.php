@@ -82,6 +82,7 @@ Route::middleware(['auth', 'role.admin'])->prefix('admin')->as('admin.')->group(
 
     // Reports
     Route::get('/reports/package-profit', [ReportController::class, 'packageProfit'])->name('reports.package-profit');
+    Route::get('/reports/package-profit/export-csv', [ReportController::class, 'exportCsv'])->name('reports.package-profit.export-csv');
 
     // Activity Logs & Settings
     Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
