@@ -72,7 +72,7 @@ export default function AdminLayout({ children, title }) {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
+    <div className="h-screen bg-slate-50 flex flex-col font-sans overflow-hidden">
       {/* Top Navbar Mobile */}
       <header className="lg:hidden bg-white border-b border-slate-200 px-4 py-3 flex items-center justify-between sticky top-0 z-40">
         <div className="flex items-center space-x-3">
@@ -102,7 +102,7 @@ export default function AdminLayout({ children, title }) {
 
         {/* Sidebar Desktop & Mobile Sheet */}
         <aside
-          className={`fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-slate-200 flex flex-col transition-transform duration-200 ease-in-out lg:static lg:translate-x-0 ${
+          className={`fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-slate-200 flex flex-col transition-transform duration-200 ease-in-out lg:sticky lg:top-0 lg:h-screen lg:translate-x-0 ${
             sidebarOpen ? "translate-x-0" : "-translate-x-full"
           }`}
         >
