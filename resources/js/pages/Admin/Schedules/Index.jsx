@@ -1,0 +1,492 @@
+import React, { useState } from "react";
+import AdminLayout from "@/layouts/AdminLayout";
+import { formatDate, formatRupiah } from "@/lib/utils";
+import { useForm, router, Link } from "@inertiajs/react";
+import {
+  Calendar,
+  Plus,
+  Search,
+  MapPin,
+  Clock,
+  Sparkles,
+  User,
+  Camera,
+  Eye,
+  CheckCircle2,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+
+export default function Index({ schedules, filters, customers, packages, photographers, muas }) {
+  const safeSchedules = schedules?.data ? schedules : { data: [] };
+  const safeFilters = filters || {};
+  const safeCustomers = Array.isArray(customers) ? customers : [];
+  const safePackages = Array.isArray(packages) ? packages : [];
+  const safePhotographers = Array.isArray(photographers) ? photographers : [];
+  const safeMuas = Array.isArray(muas) ? muas : [];
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [search, setSearch] = useState(safeFilters.search || "");
+  const [selectedPackage, setSelectedPackage] = useState(null);
+
+  const form = useForm({
+    customer_id: "",
+    photo_package_id: "",
+    date: new Date().toISOString().split("T")[0],
+    start_time: "09:00",
+    end_time: "11:00",
+    // Mandatory location fields
+    location_name: "",
+    location_address: "",
+    latitude: -8.671234,
+    longitude: 115.215678,
+    location_radius: 100,
+    location_notes: "",
+    notes: "",
+    photographer_ids: [],
+    mua_ids: [],
+    photographer_salary: "",
+    mua_fee: "",
+  });
+
+  const handlePackageChange = (packageId) => {
+    form.setData("photo_package_id", packageId);
+    const pkg = packages.find((p) => String(p.id) === String(packageId));
+    setSelectedPackage(pkg || null);
+  };
+
+  const handlePhotographerCheckbox = (id) => {
+    const current = form.data.photographer_ids;
+    if (current.includes(id)) {
+      form.setData("photographer_ids", current.filter((x) => x !== id));
+    } else {
+      form.setData("photographer_ids", [...current, id]);
+    }
+  };
+
+  const handleMuaCheckbox = (id) => {
+    const current = form.data.mua_ids;
+    if (current.includes(id)) {
+      form.setData("mua_ids", current.filter((x) => x !== id));
+    } else {
+      form.setData("mua_ids", [...current, id]);
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    form.post("/admin/schedules", {
+      onSuccess: () => {
+        setModalOpen(false);
+        form.reset();
+        setSelectedPackage(null);
+      },
+    });
+  };
+
+  const handleSearch = () => {
+    router.get("/admin/schedules", { search }, { preserveState: true });
+  };
+
+  return (
+    <AdminLayout title="Manajemen Jadwal">
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+              Manajemen Jadwal Pemotretan
+            </h1>
+            <p className="text-sm text-slate-500 mt-1">
+              Buat jadwal baru, tentukan penugasan tim, dan tetapkan koordinat lokasi pemotretan.
+            </p>
+          </div>
+          <Button onClick={() => setModalOpen(true)} className="bg-slate-900 text-white shadow-sm">
+            <Plus className="h-4 w-4 mr-2" />
+            Buat Jadwal Baru
+          </Button>
+        </div>
+
+        {/* Search */}
+        <Card className="border-slate-200">
+          <CardContent className="pt-6">
+            <div className="flex gap-2">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
+                <Input
+                  placeholder="Cari pelanggan, nama lokasi, atau alamat..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="pl-9"
+                />
+              </div>
+              <Button variant="secondary" onClick={handleSearch}>
+                Cari
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Schedules Table */}
+        <div className="overflow-x-auto bg-white rounded-xl border border-slate-200 shadow-2xs">
+          <table className="w-full text-sm text-left text-slate-600">
+            <thead className="text-xs uppercase bg-slate-50 text-slate-500 border-b border-slate-200">
+              <tr>
+                <th className="px-4 py-3">Tanggal & Waktu</th>
+                <th className="px-4 py-3">Pelanggan</th>
+                <th className="px-4 py-3">Paket Foto</th>
+                <th className="px-4 py-3">Lokasi Pemotretan (Wajib)</th>
+                <th className="px-4 py-3">Tim Bertugas</th>
+                <th className="px-4 py-3 text-center">Status</th>
+                <th className="px-4 py-3 text-center">Aksi</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {safeSchedules.data.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="text-center py-8 text-slate-400">
+                    Tidak ada jadwal pemotretan ditemukan.
+                  </td>
+                </tr>
+              ) : (
+                safeSchedules.data.map((s) => (
+                  <tr key={s.id} className="hover:bg-slate-50/50">
+                    <td className="px-4 py-3 font-medium text-slate-900 whitespace-nowrap">
+                      {formatDate(s.date)} <br />
+                      <span className="text-xs text-slate-400 flex items-center gap-1 mt-0.5">
+                        <Clock className="h-3 w-3" /> {s.start_time?.substring(0, 5)} - {s.end_time?.substring(0, 5)}
+                      </span>
+                    </td>
+
+                    <td className="px-4 py-3 font-semibold text-slate-900">
+                      {s.customer?.name}
+                    </td>
+
+                    <td className="px-4 py-3 font-medium text-slate-800">
+                      {s.photo_package?.name || s.project?.package_name || "-"}
+                    </td>
+
+                    <td className="px-4 py-3 max-w-xs">
+                      <div className="font-semibold text-slate-900 flex items-center gap-1">
+                        <MapPin className="h-3.5 w-3.5 text-rose-500 shrink-0" />
+                        <span className="truncate">{s.location_name}</span>
+                      </div>
+                      <span className="text-xs text-slate-400 truncate block">{s.location_address}</span>
+                      <span className="text-[10px] text-slate-500 font-mono">
+                        Radius GPS: {s.location_radius}m
+                      </span>
+                    </td>
+
+                    <td className="px-4 py-3 text-xs">
+                      <div className="space-y-1">
+                        {s.project?.photographers?.map((p) => (
+                          <div key={p.id} className="flex items-center space-x-1 text-slate-800 font-medium">
+                            <Camera className="h-3 w-3 text-slate-400" />
+                            <span>{p.name}</span>
+                          </div>
+                        ))}
+                        {s.project?.muas?.map((m) => (
+                          <div key={m.id} className="flex items-center space-x-1 text-amber-700 font-medium">
+                            <Sparkles className="h-3 w-3 text-amber-500" />
+                            <span>{m.name}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </td>
+
+                    <td className="px-4 py-3 text-center">
+                      <Badge
+                        variant={
+                          s.status === "COMPLETED"
+                            ? "success"
+                            : s.status === "SHOOTING"
+                            ? "warning"
+                            : "secondary"
+                        }
+                      >
+                        {s.status}
+                      </Badge>
+                    </td>
+
+                    <td className="px-4 py-3 text-center">
+                      <Link href={`/admin/schedules/${s.id}`}>
+                        <Button variant="ghost" size="icon" title="Lihat Detail">
+                          <Eye className="h-4 w-4 text-slate-600" />
+                        </Button>
+                      </Link>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Modal Create Schedule */}
+        <Dialog open={modalOpen} onOpenChange={setModalOpen}>
+          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Buat Jadwal Pemotretan Baru</DialogTitle>
+            </DialogHeader>
+
+            <form onSubmit={handleSubmit} className="space-y-5 py-2">
+              {/* Customer & Package */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Pelanggan (Customer)</Label>
+                  <select
+                    required
+                    className="flex h-9 w-full rounded-md border border-slate-200 bg-white px-3 py-1 text-sm shadow-sm"
+                    value={form.data.customer_id}
+                    onChange={(e) => form.setData("customer_id", e.target.value)}
+                  >
+                    <option value="">-- Pilih Pelanggan --</option>
+                    {customers.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.name} ({c.phone})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Paket Foto</Label>
+                  <select
+                    required
+                    className="flex h-9 w-full rounded-md border border-slate-200 bg-white px-3 py-1 text-sm shadow-sm"
+                    value={form.data.photo_package_id}
+                    onChange={(e) => handlePackageChange(e.target.value)}
+                  >
+                    <option value="">-- Pilih Paket Foto --</option>
+                    {packages.map((pkg) => (
+                      <option key={pkg.id} value={pkg.id}>
+                        {pkg.name} - {formatRupiah(pkg.price)} ({pkg.category})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Package Detail Preview Banner */}
+              {selectedPackage && (
+                <div className="p-3 bg-slate-100/70 border border-slate-200 rounded-lg text-xs space-y-1">
+                  <div className="flex items-center justify-between font-bold text-slate-900">
+                    <span>{selectedPackage.name}</span>
+                    <span>Harga: {formatRupiah(selectedPackage.price)}</span>
+                  </div>
+                  <div className="flex items-center space-x-4 text-slate-600">
+                    <span>Durasi: {selectedPackage.duration_minutes} Menit</span>
+                    <span>•</span>
+                    <span>{selectedPackage.includes_mua ? "✓ Termasuk MUA" : "— Tanpa MUA"}</span>
+                  </div>
+                </div>
+              )}
+
+              {/* Date & Time */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <Label>Tanggal Pemotretan</Label>
+                  <Input
+                    type="date"
+                    required
+                    value={form.data.date}
+                    onChange={(e) => form.setData("date", e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Jam Mulai</Label>
+                  <Input
+                    type="time"
+                    required
+                    value={form.data.start_time}
+                    onChange={(e) => form.setData("start_time", e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Jam Selesai</Label>
+                  <Input
+                    type="time"
+                    required
+                    value={form.data.end_time}
+                    onChange={(e) => form.setData("end_time", e.target.value)}
+                  />
+                </div>
+              </div>
+
+              {/* MANDATORY LOCATION SECTION */}
+              <div className="border-t border-slate-200 pt-3 space-y-3">
+                <p className="text-xs font-bold uppercase text-slate-700 tracking-wider flex items-center gap-1.5">
+                  <MapPin className="h-4 w-4 text-rose-600" /> Information Lokasi (WAJIB DIIISI)
+                </p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Nama Lokasi</Label>
+                    <Input
+                      required
+                      placeholder="misal: Kampus Sudirman Unud / Pantai Sanur"
+                      value={form.data.location_name}
+                      onChange={(e) => form.setData("location_name", e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Radius Validasi GPS (Meter)</Label>
+                    <Input
+                      type="number"
+                      required
+                      min="10"
+                      max="5000"
+                      value={form.data.location_radius}
+                      onChange={(e) => form.setData("location_radius", e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Alamat Lengkap Lokasi</Label>
+                  <Input
+                    required
+                    placeholder="misal: Jl. PB Sudirman, Denpasar Barat, Bali"
+                    value={form.data.location_address}
+                    onChange={(e) => form.setData("location_address", e.target.value)}
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Latitude GPS</Label>
+                    <Input
+                      type="number"
+                      step="any"
+                      required
+                      placeholder="-8.671234"
+                      value={form.data.latitude}
+                      onChange={(e) => form.setData("latitude", e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Longitude GPS</Label>
+                    <Input
+                      type="number"
+                      step="any"
+                      required
+                      placeholder="115.215678"
+                      value={form.data.longitude}
+                      onChange={(e) => form.setData("longitude", e.target.value)}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Assignment Section */}
+              <div className="border-t border-slate-200 pt-3 space-y-4">
+                <p className="text-xs font-bold uppercase text-slate-700 tracking-wider">
+                  Penugasan Tim & Gaji Project
+                </p>
+
+                <div>
+                  <Label className="mb-2 block">Pilih Photographer (Minimal 1)</Label>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                    {photographers.map((p) => (
+                      <label
+                        key={p.id}
+                        className={`p-2.5 rounded-lg border text-xs flex items-center space-x-2 cursor-pointer transition-colors ${
+                          form.data.photographer_ids.includes(p.id)
+                            ? "bg-slate-900 text-white border-slate-900"
+                            : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={form.data.photographer_ids.includes(p.id)}
+                          onChange={() => handlePhotographerCheckbox(p.id)}
+                          className="hidden"
+                        />
+                        <Camera className="h-3.5 w-3.5 shrink-0" />
+                        <span className="truncate">{p.name}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <Label className="mb-2 block">Pilih MUA (Opsional)</Label>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                    {muas.map((m) => (
+                      <label
+                        key={m.id}
+                        className={`p-2.5 rounded-lg border text-xs flex items-center space-x-2 cursor-pointer transition-colors ${
+                          form.data.mua_ids.includes(m.id)
+                            ? "bg-amber-900 text-white border-amber-900"
+                            : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={form.data.mua_ids.includes(m.id)}
+                          onChange={() => handleMuaCheckbox(m.id)}
+                          className="hidden"
+                        />
+                        <Sparkles className="h-3.5 w-3.5 shrink-0" />
+                        <span className="truncate">{m.name}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label className="text-xs">Gaji Photographer per Project (Rp)</Label>
+                    <Input
+                      type="number"
+                      placeholder="Default dari estimasi paket"
+                      value={form.data.photographer_salary}
+                      onChange={(e) => form.setData("photographer_salary", e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-xs">Fee MUA per Project (Rp)</Label>
+                    <Input
+                      type="number"
+                      placeholder="Default dari estimasi paket"
+                      value={form.data.mua_fee}
+                      onChange={(e) => form.setData("mua_fee", e.target.value)}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label>Catatan Tambahan</Label>
+                <Textarea
+                  placeholder="Catatan khusus untuk photographer..."
+                  value={form.data.notes}
+                  onChange={(e) => form.setData("notes", e.target.value)}
+                />
+              </div>
+
+              <DialogFooter>
+                <Button type="button" variant="outline" onClick={() => setModalOpen(false)}>
+                  Batal
+                </Button>
+                <Button type="submit" className="bg-slate-900 text-white" disabled={form.processing}>
+                  {form.processing ? "Memproses..." : "Buat Jadwal & Project"}
+                </Button>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
+      </div>
+    </AdminLayout>
+  );
+}
