@@ -22,19 +22,20 @@ class ReportController extends Controller
         }
         $packages = $packagesQuery->get();
 
-        $reportData = $packages->map(function ($pkg) use ($startDate, $endDate) {
-            $projectsQuery = Project::with(['photographerSalaries', 'muaFees', 'expenses'])
-                ->where('photo_package_id', $pkg->id)
-                ->where('status', 'COMPLETED');
+        $allProjectsQuery = Project::with(['photographerSalaries', 'muaFees', 'expenses'])
+            ->where('status', 'COMPLETED');
 
-            if ($startDate) {
-                $projectsQuery->whereDate('date', '>=', $startDate);
-            }
-            if ($endDate) {
-                $projectsQuery->whereDate('date', '<=', $endDate);
-            }
+        if ($startDate) {
+            $allProjectsQuery->whereDate('date', '>=', $startDate);
+        }
+        if ($endDate) {
+            $allProjectsQuery->whereDate('date', '<=', $endDate);
+        }
 
-            $projects = $projectsQuery->get();
+        $allProjectsGrouped = $allProjectsQuery->get()->groupBy('photo_package_id');
+
+        $reportData = $packages->map(function ($pkg) use ($allProjectsGrouped) {
+            $projects = $allProjectsGrouped->get($pkg->id, collect());
 
             $projectCount = $projects->count();
             $totalRevenue = (float) $projects->sum('package_price');
@@ -113,19 +114,20 @@ class ReportController extends Controller
             // Header row
             fputcsv($file, ['Nama Paket', 'Kategori', 'Total Project', 'Harga Paket', 'Total Revenue (Rp)', 'Total Cost (Rp)', 'Total Profit (Rp)', 'Margin (%)']);
 
+            $allProjectsQuery = Project::with(['photographerSalaries', 'muaFees', 'expenses'])
+                ->where('status', 'COMPLETED');
+
+            if ($startDate) {
+                $allProjectsQuery->whereDate('date', '>=', $startDate);
+            }
+            if ($endDate) {
+                $allProjectsQuery->whereDate('date', '<=', $endDate);
+            }
+
+            $allProjectsGrouped = $allProjectsQuery->get()->groupBy('photo_package_id');
+
             foreach ($packages as $pkg) {
-                $projectsQuery = Project::with(['photographerSalaries', 'muaFees', 'expenses'])
-                    ->where('photo_package_id', $pkg->id)
-                    ->where('status', 'COMPLETED');
-
-                if ($startDate) {
-                    $projectsQuery->whereDate('date', '>=', $startDate);
-                }
-                if ($endDate) {
-                    $projectsQuery->whereDate('date', '<=', $endDate);
-                }
-
-                $projects = $projectsQuery->get();
+                $projects = $allProjectsGrouped->get($pkg->id, collect());
                 $projectCount = $projects->count();
                 $totalRevenue = (float) $projects->sum('package_price');
                 $totalCost = (float) $projects->sum(function ($p) {

@@ -370,7 +370,7 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
                         src={`/storage/${startProof.photo_path}`}
                         alt="Start Proof"
                         className="w-full h-full object-cover"
-                        onError={(e) => { e.target.src = "https://via.placeholder.com/400x250?text=Photo+Proof+Start"; }}
+                        onError={(e) => { e.target.onerror = null; e.target.src = "https://via.placeholder.com/400x250?text=Photo+Proof+Start"; }}
                       />
                     </div>
                     <div className="grid grid-cols-2 gap-2 text-slate-700 pt-1">
@@ -418,7 +418,7 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
                         src={`/storage/${endProof.photo_path}`}
                         alt="End Proof"
                         className="w-full h-full object-cover"
-                        onError={(e) => { e.target.src = "https://via.placeholder.com/400x250?text=Photo+Proof+End"; }}
+                        onError={(e) => { e.target.onerror = null; e.target.src = "https://via.placeholder.com/400x250?text=Photo+Proof+End"; }}
                       />
                     </div>
                     <div className="grid grid-cols-2 gap-2 text-slate-700 pt-1">

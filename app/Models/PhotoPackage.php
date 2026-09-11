@@ -48,7 +48,7 @@ class PhotoPackage extends Model
 
     public function getEstimatedProfitAttribute(): float
     {
-        return (float) ($this->price - $this->getEstimatedTotalCostAttribute());
+        return (float) ($this->price - $this->estimated_total_cost);
     }
 
     public function getEstimatedMarginAttribute(): float
@@ -57,7 +57,7 @@ class PhotoPackage extends Model
             return 0.0;
         }
 
-        return round(($this->getEstimatedProfitAttribute() / $this->price) * 100, 2);
+        return round(($this->estimated_profit / $this->price) * 100, 2);
     }
 
     public function scopeActive($query)

@@ -79,29 +79,38 @@ class Project extends Model
 
     public function getActualPhotographerCostAttribute(): float
     {
+        if ($this->relationLoaded('photographerSalaries')) {
+            return (float) $this->photographerSalaries->sum('amount');
+        }
         return (float) $this->photographerSalaries()->sum('amount');
     }
 
     public function getActualMuaCostAttribute(): float
     {
+        if ($this->relationLoaded('muaFees')) {
+            return (float) $this->muaFees->sum('amount');
+        }
         return (float) $this->muaFees()->sum('amount');
     }
 
     public function getActualOperationalCostAttribute(): float
     {
+        if ($this->relationLoaded('expenses')) {
+            return (float) $this->expenses->sum('amount');
+        }
         return (float) $this->expenses()->sum('amount');
     }
 
     public function getActualTotalCostAttribute(): float
     {
-        return (float) ($this->getActualPhotographerCostAttribute() +
-            $this->getActualMuaCostAttribute() +
-            $this->getActualOperationalCostAttribute());
+        return (float) ($this->actual_photographer_cost +
+            $this->actual_mua_cost +
+            $this->actual_operational_cost);
     }
 
     public function getActualProfitAttribute(): float
     {
-        return (float) ($this->package_price - $this->getActualTotalCostAttribute());
+        return (float) ($this->package_price - $this->actual_total_cost);
     }
 
     public function getActualMarginAttribute(): float
@@ -110,7 +119,7 @@ class Project extends Model
             return 0.0;
         }
 
-        return round(($this->getActualProfitAttribute() / $this->package_price) * 100, 2);
+        return round(($this->actual_profit / $this->package_price) * 100, 2);
     }
 
     public function getFormattedWorkDurationAttribute(): string

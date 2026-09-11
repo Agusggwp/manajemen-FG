@@ -82,7 +82,7 @@ export default function Index({ projects = [] }) {
                             src={`/storage/${g.file_path}`}
                             alt={g.file_name}
                             className="w-full h-full object-cover"
-                            onError={(e) => { e.target.src = "https://via.placeholder.com/150"; }}
+                            onError={(e) => { e.target.onerror = null; e.target.src = "https://via.placeholder.com/150"; }}
                           />
                         </div>
                       ))}

@@ -70,7 +70,8 @@ class DashboardController extends Controller
             $monthEnd = Carbon::now()->subMonths($i)->endOfMonth();
             $monthLabel = $monthStart->translatedFormat('M Y');
 
-            $mProjects = Project::where('status', 'COMPLETED')
+            $mProjects = Project::with(['photographerSalaries', 'muaFees', 'expenses'])
+                ->where('status', 'COMPLETED')
                 ->whereBetween('created_at', [$monthStart, $monthEnd])
                 ->get();
 

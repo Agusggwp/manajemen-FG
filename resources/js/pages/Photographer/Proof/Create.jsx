@@ -56,9 +56,20 @@ export default function Create({ schedule, type, existingProof }) {
     getGpsPosition();
   }, []);
 
+  useEffect(() => {
+    return () => {
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [previewUrl]);
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
       form.setData("photo", file);
       setPreviewUrl(URL.createObjectURL(file));
     }
@@ -111,7 +122,7 @@ export default function Create({ schedule, type, existingProof }) {
                 <span className="font-bold text-slate-900 flex items-center gap-1.5">
                   <Navigation className="h-4 w-4 text-rose-600 animate-pulse" /> Deteksi GPS Lokasi
                 </span>
-                <Button size="xs" variant="outline" onClick={getGpsPosition} disabled={gpsLoading}>
+                <Button type="button" size="xs" variant="outline" onClick={getGpsPosition} disabled={gpsLoading}>
                   {gpsLoading ? "Mendeteksi..." : "Muat Ulang GPS"}
                 </Button>
               </div>

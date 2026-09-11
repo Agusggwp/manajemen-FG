@@ -48,6 +48,12 @@ class LoginController extends Controller
                 return redirect()->intended(route('admin.dashboard'));
             }
 
+            // Ensure intended URL for non-admin doesn't point to admin routes (prevents redirect loop)
+            $intended = session()->get('url.intended');
+            if ($intended && str_contains($intended, '/admin')) {
+                session()->forget('url.intended');
+            }
+
             return redirect()->intended(route('photographer.dashboard'));
         }
 

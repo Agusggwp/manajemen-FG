@@ -76,6 +76,7 @@ export default function Index({ proofs, counts, activeTab = "pending" }) {
         {/* Tab Navigation */}
         <div className="flex border-b border-slate-200 space-x-4">
           <button
+            type="button"
             onClick={() => handleTabChange("pending")}
             className={`pb-3 px-1 text-sm font-semibold border-b-2 flex items-center space-x-2 transition-colors ${
               activeTab === "pending"
@@ -89,6 +90,7 @@ export default function Index({ proofs, counts, activeTab = "pending" }) {
           </button>
 
           <button
+            type="button"
             onClick={() => handleTabChange("approved")}
             className={`pb-3 px-1 text-sm font-semibold border-b-2 flex items-center space-x-2 transition-colors ${
               activeTab === "approved"
@@ -102,6 +104,7 @@ export default function Index({ proofs, counts, activeTab = "pending" }) {
           </button>
 
           <button
+            type="button"
             onClick={() => handleTabChange("rejected")}
             className={`pb-3 px-1 text-sm font-semibold border-b-2 flex items-center space-x-2 transition-colors ${
               activeTab === "rejected"
@@ -130,7 +133,7 @@ export default function Index({ proofs, counts, activeTab = "pending" }) {
                       src={`/storage/${proof.photo_path}`}
                       alt="Proof Photo"
                       className="w-full h-full object-cover"
-                      onError={(e) => { e.target.src = "https://via.placeholder.com/400x250?text=Photo+Proof"; }}
+                      onError={(e) => { e.target.onerror = null; e.target.src = "https://via.placeholder.com/400x250?text=Photo+Proof"; }}
                     />
                     <div className="absolute top-3 left-3">
                       <Badge variant="default" className="uppercase font-bold tracking-wider">
