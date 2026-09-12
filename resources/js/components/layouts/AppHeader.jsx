@@ -18,6 +18,15 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
+import { ChevronDown, User as UserIcon } from "lucide-react";
 
 const ROUTE_LABELS = {
   // Common & Admin
@@ -169,31 +178,59 @@ export default function AppHeader({
       </div>
 
       <div className="flex items-center space-x-3 sm:space-x-4 shrink-0">
-        <div className="flex items-center space-x-3 pl-2 sm:pl-3 border-l border-slate-200">
-          <div className="flex items-center space-x-2.5">
-            <div className="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center text-xs font-bold ring-2 ring-slate-100 shrink-0">
-              {user?.name?.charAt(0) || "U"}
-            </div>
-            <div className="hidden md:block text-left">
-              <p className="text-xs font-semibold text-slate-900 leading-tight truncate max-w-[140px]">
-                {user?.name}
-              </p>
-              <span className="text-[10px] font-bold px-1.5 py-0.2 bg-slate-100 text-slate-700 rounded border border-slate-200">
-                {userBadge}
-              </span>
-            </div>
-          </div>
-
-          <Link
-            href="/logout"
-            method="post"
-            as="button"
-            className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
-            title="Logout"
-          >
-            <LogOut className="h-4 w-4" />
-          </Link>
-        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              className="flex items-center space-x-2.5 p-1 sm:px-2 sm:py-1.5 h-auto rounded-lg hover:bg-slate-100 transition-colors focus-visible:ring-1 focus-visible:ring-slate-300"
+            >
+              <div className="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center text-xs font-bold ring-2 ring-slate-100 shrink-0">
+                {user?.name?.charAt(0) || "U"}
+              </div>
+              <div className="hidden md:block text-left">
+                <p className="text-xs font-semibold text-slate-900 leading-tight truncate max-w-[130px]">
+                  {user?.name}
+                </p>
+                <span className="text-[10px] font-bold px-1.5 py-0.2 bg-slate-100 text-slate-700 rounded border border-slate-200">
+                  {userBadge}
+                </span>
+              </div>
+              <ChevronDown className="h-3.5 w-3.5 text-slate-400 hidden sm:block" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-56 mt-1 shadow-lg">
+            <DropdownMenuLabel className="font-normal py-2">
+              <div className="flex flex-col space-y-1">
+                <p className="text-sm font-semibold text-slate-900 leading-none">{user?.name}</p>
+                <p className="text-xs text-slate-500 leading-none">{user?.email || (isPhotographer ? "Portal Photographer" : "Administrator")}</p>
+              </div>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <a
+                href="/"
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center cursor-pointer text-xs font-medium text-slate-700"
+              >
+                <Globe className="mr-2 h-4 w-4 text-slate-500" />
+                <span>Lihat Web Publik</span>
+              </a>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild className="text-red-600 focus:text-red-600 focus:bg-red-50 cursor-pointer">
+              <Link
+                href="/logout"
+                method="post"
+                as="button"
+                className="w-full flex items-center text-xs font-medium"
+              >
+                <LogOut className="mr-2 h-4 w-4 text-red-600" />
+                <span>Keluar (Logout)</span>
+              </Link>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </header>
   );
