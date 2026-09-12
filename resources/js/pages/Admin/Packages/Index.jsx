@@ -479,7 +479,14 @@ export default function Index({ packages, filters, categories, muas }) {
                     <Label className="text-xs block">Pilih MUA Paket</Label>
                     <Select
                       value={form.data.mua_id ? String(form.data.mua_id) : ""}
-                      onValueChange={(val) => form.setData("mua_id", val)}
+                      onValueChange={(val) => {
+                        const selectedMua = safeMuas.find((m) => String(m.id) === String(val));
+                        form.setData({
+                          ...form.data,
+                          mua_id: val,
+                          estimated_mua_fee: selectedMua?.default_fee ? selectedMua.default_fee : form.data.estimated_mua_fee,
+                        });
+                      }}
                     >
                       <SelectTrigger className="w-full bg-white">
                         <SelectValue placeholder="-- Pilih MUA (Default Paket) --" />
@@ -487,7 +494,7 @@ export default function Index({ packages, filters, categories, muas }) {
                       <SelectContent>
                         {safeMuas.map((m) => (
                           <SelectItem key={m.id} value={String(m.id)}>
-                            {m.name} ({m.specialty})
+                            {m.name} {m.specialty ? `(${m.specialty})` : ""} {m.default_fee ? `- ${formatRupiah(m.default_fee)}` : ""}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -516,7 +523,7 @@ export default function Index({ packages, filters, categories, muas }) {
                     <Input
                       type="number"
                       min="0"
-                      disabled={!form.data.includes_mua}
+                      disabled
                       value={form.data.estimated_mua_fee}
                       onChange={(e) => form.setData("estimated_mua_fee", e.target.value)}
                     />

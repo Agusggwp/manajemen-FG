@@ -100,9 +100,28 @@ export default function Index({ schedules, existingAssignments, filters, custome
   };
 
   const handlePackageChange = (packageId) => {
-    form.setData("photo_package_id", packageId);
     const pkg = packages.find((p) => String(p.id) === String(packageId));
     setSelectedPackage(pkg || null);
+    
+    let defaultMuaFee = form.data.mua_fee;
+    let selectedMuaIds = form.data.mua_ids;
+    if (pkg) {
+      if (pkg.mua_id) {
+        selectedMuaIds = [pkg.mua_id];
+      }
+      if (pkg.mua?.default_fee) {
+        defaultMuaFee = pkg.mua.default_fee;
+      } else if (pkg.estimated_mua_fee) {
+        defaultMuaFee = pkg.estimated_mua_fee;
+      }
+    }
+
+    form.setData({
+      ...form.data,
+      photo_package_id: packageId,
+      mua_ids: selectedMuaIds,
+      mua_fee: defaultMuaFee,
+    });
   };
 
   const handlePhotographerCheckbox = (id) => {
@@ -116,11 +135,15 @@ export default function Index({ schedules, existingAssignments, filters, custome
 
   const handleMuaCheckbox = (id) => {
     const current = form.data.mua_ids;
-    if (current.includes(id)) {
-      form.setData("mua_ids", current.filter((x) => x !== id));
-    } else {
-      form.setData("mua_ids", [...current, id]);
-    }
+    const isAdding = !current.includes(id);
+    const updatedMuaIds = isAdding ? [...current, id] : current.filter((x) => x !== id);
+    const targetMua = muas.find((m) => m.id === id);
+
+    form.setData({
+      ...form.data,
+      mua_ids: updatedMuaIds,
+      mua_fee: isAdding && targetMua?.default_fee ? targetMua.default_fee : form.data.mua_fee,
+    });
   };
 
   const handleSubmit = (e) => {
@@ -603,7 +626,8 @@ export default function Index({ schedules, existingAssignments, filters, custome
                     <Label className="text-xs">Fee MUA per Project (Rp)</Label>
                     <Input
                       type="number"
-                      placeholder="Default dari estimasi paket"
+                      disabled
+                      placeholder="Otomatis dari fee MUA"
                       value={form.data.mua_fee}
                       onChange={(e) => form.setData("mua_fee", e.target.value)}
                     />

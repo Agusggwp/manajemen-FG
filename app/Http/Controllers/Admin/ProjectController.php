@@ -39,7 +39,7 @@ class ProjectController extends Controller
             ],
             'statuses' => ['PLANNING', 'SCHEDULED', 'SHOOTING', 'EDITING', 'REVIEW', 'COMPLETED', 'DELIVERED', 'CANCELLED'],
             'photographers' => User::photographer()->active()->get(['id', 'name', 'specialty']),
-            'muas' => Mua::active()->get(['id', 'name', 'specialty']),
+            'muas' => Mua::active()->get(['id', 'name', 'specialty', 'default_fee']),
         ]);
     }
 
@@ -144,7 +144,6 @@ class ProjectController extends Controller
                 'work_start_time' => $project->work_start_time,
                 'work_end_time' => $project->work_end_time,
                 'payment_status' => 'UNPAID',
-                'created_by' => auth()->id(),
             ]
         );
 
@@ -182,7 +181,6 @@ class ProjectController extends Controller
                 'work_start_time' => $project->work_start_time,
                 'work_end_time' => $project->work_end_time,
                 'payment_status' => 'UNPAID',
-                'created_by' => auth()->id(),
             ]
         );
 

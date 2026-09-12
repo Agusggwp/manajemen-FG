@@ -714,6 +714,7 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
                   type="number"
                   min="0"
                   required
+                  disabled
                   value={muaForm.data.amount}
                   onChange={(e) => muaForm.setData("amount", e.target.value)}
                 />

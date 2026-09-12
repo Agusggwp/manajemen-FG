@@ -57,7 +57,7 @@ class PhotoPackageController extends Controller
                 'direction' => (string) $request->input('direction', 'desc'),
             ],
             'categories' => ['Wedding', 'Graduation', 'Portrait', 'Product', 'Event', 'Prewedding', 'Commercial', 'Other'],
-            'muas' => Mua::active()->get(['id', 'name', 'specialty']),
+            'muas' => Mua::active()->get(['id', 'name', 'specialty', 'default_fee']),
         ]);
     }
 

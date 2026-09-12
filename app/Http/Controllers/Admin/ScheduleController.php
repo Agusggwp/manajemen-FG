@@ -22,7 +22,7 @@ class ScheduleController extends Controller
 
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {
-                $q->whereHas('customer', fn ($c) => $c->where('name', 'like', "%{$search}%"))
+                $q->whereHas('customer', fn($c) => $c->where('name', 'like', "%{$search}%"))
                     ->orWhere('location_name', 'like', "%{$search}%")
                     ->orWhere('location_address', 'like', "%{$search}%");
             });
@@ -64,7 +64,7 @@ class ScheduleController extends Controller
             'customers' => Customer::all(['id', 'name', 'phone']),
             'packages' => PhotoPackage::active()->with('mua')->get(['id', 'name', 'price', 'duration_minutes', 'includes_mua', 'category', 'mua_id', 'estimated_mua_fee']),
             'photographers' => User::photographer()->active()->get(['id', 'name', 'specialty']),
-            'muas' => Mua::active()->get(['id', 'name', 'specialty']),
+            'muas' => Mua::active()->get(['id', 'name', 'specialty', 'default_fee']),
         ]);
     }
 
@@ -183,7 +183,6 @@ class ScheduleController extends Controller
                 'work_start_time' => $validated['start_time'],
                 'work_end_time' => $validated['end_time'],
                 'payment_status' => 'UNPAID',
-                'created_by' => auth()->id(),
             ]);
         }
 
@@ -206,7 +205,6 @@ class ScheduleController extends Controller
                     'work_start_time' => $validated['start_time'],
                     'work_end_time' => $validated['end_time'],
                     'payment_status' => 'UNPAID',
-                    'created_by' => auth()->id(),
                 ]);
             }
         }
