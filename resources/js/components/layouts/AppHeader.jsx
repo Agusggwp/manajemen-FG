@@ -1,5 +1,5 @@
-import React, { useMemo } from "react";
-import { Link, usePage } from "@inertiajs/react";
+import React, { useState, useMemo } from "react";
+import { Link, usePage, router } from "@inertiajs/react";
 import {
   Menu,
   X,
@@ -8,6 +8,8 @@ import {
   Globe,
   LogOut,
   Home,
+  ChevronDown,
+  User as UserIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,7 +28,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown, User as UserIcon } from "lucide-react";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 const ROUTE_LABELS = {
   // Common & Admin
@@ -67,6 +69,7 @@ export default function AppHeader({
     currentRoute.startsWith("/photographer") || user?.role === "photographer";
 
   const userBadge = isPhotographer ? "PHOTOGRAPHER" : "ADMIN";
+  const [logoutOpen, setLogoutOpen] = useState(false);
 
   const breadcrumbs = useMemo(() => {
     const segments = currentRoute.split("/").filter(Boolean);
@@ -218,20 +221,31 @@ export default function AppHeader({
               </a>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem asChild className="text-red-600 focus:text-red-600 focus:bg-red-50 cursor-pointer">
-              <Link
-                href="/logout"
-                method="post"
-                as="button"
-                className="w-full flex items-center text-xs font-medium"
-              >
-                <LogOut className="mr-2 h-4 w-4 text-red-600" />
-                <span>Keluar (Logout)</span>
-              </Link>
+            <DropdownMenuItem
+              onClick={() => setLogoutOpen(true)}
+              className="text-red-600 focus:text-red-600 focus:bg-red-50 cursor-pointer text-xs font-medium flex items-center gap-2"
+            >
+              <LogOut className="h-4 w-4 text-red-600" />
+              <span>Keluar (Logout)</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+
+      <ConfirmDialog
+        open={logoutOpen}
+        onOpenChange={setLogoutOpen}
+        title="Konfirmasi Logout"
+        description="Apakah Anda yakin ingin keluar dari sistem manajemen ART DEVATA?"
+        confirmText="Keluar"
+        cancelText="Batal"
+        variant="destructive"
+        icon={LogOut}
+        onConfirm={() => {
+          setLogoutOpen(false);
+          router.post("/logout");
+        }}
+      />
     </header>
   );
 }

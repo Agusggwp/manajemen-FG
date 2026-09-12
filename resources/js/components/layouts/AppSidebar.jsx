@@ -1,5 +1,5 @@
-import React from "react";
-import { Link, usePage } from "@inertiajs/react";
+import React, { useState } from "react";
+import { Link, usePage, router } from "@inertiajs/react";
 import {
   LayoutDashboard,
   Calendar,
@@ -19,6 +19,7 @@ import {
   Image,
   DollarSign,
 } from "lucide-react";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 export default function AppSidebar({
   sidebarOpen,
@@ -27,6 +28,7 @@ export default function AppSidebar({
   toggleSidebar,
   user,
 }) {
+  const [logoutOpen, setLogoutOpen] = useState(false);
   const currentRoute = window.location.pathname;
   const isActive = (path) => currentRoute.startsWith(path);
 
@@ -234,15 +236,14 @@ export default function AppSidebar({
                 >
                   {user?.name?.charAt(0) || "U"}
                 </div>
-                <Link
-                  href="/logout"
-                  method="post"
-                  as="button"
+                <button
+                  type="button"
+                  onClick={() => setLogoutOpen(true)}
                   className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
                   title="Logout"
                 >
                   <LogOut className="h-4 w-4" />
-                </Link>
+                </button>
               </div>
             )}
 
@@ -261,19 +262,33 @@ export default function AppSidebar({
                   <p className="text-[10px] text-slate-500 truncate">{user?.email || user?.specialty}</p>
                 </div>
               </div>
-              <Link
-                href="/logout"
-                method="post"
-                as="button"
+              <button
+                type="button"
+                onClick={() => setLogoutOpen(true)}
                 className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors cursor-pointer"
                 title="Logout"
               >
                 <LogOut className="h-4 w-4" />
-              </Link>
+              </button>
             </div>
           </div>
         </div>
       </aside>
+
+      <ConfirmDialog
+        open={logoutOpen}
+        onOpenChange={setLogoutOpen}
+        title="Konfirmasi Logout"
+        description="Apakah Anda yakin ingin keluar dari sistem manajemen ART DEVATA?"
+        confirmText="Keluar"
+        cancelText="Batal"
+        variant="destructive"
+        icon={LogOut}
+        onConfirm={() => {
+          setLogoutOpen(false);
+          router.post("/logout");
+        }}
+      />
     </>
   );
 }
