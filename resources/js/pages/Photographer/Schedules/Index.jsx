@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { formatDate } from "@/lib/utils";
 import { Head, Link, router } from "@inertiajs/react";
-import { Calendar, MapPin, Clock, Camera, Eye, Filter } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Calendar, MapPin, Clock, Camera, Eye } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -14,11 +13,13 @@ export default function Index({ schedules = { data: [] }, filters = {} }) {
   const [isFiltering, setIsFiltering] = useState(false);
   const [date, setDate] = useState(safeFilters.date || "");
 
-  const handleFilter = () => {
+  const handleDateChange = (e) => {
+    const val = e.target.value;
+    setDate(val);
     setIsFiltering(true);
     router.get(
       "/photographer/schedules",
-      { date },
+      { date: val },
       {
         preserveState: true,
         onFinish: () => setIsFiltering(false),
@@ -48,12 +49,9 @@ export default function Index({ schedules = { data: [] }, filters = {} }) {
               <Input
                 type="date"
                 value={date}
-                onChange={(e) => setDate(e.target.value)}
+                onChange={handleDateChange}
                 className="max-w-xs"
               />
-              <Button variant="secondary" size="sm" onClick={handleFilter} disabled={isLoading}>
-                <Filter /> Filter
-              </Button>
             </div>
           </CardContent>
         </Card>

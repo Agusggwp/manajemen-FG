@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { formatDate, formatRupiah } from "@/lib/utils";
 import { Head, router } from "@inertiajs/react";
-import { DollarSign, Clock, CheckCircle2, Filter } from "lucide-react";
+import { DollarSign, Clock, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -28,11 +28,13 @@ export default function Index({ salaries = { data: [] }, unpaidTotal = 0, paidTo
   const [isFiltering, setIsFiltering] = useState(false);
   const [status, setStatus] = useState(safeFilters.status || "");
 
-  const handleFilter = () => {
+  const handleStatusChange = (val) => {
+    const newStatus = val === "all" ? "" : val;
+    setStatus(newStatus);
     setIsFiltering(true);
     router.get(
       "/photographer/salary",
-      { status },
+      { status: newStatus },
       {
         preserveState: true,
         onFinish: () => setIsFiltering(false),
@@ -81,7 +83,7 @@ export default function Index({ salaries = { data: [] }, unpaidTotal = 0, paidTo
         {/* Filter */}
         <Card className="border-slate-200">
           <CardContent className="pt-4 pb-4 flex gap-2 items-center">
-            <Select value={status || "all"} onValueChange={(val) => setStatus(val === "all" ? "" : val)}>
+            <Select value={status || "all"} onValueChange={handleStatusChange}>
               <SelectTrigger className="w-full sm:w-56 bg-white text-xs">
                 <SelectValue placeholder="Semua Status Pembayaran" />
               </SelectTrigger>
@@ -91,9 +93,6 @@ export default function Index({ salaries = { data: [] }, unpaidTotal = 0, paidTo
                 <SelectItem value="PAID">PAID (Sudah Lunas)</SelectItem>
               </SelectContent>
             </Select>
-            <Button variant="secondary" size="sm" onClick={handleFilter}>
-              <Filter /> Filter
-            </Button>
           </CardContent>
         </Card>
 
