@@ -1,7 +1,6 @@
 import React from "react";
-import PhotographerLayout from "@/layouts/PhotographerLayout";
 import { formatDate } from "@/lib/utils";
-import { Link } from "@inertiajs/react";
+import { Head, Link } from "@inertiajs/react";
 import { ArrowLeft, MapPin, Clock, Camera, CheckCircle2, AlertCircle, PlayCircle, StopCircle, Lock } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -19,7 +18,8 @@ export default function Show({ schedule }) {
   const isTimeForStart = now >= scheduleStartDateTime;
 
   return (
-    <PhotographerLayout title={`Jadwal Pemotretan - ${schedule.customer?.name}`}>
+    <>
+      <Head title={`Jadwal Pemotretan - ${schedule.customer?.name}`} />
       <div className="space-y-6">
         <div className="flex items-center space-x-3">
           <Link href="/photographer/schedules">
@@ -193,6 +193,6 @@ export default function Show({ schedule }) {
           </CardContent>
         </Card>
       </div>
-    </PhotographerLayout>
+    </>
   );
 }

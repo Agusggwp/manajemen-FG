@@ -1,7 +1,6 @@
 import React from "react";
-import PhotographerLayout from "@/layouts/PhotographerLayout";
 import { formatDate } from "@/lib/utils";
-import { Link } from "@inertiajs/react";
+import { Head, Link } from "@inertiajs/react";
 import { FolderKanban, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -9,7 +8,8 @@ import { Card, CardContent } from "@/components/ui/card";
 
 export default function Index({ projects = { data: [] } }) {
   return (
-    <PhotographerLayout title="Project Saya">
+    <>
+      <Head title="Project Saya" />
       <div className="space-y-6">
         <div>
           <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
@@ -55,6 +55,6 @@ export default function Index({ projects = { data: [] } }) {
           )}
         </div>
       </div>
-    </PhotographerLayout>
+    </>
   );
 }

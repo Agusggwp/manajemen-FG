@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import PhotographerLayout from "@/layouts/PhotographerLayout";
 import { formatDate } from "@/lib/utils";
-import { Link, router } from "@inertiajs/react";
+import { Head, Link, router } from "@inertiajs/react";
 import { Calendar, MapPin, Clock, Camera, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -17,7 +16,8 @@ export default function Index({ schedules = { data: [] }, filters = {} }) {
   };
 
   return (
-    <PhotographerLayout title="Jadwal Saya">
+    <>
+      <Head title="Jadwal Saya" />
       <div className="space-y-6">
         <div>
           <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
@@ -89,6 +89,6 @@ export default function Index({ schedules = { data: [] }, filters = {} }) {
           )}
         </div>
       </div>
-    </PhotographerLayout>
+    </>
   );
 }

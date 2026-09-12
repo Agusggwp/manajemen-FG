@@ -1,7 +1,6 @@
 import React from "react";
-import PhotographerLayout from "@/layouts/PhotographerLayout";
 import { formatDate, formatRupiah } from "@/lib/utils";
-import { Link } from "@inertiajs/react";
+import { Head, Link } from "@inertiajs/react";
 import { ArrowLeft, Clock, MapPin, DollarSign, Camera, CheckCircle2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -9,7 +8,8 @@ import { Button } from "@/components/ui/button";
 
 export default function Show({ project, mySalary }) {
   return (
-    <PhotographerLayout title={`Detail Project - ${project.project_name}`}>
+    <>
+      <Head title={`Detail Project - ${project.project_name}`} />
       <div className="space-y-6">
         <div className="flex items-center space-x-3">
           <Link href="/photographer/projects">
@@ -72,6 +72,6 @@ export default function Show({ project, mySalary }) {
           </CardContent>
         </Card>
       </div>
-    </PhotographerLayout>
+    </>
   );
 }

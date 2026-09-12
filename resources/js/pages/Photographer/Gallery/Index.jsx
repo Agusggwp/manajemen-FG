@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import PhotographerLayout from "@/layouts/PhotographerLayout";
-import { useForm } from "@inertiajs/react";
+import { Head, useForm } from "@inertiajs/react";
 import { Image, Upload, CheckCircle2, FolderKanban } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -40,7 +39,8 @@ export default function Index({ projects = [] }) {
   };
 
   return (
-    <PhotographerLayout title="Galeri Project">
+    <>
+      <Head title="Galeri Project" />
       <div className="space-y-6">
         <div>
           <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
@@ -138,6 +138,6 @@ export default function Index({ projects = [] }) {
           </DialogContent>
         </Dialog>
       </div>
-    </PhotographerLayout>
+    </>
   );
 }

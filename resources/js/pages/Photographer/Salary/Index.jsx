@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import PhotographerLayout from "@/layouts/PhotographerLayout";
 import { formatDate, formatRupiah } from "@/lib/utils";
-import { router } from "@inertiajs/react";
+import { Head, router } from "@inertiajs/react";
 import { DollarSign, Clock, CheckCircle2, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -16,7 +15,8 @@ export default function Index({ salaries = { data: [] }, unpaidTotal = 0, paidTo
   };
 
   return (
-    <PhotographerLayout title="Gaji Saya">
+    <>
+      <Head title="Gaji Saya" />
       <div className="space-y-6">
         <div>
           <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
@@ -119,6 +119,6 @@ export default function Index({ salaries = { data: [] }, unpaidTotal = 0, paidTo
           </table>
         </div>
       </div>
-    </PhotographerLayout>
+    </>
   );
 }

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import PhotographerLayout from "@/layouts/PhotographerLayout";
-import { useForm, Link } from "@inertiajs/react";
+import { Head, useForm, Link } from "@inertiajs/react";
 import { ArrowLeft, Camera, MapPin, Navigation, ShieldCheck, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -90,7 +89,8 @@ export default function Create({ schedule, type, existingProof }) {
   };
 
   return (
-    <PhotographerLayout title={`Kirim Proof ${type} - ${schedule.customer?.name}`}>
+    <>
+      <Head title={`Kirim Proof ${type} - ${schedule.customer?.name}`} />
       <div className="space-y-6 max-w-xl mx-auto">
         <div className="flex items-center space-x-3">
           <Link href={`/photographer/schedules/${schedule.id}`}>
@@ -202,6 +202,6 @@ export default function Create({ schedule, type, existingProof }) {
           </CardContent>
         </Card>
       </div>
-    </PhotographerLayout>
+    </>
   );
 }

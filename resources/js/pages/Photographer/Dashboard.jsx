@@ -1,7 +1,6 @@
 import React from "react";
-import PhotographerLayout from "@/layouts/PhotographerLayout";
 import { formatDate, formatRupiah } from "@/lib/utils";
-import { Link } from "@inertiajs/react";
+import { Head, Link } from "@inertiajs/react";
 import { Calendar, FolderKanban, Clock, CheckCircle2, DollarSign, Camera, MapPin, ArrowRight } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -11,7 +10,8 @@ export default function Dashboard({ stats = {}, recentSchedules = [], recentProo
   const safeStats = stats || {};
   const safeSchedules = Array.isArray(recentSchedules) ? recentSchedules : (recentSchedules?.data || []);
   return (
-    <PhotographerLayout title="Dashboard Photographer">
+    <>
+      <Head title="Dashboard Photographer" />
       <div className="space-y-6">
         <div>
           <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
@@ -31,97 +31,142 @@ export default function Dashboard({ stats = {}, recentSchedules = [], recentProo
               </CardTitle>
             </CardHeader>
             <CardContent className="p-4 pt-1">
-              <div className="text-xl font-bold">{formatRupiah(safeStats.monthlyEarnings || 0)}</div>
-              <p className="text-[11px] text-slate-400 mt-0.5">Total gaji penugasan project</p>
+              <p className="text-xl sm:text-2xl font-black text-white">
+                {formatRupiah(safeStats.monthlySalary || 0)}
+              </p>
+              <p className="text-[11px] text-slate-400 mt-0.5 font-medium">Bulan berjalan</p>
             </CardContent>
           </Card>
 
-          <Card className="bg-amber-50 border-amber-200">
+          <Card className="border-slate-200">
             <CardHeader className="p-4 pb-1">
-              <CardTitle className="text-xs font-semibold text-amber-800 uppercase">
-                Gaji Belum Dibayar
+              <CardTitle className="text-xs font-semibold text-slate-500 uppercase">
+                Total Gaji Diterima
               </CardTitle>
             </CardHeader>
             <CardContent className="p-4 pt-1">
-              <div className="text-xl font-bold text-amber-950">{formatRupiah(safeStats.unpaidSalary || 0)}</div>
+              <p className="text-xl sm:text-2xl font-black text-slate-900">
+                {formatRupiah(safeStats.totalSalaryPaid || 0)}
+              </p>
+              <p className="text-[11px] text-emerald-600 mt-0.5 font-medium">Sudah dibayarkan</p>
             </CardContent>
           </Card>
 
-          <Card className="bg-emerald-50 border-emerald-200">
+          <Card className="border-slate-200">
             <CardHeader className="p-4 pb-1">
-              <CardTitle className="text-xs font-semibold text-emerald-800 uppercase">
-                Sudah Lunas Dibayar
+              <CardTitle className="text-xs font-semibold text-slate-500 uppercase">
+                Tugas Aktif
               </CardTitle>
             </CardHeader>
             <CardContent className="p-4 pt-1">
-              <div className="text-xl font-bold text-emerald-950">{formatRupiah(safeStats.paidSalary || 0)}</div>
+              <p className="text-xl sm:text-2xl font-black text-slate-900">
+                {safeStats.pendingJobs || 0}
+              </p>
+              <p className="text-[11px] text-slate-500 mt-0.5 font-medium">Jadwal & Project</p>
             </CardContent>
           </Card>
         </div>
 
-        {/* Counters */}
+        {/* Quick Links */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="bg-white p-3.5 rounded-xl border border-slate-200 text-center">
-            <Calendar className="h-4 w-4 text-slate-700 mx-auto mb-1" />
-            <p className="text-[11px] font-medium text-slate-500">Jadwal Hari Ini</p>
-            <p className="text-lg font-bold text-slate-900 mt-0.5">{safeStats.todaysScheduleCount || 0}</p>
-          </div>
-
-          <div className="bg-white p-3.5 rounded-xl border border-slate-200 text-center">
-            <FolderKanban className="h-4 w-4 text-slate-700 mx-auto mb-1" />
-            <p className="text-[11px] font-medium text-slate-500">Project Saya</p>
-            <p className="text-lg font-bold text-slate-900 mt-0.5">{safeStats.myProjectsCount || 0}</p>
-          </div>
-
-          <div className="bg-white p-3.5 rounded-xl border border-slate-200 text-center">
-            <Clock className="h-4 w-4 text-amber-600 mx-auto mb-1" />
-            <p className="text-[11px] font-medium text-slate-500">Berlangsung</p>
-            <p className="text-lg font-bold text-slate-900 mt-0.5">{safeStats.ongoingCount || 0}</p>
-          </div>
-
-          <div className="bg-white p-3.5 rounded-xl border border-slate-200 text-center">
-            <CheckCircle2 className="h-4 w-4 text-emerald-600 mx-auto mb-1" />
-            <p className="text-[11px] font-medium text-slate-500">Selesai</p>
-            <p className="text-lg font-bold text-slate-900 mt-0.5">{safeStats.completedCount || 0}</p>
-          </div>
+          <Link href="/photographer/schedules" className="p-3 bg-white rounded-lg border border-slate-200 shadow-2xs hover:border-slate-300 transition-colors flex items-center space-x-3">
+            <div className="p-2 bg-slate-100 text-slate-700 rounded-md">
+              <Calendar className="h-4 w-4" />
+            </div>
+            <div>
+              <p className="text-xs font-bold text-slate-900">Jadwal</p>
+              <p className="text-[10px] text-slate-500">Lihat agenda</p>
+            </div>
+          </Link>
+          <Link href="/photographer/projects" className="p-3 bg-white rounded-lg border border-slate-200 shadow-2xs hover:border-slate-300 transition-colors flex items-center space-x-3">
+            <div className="p-2 bg-slate-100 text-slate-700 rounded-md">
+              <FolderKanban className="h-4 w-4" />
+            </div>
+            <div>
+              <p className="text-xs font-bold text-slate-900">Project</p>
+              <p className="text-[10px] text-slate-500">Tugas foto</p>
+            </div>
+          </Link>
+          <Link href="/photographer/gallery" className="p-3 bg-white rounded-lg border border-slate-200 shadow-2xs hover:border-slate-300 transition-colors flex items-center space-x-3">
+            <div className="p-2 bg-slate-100 text-slate-700 rounded-md">
+              <Camera className="h-4 w-4" />
+            </div>
+            <div>
+              <p className="text-xs font-bold text-slate-900">Galeri</p>
+              <p className="text-[10px] text-slate-500">Hasil karya</p>
+            </div>
+          </Link>
+          <Link href="/photographer/salary" className="p-3 bg-white rounded-lg border border-slate-200 shadow-2xs hover:border-slate-300 transition-colors flex items-center space-x-3">
+            <div className="p-2 bg-slate-100 text-slate-700 rounded-md">
+              <DollarSign className="h-4 w-4" />
+            </div>
+            <div>
+              <p className="text-xs font-bold text-slate-900">Gaji Saya</p>
+              <p className="text-[10px] text-slate-500">Riwayat gaji</p>
+            </div>
+          </Link>
         </div>
 
-        {/* Actionable Today's & Assigned Schedules List */}
-        <Card className="border-slate-200">
-          <CardHeader className="flex flex-row items-center justify-between py-4">
-            <CardTitle className="text-base font-semibold">Jadwal Pemotretan Saya</CardTitle>
+        {/* Assigned Upcoming Schedules */}
+        <Card className="border-slate-200 shadow-2xs">
+          <CardHeader className="p-4 sm:p-5 border-b border-slate-100 flex flex-row items-center justify-between">
+            <div>
+              <CardTitle className="text-sm sm:text-base font-bold text-slate-900">
+                Jadwal Pemotretan Mendatang
+              </CardTitle>
+              <p className="text-xs text-slate-500">Daftar penugasan foto Anda</p>
+            </div>
             <Link href="/photographer/schedules">
-              <Button size="sm" variant="outline" className="text-xs">
-                Lihat Semua <ArrowRight className="ml-1 h-3.5 w-3.5" />
+              <Button variant="ghost" size="sm" className="text-xs font-semibold text-slate-700">
+                Semua Jadwal <ArrowRight className="h-3.5 w-3.5 ml-1" />
               </Button>
             </Link>
           </CardHeader>
-          <CardContent className="space-y-3 pt-0">
+          <CardContent className="p-4 sm:p-5 space-y-3">
             {safeSchedules.length === 0 ? (
-              <p className="text-xs text-slate-400 py-4 text-center">Belum ada penugasan jadwal.</p>
+              <div className="text-center py-8">
+                <Calendar className="h-8 w-8 text-slate-300 mx-auto mb-2" />
+                <p className="text-xs text-slate-500">Belum ada jadwal pemotretan yang ditugaskan kepada Anda.</p>
+              </div>
             ) : (
-              safeSchedules.map((sch) => (
-                <div key={sch.id} className="p-3.5 bg-slate-50 rounded-xl border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              safeSchedules.map((schedule) => (
+                <div
+                  key={schedule.id}
+                  className="p-3 sm:p-4 rounded-lg bg-slate-50 border border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+                >
                   <div className="space-y-1">
                     <div className="flex items-center space-x-2">
-                      <span className="font-bold text-slate-900 text-sm">{sch.customer?.name}</span>
-                      <Badge variant="secondary" className="text-[10px]">
-                        {sch.photo_package?.name}
+                      <p className="text-xs font-bold text-slate-900">
+                        {schedule.customer?.name || "Pelanggan"}
+                      </p>
+                      <Badge variant="outline" className="text-[10px] bg-white">
+                        {schedule.package?.name || "Paket Foto"}
+                      </Badge>
+                      <Badge className="text-[10px]">
+                        {schedule.status}
                       </Badge>
                     </div>
-                    <div className="text-xs text-slate-600 flex items-center space-x-3">
-                      <span>📅 {formatDate(sch.date)}</span>
-                      <span>⏰ {sch.start_time?.substring(0, 5)} - {sch.end_time?.substring(0, 5)}</span>
-                    </div>
-                    <div className="text-xs text-slate-700 font-medium flex items-center gap-1">
-                      <MapPin className="h-3.5 w-3.5 text-rose-500 shrink-0" />
-                      <span>{sch.location_name} ({sch.location_address})</span>
+                    <div className="flex flex-wrap items-center text-[11px] text-slate-500 gap-x-3 gap-y-1">
+                      <span className="flex items-center">
+                        <Calendar className="h-3.5 w-3.5 mr-1 text-slate-400" />
+                        {formatDate(schedule.shooting_date)}
+                      </span>
+                      <span className="flex items-center">
+                        <Clock className="h-3.5 w-3.5 mr-1 text-slate-400" />
+                        {schedule.shooting_time?.substring(0, 5) || "-"}
+                      </span>
+                      {schedule.location && (
+                        <span className="flex items-center">
+                          <MapPin className="h-3.5 w-3.5 mr-1 text-slate-400" />
+                          {schedule.location}
+                        </span>
+                      )}
                     </div>
                   </div>
 
-                  <div>
-                    <Link href={`/photographer/schedules/${sch.id}`}>
-                      <Button size="sm" className="bg-slate-900 text-white w-full sm:w-auto text-xs">
+                  <div className="flex items-center space-x-2 shrink-0">
+                    <Link href={`/photographer/schedules/${schedule.id}`}>
+                      <Button size="sm" variant="default" className="text-xs bg-slate-900 hover:bg-slate-800">
                         Buka Jadwal & Kirim Proof
                       </Button>
                     </Link>
@@ -132,6 +177,6 @@ export default function Dashboard({ stats = {}, recentSchedules = [], recentProo
           </CardContent>
         </Card>
       </div>
-    </PhotographerLayout>
+    </>
   );
 }
