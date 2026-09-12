@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { formatRupiah } from "@/lib/utils";
 import { Head, useForm, router } from "@inertiajs/react";
 import {
   Package,
   Plus,
   Search,
-  Filter,
   Copy,
   Power,
   Trash2,
@@ -60,7 +59,7 @@ export default function Index({ packages, filters, categories, muas }) {
     search: filters?.search ?? "",
     category: filters?.category ?? "",
     status: filters?.status ?? "",
-    sort: filters?.sort ?? "created_at",
+    sort: filters?.sort ?? "all",
     direction: filters?.direction ?? "desc",
   };
   const safeCategories = Array.isArray(categories) ? categories : [];
@@ -72,9 +71,29 @@ export default function Index({ packages, filters, categories, muas }) {
   const [editingPackage, setEditingPackage] = useState(null);
   const [search, setSearch] = useState(safeFilters.search || "");
   const [category, setCategory] = useState(safeFilters.category || "");
-  const [sortBy, setSortBy] = useState(safeFilters.sort_by || "created_at");
+  const [sortBy, setSortBy] = useState(safeFilters.sort || "all");
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [deleteOpen, setDeleteOpen] = useState(false);
+
+  const triggerFilter = (newSearch = search, newCategory = category, newSort = sortBy) => {
+    setIsSearching(true);
+    router.get(
+      "/admin/packages",
+      { search: newSearch, category: newCategory, sort: newSort },
+      {
+        preserveState: true,
+        onFinish: () => setIsSearching(false),
+      }
+    );
+  };
+
+  useEffect(() => {
+    if (search === (safeFilters.search || "")) return;
+    const timer = setTimeout(() => {
+      triggerFilter(search, category, sortBy);
+    }, 350);
+    return () => clearTimeout(timer);
+  }, [search]);
 
   const form = useForm({
     name: "",
@@ -129,18 +148,6 @@ export default function Index({ packages, filters, categories, muas }) {
         onSuccess: () => setModalOpen(false),
       });
     }
-  };
-
-  const handleFilter = () => {
-    setIsSearching(true);
-    router.get(
-      "/admin/packages",
-      { search, category, sort: sortBy },
-      {
-        preserveState: true,
-        onFinish: () => setIsSearching(false),
-      }
-    );
   };
 
   const handleDuplicate = (id) => {
@@ -208,41 +215,49 @@ export default function Index({ packages, filters, categories, muas }) {
                   placeholder="Cari nama paket foto..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleFilter()}
                   className="pl-9"
                 />
               </div>
 
+              {/* Dropdown 1: Kategori */}
               <Select
                 value={category || "all"}
-                onValueChange={(val) => setCategory(val === "all" ? "" : val)}
+                onValueChange={(val) => {
+                  const newCat = val === "all" ? "" : val;
+                  setCategory(newCat);
+                  triggerFilter(search, newCat, sortBy);
+                }}
               >
                 <SelectTrigger className="w-full md:w-48 bg-white">
                   <SelectValue placeholder="Semua Kategori" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Semua Kategori</SelectItem>
-                  {categories.map((c) => (
+                  {safeCategories.map((c) => (
                     <SelectItem key={c} value={c}>{c}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
 
-              <Select value={sortBy} onValueChange={setSortBy}>
+              {/* Dropdown 2: Urutan / Harga */}
+              <Select
+                value={sortBy || "all"}
+                onValueChange={(val) => {
+                  setSortBy(val);
+                  triggerFilter(search, category, val);
+                }}
+              >
                 <SelectTrigger className="w-full md:w-48 bg-white">
-                  <SelectValue placeholder="Urutkan" />
+                  <SelectValue placeholder="Semua Kategori" />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="all">Semua Kategori</SelectItem>
                   <SelectItem value="created_at">Terbaru</SelectItem>
                   <SelectItem value="price_asc">Harga Terendah</SelectItem>
                   <SelectItem value="price_desc">Harga Tertinggi</SelectItem>
                   <SelectItem value="name_asc">Nama (A-Z)</SelectItem>
                 </SelectContent>
               </Select>
-
-              <Button variant="secondary" onClick={handleFilter} disabled={isLoading}>
-                <Filter /> Filter
-              </Button>
             </div>
           </CardContent>
         </Card>

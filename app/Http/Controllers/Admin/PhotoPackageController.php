@@ -30,22 +30,29 @@ class PhotoPackageController extends Controller
         }
 
         $sort = $request->input('sort', 'created_at');
-        $direction = $request->input('direction', 'desc');
 
-        if (in_array($sort, ['name', 'price', 'category', 'status', 'created_at'])) {
-            $query->orderBy($sort, $direction);
+        switch ($sort) {
+            case 'price_asc':
+                $query->orderBy('price', 'asc');
+                break;
+            case 'price_desc':
+                $query->orderBy('price', 'desc');
+                break;
+            case 'name_asc':
+            case 'name':
+                $query->orderBy('name', 'asc');
+                break;
+            case 'name_desc':
+                $query->orderBy('name', 'desc');
+                break;
+            case 'created_at':
+            case 'all':
+            default:
+                $query->orderBy('created_at', 'desc');
+                break;
         }
 
         $packages = $query->paginate(12)->withQueryString();
-
-        // Calculate sort by profit / margin if requested in memory or sort collection
-        if (in_array($sort, ['profit', 'margin'])) {
-            $sortedItems = $packages->getCollection()->sortBy(function ($item) use ($sort) {
-                return $sort === 'profit' ? $item->estimated_profit : $item->estimated_margin;
-            }, SORT_REGULAR, $direction === 'desc');
-
-            $packages->setCollection($sortedItems->values());
-        }
 
         return Inertia::render('Admin/Packages/Index', [
             'packages' => $packages,
