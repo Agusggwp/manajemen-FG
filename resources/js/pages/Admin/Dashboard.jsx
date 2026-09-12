@@ -26,8 +26,19 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { usePageLoading, DashboardPageSkeleton } from "@/components/loading/PageSkeletons";
+import {
+  RevenueTrendChart,
+  PackagePerformanceBarChart,
+  ProjectStatusDonutChart,
+} from "@/components/charts/DashboardCharts";
 
-export default function Dashboard({ stats = {}, recentSchedules = [], pendingProofs = [] }) {
+export default function Dashboard({
+  stats = {},
+  recentSchedules = [],
+  pendingProofs = [],
+  revenueTrend = [],
+  packagePerformance = [],
+}) {
   const isNavigating = usePageLoading();
   const safeStats = stats || {};
   const safeSchedules = Array.isArray(recentSchedules) ? recentSchedules : (recentSchedules?.data || []);
@@ -155,6 +166,22 @@ export default function Dashboard({ stats = {}, recentSchedules = [], pendingPro
             <Sparkles className="h-5 w-5 text-slate-700 mx-auto mb-1" />
             <p className="text-xs font-medium text-slate-500">MUA</p>
             <p className="text-xl font-bold text-slate-900 mt-0.5">{safeStats.totalMuas || 0}</p>
+          </div>
+        </div>
+
+        {/* Analytics Charts Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2">
+            <RevenueTrendChart data={revenueTrend} />
+          </div>
+          <div>
+            <ProjectStatusDonutChart statusCounts={safeStats.statusCounts} title="Status Seluruh Project" />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-3">
+            <PackagePerformanceBarChart data={packagePerformance} />
           </div>
         </div>
 

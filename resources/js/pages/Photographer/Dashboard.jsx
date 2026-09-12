@@ -6,8 +6,18 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { usePageLoading, PhotographerDashboardSkeleton } from "@/components/loading/PageSkeletons";
+import {
+  PhotographerEarningsChart,
+  ProjectStatusDonutChart,
+} from "@/components/charts/DashboardCharts";
 
-export default function Dashboard({ stats = {}, recentSchedules = [], recentProofs = [] }) {
+export default function Dashboard({
+  stats = {},
+  recentSchedules = [],
+  recentProofs = [],
+  earningsTrend = [],
+  statusBreakdown = {},
+}) {
   const isNavigating = usePageLoading();
   const safeStats = stats || {};
   const safeSchedules = Array.isArray(recentSchedules) ? recentSchedules : (recentSchedules?.data || []);
@@ -117,6 +127,16 @@ export default function Dashboard({ stats = {}, recentSchedules = [], recentProo
               <p className="text-[10px] text-slate-500">Riwayat gaji</p>
             </div>
           </Link>
+        </div>
+
+        {/* Analytics & Performance Charts */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2">
+            <PhotographerEarningsChart data={earningsTrend} />
+          </div>
+          <div>
+            <ProjectStatusDonutChart statusCounts={statusBreakdown} title="Status Penugasan Foto" />
+          </div>
         </div>
 
         {/* Assigned Upcoming Schedules */}

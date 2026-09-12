@@ -350,6 +350,43 @@ export function DashboardPageSkeleton() {
         ))}
       </div>
 
+      {/* Analytics Charts Skeleton */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2">
+          <Card className="border-slate-200">
+            <CardHeader className="flex flex-row items-center justify-between pb-3">
+              <div className="space-y-1">
+                <Skeleton className="h-5 w-48" />
+                <Skeleton className="h-3 w-64" />
+              </div>
+              <Skeleton className="h-8 w-32 rounded-lg" />
+            </CardHeader>
+            <CardContent className="pt-2 space-y-3">
+              <div className="flex gap-4">
+                <Skeleton className="h-4 w-32" />
+                <Skeleton className="h-4 w-32" />
+              </div>
+              <Skeleton className="h-52 w-full rounded-md" />
+            </CardContent>
+          </Card>
+        </div>
+        <div>
+          <Card className="border-slate-200">
+            <CardHeader className="pb-3">
+              <Skeleton className="h-5 w-40" />
+              <Skeleton className="h-3 w-28" />
+            </CardHeader>
+            <CardContent className="flex flex-col items-center justify-center space-y-4 pt-2">
+              <Skeleton className="h-36 w-36 rounded-full" />
+              <div className="grid grid-cols-2 gap-2 w-full">
+                <Skeleton className="h-8 rounded-md" />
+                <Skeleton className="h-8 rounded-md" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
       {/* Recent Schedules Table */}
       <Card className="border-slate-200">
         <CardHeader className="flex flex-row items-center justify-between">
@@ -420,6 +457,38 @@ export function PhotographerDashboardSkeleton() {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Analytics Charts Skeleton */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2">
+          <Card className="border-slate-200">
+            <CardHeader className="flex flex-row items-center justify-between pb-3">
+              <div className="space-y-1">
+                <Skeleton className="h-5 w-48" />
+                <Skeleton className="h-3 w-60" />
+              </div>
+            </CardHeader>
+            <CardContent className="pt-2 space-y-3">
+              <Skeleton className="h-48 w-full rounded-md" />
+            </CardContent>
+          </Card>
+        </div>
+        <div>
+          <Card className="border-slate-200">
+            <CardHeader className="pb-3">
+              <Skeleton className="h-5 w-40" />
+              <Skeleton className="h-3 w-28" />
+            </CardHeader>
+            <CardContent className="flex flex-col items-center justify-center space-y-4 pt-2">
+              <Skeleton className="h-36 w-36 rounded-full" />
+              <div className="grid grid-cols-2 gap-2 w-full">
+                <Skeleton className="h-8 rounded-md" />
+                <Skeleton className="h-8 rounded-md" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
 
       {/* Upcoming Schedules */}
