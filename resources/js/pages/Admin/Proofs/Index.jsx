@@ -24,11 +24,13 @@ import {
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { usePageLoading, CardGridSkeleton } from "@/components/loading/PageSkeletons";
 
 export default function Index({ proofs, counts, activeTab = "pending" }) {
   const safeProofs = proofs?.data ? proofs : { data: [] };
   const safeCounts = counts || { pending: 0, approved: 0, rejected: 0 };
 
+  const isNavigating = usePageLoading();
   const [selectedProof, setSelectedProof] = useState(null);
   const [rejectModalOpen, setRejectModalOpen] = useState(false);
   const [adminNote, setAdminNote] = useState("");
@@ -131,14 +133,16 @@ export default function Index({ proofs, counts, activeTab = "pending" }) {
           </button>
         </div>
 
-        {/* Grid of Proofs */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {safeProofs.data.length === 0 ? (
-            <div className="col-span-full text-center py-12 bg-white rounded-xl border border-slate-200 text-slate-400">
-              Tidak ada data bukti foto pemotretan pada tab ini.
-            </div>
-          ) : (
-            safeProofs.data.map((proof) => (
+        {/* Grid of Proofs or Skeleton */}
+        {isNavigating ? (
+          <CardGridSkeleton count={6} />
+        ) : safeProofs.data.length === 0 ? (
+          <div className="col-span-full text-center py-12 bg-white rounded-xl border border-slate-200 text-slate-400">
+            Tidak ada data bukti foto pemotretan pada tab ini.
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {safeProofs.data.map((proof) => (
               <Card key={proof.id} className="border-slate-200 overflow-hidden shadow-xs flex flex-col justify-between">
                 <div>
                   <div className="relative aspect-video w-full bg-slate-900 overflow-hidden">
@@ -212,9 +216,9 @@ export default function Index({ proofs, counts, activeTab = "pending" }) {
                   </div>
                 )}
               </Card>
-            ))
-          )}
-        </div>
+            ))}
+          </div>
+        )}
 
         {/* Modal Reject */}
         <Dialog open={rejectModalOpen} onOpenChange={setRejectModalOpen}>

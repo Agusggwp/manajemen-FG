@@ -45,6 +45,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { usePageLoading, TableSkeleton, CardGridSkeleton } from "@/components/loading/PageSkeletons";
 
 export default function Index({ schedules, existingAssignments, filters, customers, packages, photographers, muas }) {
   const safeSchedules = schedules?.data ? schedules : { data: [] };
@@ -130,11 +131,23 @@ export default function Index({ schedules, existingAssignments, filters, custome
     });
   };
 
+  const isNavigating = usePageLoading();
+  const [isSearching, setIsSearching] = useState(false);
   const [viewMode, setViewMode] = useState("table"); // "table" | "calendar"
 
   const handleSearch = () => {
-    router.get("/admin/schedules", { search }, { preserveState: true });
+    setIsSearching(true);
+    router.get(
+      "/admin/schedules",
+      { search },
+      {
+        preserveState: true,
+        onFinish: () => setIsSearching(false),
+      }
+    );
   };
+
+  const isLoading = isNavigating || isSearching;
 
   return (
     <>
@@ -180,17 +193,24 @@ export default function Index({ schedules, existingAssignments, filters, custome
                   placeholder="Cari pelanggan, nama lokasi, atau alamat..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                   className="pl-9"
                 />
               </div>
-              <Button variant="secondary" onClick={handleSearch}>
+              <Button variant="secondary" onClick={handleSearch} disabled={isLoading}>
                 <Search /> Cari
               </Button>
             </div>
           </CardContent>
         </Card>
 
-        {viewMode === "calendar" ? (
+        {isLoading ? (
+          viewMode === "calendar" ? (
+            <CardGridSkeleton count={6} />
+          ) : (
+            <TableSkeleton rows={6} cols={5} />
+          )
+        ) : viewMode === "calendar" ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {safeSchedules.data.length === 0 ? (
               <div className="col-span-full bg-white p-8 text-center rounded-xl border border-slate-200 text-slate-400">

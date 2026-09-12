@@ -28,11 +28,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { usePageLoading, CardGridSkeleton } from "@/components/loading/PageSkeletons";
 
 export default function Index({ photographers, filters }) {
   const safePhotographers = photographers?.data ? photographers : { data: [] };
   const safeFilters = filters || {};
 
+  const isNavigating = usePageLoading();
+  const [isSearching, setIsSearching] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingPhotographer, setEditingPhotographer] = useState(null);
   const [search, setSearch] = useState(safeFilters.search || "");
@@ -85,7 +88,15 @@ export default function Index({ photographers, filters }) {
   };
 
   const handleSearch = () => {
-    router.get("/admin/photographers", { search }, { preserveState: true });
+    setIsSearching(true);
+    router.get(
+      "/admin/photographers",
+      { search },
+      {
+        preserveState: true,
+        onFinish: () => setIsSearching(false),
+      }
+    );
   };
 
   const handleDeleteClick = (photographer) => {
@@ -102,6 +113,8 @@ export default function Index({ photographers, filters }) {
       },
     });
   };
+
+  const isLoading = isNavigating || isSearching;
 
   return (
     <>
@@ -131,24 +144,27 @@ export default function Index({ photographers, filters }) {
                   placeholder="Cari nama, email, atau spesialisasi photographer..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                   className="pl-9"
                 />
               </div>
-              <Button variant="secondary" onClick={handleSearch}>
+              <Button variant="secondary" onClick={handleSearch} disabled={isLoading}>
                 <Search /> Cari
               </Button>
             </div>
           </CardContent>
         </Card>
 
-        {/* Grid List */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {safePhotographers.data.length === 0 ? (
-            <div className="col-span-full text-center py-12 bg-white rounded-xl border border-slate-200 text-slate-400">
-              Belum ada data Photographer.
-            </div>
-          ) : (
-            safePhotographers.data.map((p) => (
+        {/* Grid List or Skeleton */}
+        {isLoading ? (
+          <CardGridSkeleton count={6} />
+        ) : safePhotographers.data.length === 0 ? (
+          <div className="col-span-full text-center py-12 bg-white rounded-xl border border-slate-200 text-slate-400">
+            Belum ada data Photographer.
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {safePhotographers.data.map((p) => (
               <Card key={p.id} className="border-slate-200 hover:shadow-md transition-shadow">
                 <CardContent className="p-5 space-y-3">
                   <div className="flex items-start justify-between">
@@ -214,9 +230,9 @@ export default function Index({ photographers, filters }) {
                   </div>
                 </CardContent>
               </Card>
-            ))
-          )}
-        </div>
+            ))}
+          </div>
+        )}
 
         {/* Modal Form */}
         <Dialog open={modalOpen} onOpenChange={setModalOpen}>

@@ -52,6 +52,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { usePageLoading, TableSkeleton } from "@/components/loading/PageSkeletons";
 
 export default function Index({ packages, filters, categories, muas }) {
   const safePackages = packages?.data ? packages : { data: [] };
@@ -65,6 +66,8 @@ export default function Index({ packages, filters, categories, muas }) {
   const safeCategories = Array.isArray(categories) ? categories : [];
   const safeMuas = Array.isArray(muas) ? muas : [];
 
+  const isNavigating = usePageLoading();
+  const [isSearching, setIsSearching] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingPackage, setEditingPackage] = useState(null);
   const [search, setSearch] = useState(safeFilters.search || "");
@@ -129,10 +132,14 @@ export default function Index({ packages, filters, categories, muas }) {
   };
 
   const handleFilter = () => {
+    setIsSearching(true);
     router.get(
       "/admin/packages",
       { search, category, sort: sortBy },
-      { preserveState: true }
+      {
+        preserveState: true,
+        onFinish: () => setIsSearching(false),
+      }
     );
   };
 
@@ -158,6 +165,8 @@ export default function Index({ packages, filters, categories, muas }) {
       },
     });
   };
+
+  const isLoading = isNavigating || isSearching;
 
   // Dynamic profit calculation in modal
   const estTotalCost =
@@ -199,43 +208,50 @@ export default function Index({ packages, filters, categories, muas }) {
                   placeholder="Cari nama paket foto..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleFilter()}
                   className="pl-9"
                 />
               </div>
 
-              <Select value={category || "all"} onValueChange={(val) => setCategory(val === "all" ? "" : val)}>
-                <SelectTrigger className="w-full sm:w-44 bg-white">
+              <Select
+                value={category || "all"}
+                onValueChange={(val) => setCategory(val === "all" ? "" : val)}
+              >
+                <SelectTrigger className="w-full md:w-48 bg-white">
                   <SelectValue placeholder="Semua Kategori" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Semua Kategori</SelectItem>
-                  {safeCategories.map((c) => (
+                  {categories.map((c) => (
                     <SelectItem key={c} value={c}>{c}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
 
-              <Select value={sortBy || "created_at"} onValueChange={(val) => setSortBy(val)}>
-                <SelectTrigger className="w-full sm:w-44 bg-white">
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger className="w-full md:w-48 bg-white">
                   <SelectValue placeholder="Urutkan" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="created_at">Urutkan: Terbaru</SelectItem>
-                  <SelectItem value="price">Urutkan: Harga</SelectItem>
-                  <SelectItem value="profit">Urutkan: Profit Est.</SelectItem>
-                  <SelectItem value="margin">Urutkan: Margin Est.</SelectItem>
+                  <SelectItem value="created_at">Terbaru</SelectItem>
+                  <SelectItem value="price_asc">Harga Terendah</SelectItem>
+                  <SelectItem value="price_desc">Harga Tertinggi</SelectItem>
+                  <SelectItem value="name_asc">Nama (A-Z)</SelectItem>
                 </SelectContent>
               </Select>
 
-              <Button variant="secondary" onClick={handleFilter}>
+              <Button variant="secondary" onClick={handleFilter} disabled={isLoading}>
                 <Filter /> Filter
               </Button>
             </div>
           </CardContent>
         </Card>
 
-        {/* Packages Table Grid */}
-        <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
+        {/* Packages Table Grid or Skeleton */}
+        {isLoading ? (
+          <TableSkeleton rows={6} cols={6} />
+        ) : (
+          <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
           <Table>
             <TableHeader className="bg-slate-50">
               <TableRow>
@@ -332,7 +348,7 @@ export default function Index({ packages, filters, categories, muas }) {
                             <span>Duplikasi Paket</span>
                           </DropdownMenuItem>
                           <DropdownMenuItem
-                            onClick={() => handleToggleActive(pkg.id)}
+                            onClick={() => handleToggleStatus(pkg.id)}
                             className="cursor-pointer text-xs"
                           >
                             <Power className={`mr-2 h-3.5 w-3.5 ${pkg.is_active ? "text-amber-600" : "text-emerald-600"}`} />
@@ -355,6 +371,7 @@ export default function Index({ packages, filters, categories, muas }) {
             </TableBody>
           </Table>
         </div>
+        )}
 
         {/* Modal Form Create/Edit Package */}
         <Dialog open={modalOpen} onOpenChange={setModalOpen}>

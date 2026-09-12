@@ -28,11 +28,14 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { usePageLoading, TableSkeleton } from "@/components/loading/PageSkeletons";
 
 export default function Index({ customers, filters }) {
   const safeCustomers = customers?.data ? customers : { data: [] };
   const safeFilters = filters || {};
 
+  const isNavigating = usePageLoading();
+  const [isSearching, setIsSearching] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingCustomer, setEditingCustomer] = useState(null);
   const [search, setSearch] = useState(safeFilters.search || "");
@@ -79,7 +82,15 @@ export default function Index({ customers, filters }) {
   };
 
   const handleSearch = () => {
-    router.get("/admin/customers", { search }, { preserveState: true });
+    setIsSearching(true);
+    router.get(
+      "/admin/customers",
+      { search },
+      {
+        preserveState: true,
+        onFinish: () => setIsSearching(false),
+      }
+    );
   };
 
   const handleDeleteClick = (customer) => {
@@ -96,6 +107,8 @@ export default function Index({ customers, filters }) {
       },
     });
   };
+
+  const isLoading = isNavigating || isSearching;
 
   return (
     <>
@@ -129,15 +142,18 @@ export default function Index({ customers, filters }) {
                   className="pl-9"
                 />
               </div>
-              <Button variant="secondary" onClick={handleSearch}>
+              <Button variant="secondary" onClick={handleSearch} disabled={isLoading}>
                 <Search /> Cari
               </Button>
             </div>
           </CardContent>
         </Card>
 
-        {/* Customers Table */}
-        <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
+        {/* Customers Table or Skeleton */}
+        {isLoading ? (
+          <TableSkeleton rows={6} cols={4} />
+        ) : (
+          <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
           <Table>
             <TableHeader className="bg-slate-50">
               <TableRow>
@@ -226,6 +242,7 @@ export default function Index({ customers, filters }) {
             </TableBody>
           </Table>
         </div>
+        )}
 
         {/* Modal Create/Edit Customer */}
         <Dialog open={modalOpen} onOpenChange={setModalOpen}>

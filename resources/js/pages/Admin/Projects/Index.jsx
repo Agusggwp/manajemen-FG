@@ -21,27 +21,48 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { usePageLoading, TableSkeleton } from "@/components/loading/PageSkeletons";
 
 export default function Index({ projects, filters, statuses }) {
   const safeProjects = projects?.data ? projects : { data: [] };
   const safeFilters = filters || {};
   const safeStatuses = Array.isArray(statuses) ? statuses : [];
 
+  const isNavigating = usePageLoading();
+  const [isSearching, setIsSearching] = useState(false);
   const [search, setSearch] = useState(safeFilters.search || "");
   const [status, setStatus] = useState(safeFilters.status || "");
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      router.get("/admin/projects", { search, status }, { preserveState: true });
+      setIsSearching(true);
+      router.get(
+        "/admin/projects",
+        { search, status },
+        {
+          preserveState: true,
+          onFinish: () => setIsSearching(false),
+        }
+      );
     }, 400);
     return () => clearTimeout(timer);
   }, [search]);
 
-  const handleStatusChange = (e) => {
-    const newStatus = e.target.value;
+  const handleStatusChange = (val) => {
+    const newStatus = val === "all" ? "" : val;
     setStatus(newStatus);
-    router.get("/admin/projects", { search, status: newStatus }, { preserveState: true });
+    setIsSearching(true);
+    router.get(
+      "/admin/projects",
+      { search, status: newStatus },
+      {
+        preserveState: true,
+        onFinish: () => setIsSearching(false),
+      }
+    );
   };
+
+  const isLoading = isNavigating || isSearching;
 
   return (
     <>
@@ -72,11 +93,7 @@ export default function Index({ projects, filters, statuses }) {
 
               <Select
                 value={status || "all"}
-                onValueChange={(val) => {
-                  const newStatus = val === "all" ? "" : val;
-                  setStatus(newStatus);
-                  router.get("/admin/projects", { search, status: newStatus }, { preserveState: true });
-                }}
+                onValueChange={handleStatusChange}
               >
                 <SelectTrigger className="w-full sm:w-48 bg-white">
                   <SelectValue placeholder="Semua Status" />
@@ -92,8 +109,11 @@ export default function Index({ projects, filters, statuses }) {
           </CardContent>
         </Card>
 
-        {/* Project Table */}
-        <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
+        {/* Project Table or Skeleton */}
+        {isLoading ? (
+          <TableSkeleton rows={6} cols={6} />
+        ) : (
+          <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
           <Table>
             <TableHeader className="bg-slate-50">
               <TableRow>
@@ -171,6 +191,7 @@ export default function Index({ projects, filters, statuses }) {
             </TableBody>
           </Table>
         </div>
+        )}
       </div>
     </>
   );

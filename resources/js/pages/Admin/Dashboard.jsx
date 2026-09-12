@@ -25,11 +25,23 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
+import { usePageLoading, DashboardPageSkeleton } from "@/components/loading/PageSkeletons";
 
 export default function Dashboard({ stats = {}, recentSchedules = [], pendingProofs = [] }) {
+  const isNavigating = usePageLoading();
   const safeStats = stats || {};
   const safeSchedules = Array.isArray(recentSchedules) ? recentSchedules : (recentSchedules?.data || []);
   const safeProofs = Array.isArray(pendingProofs) ? pendingProofs : (pendingProofs?.data || []);
+
+  if (isNavigating) {
+    return (
+      <>
+        <Head title="Dashboard Admin" />
+        <DashboardPageSkeleton />
+      </>
+    );
+  }
+
   return (
     <>
       <Head title="Dashboard Admin" />

@@ -28,11 +28,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { usePageLoading, TableSkeleton } from "@/components/loading/PageSkeletons";
 
 export default function Salaries({ salaries, filters, unpaidTotal = 0, paidTotal = 0 }) {
   const safeSalaries = salaries?.data ? salaries : { data: [] };
   const safeFilters = filters || {};
 
+  const isNavigating = usePageLoading();
   const [payModalOpen, setPayModalOpen] = useState(false);
   const [selectedSalary, setSelectedSalary] = useState(null);
   const [search, setSearch] = useState(safeFilters.search || "");
@@ -96,8 +98,11 @@ export default function Salaries({ salaries, filters, unpaidTotal = 0, paidTotal
           </Card>
         </div>
 
-        {/* Table */}
-        <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
+        {/* Table or Skeleton */}
+        {isNavigating ? (
+          <TableSkeleton rows={6} cols={5} />
+        ) : (
+          <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
           <Table>
             <TableHeader className="bg-slate-50">
               <TableRow>
@@ -166,6 +171,7 @@ export default function Salaries({ salaries, filters, unpaidTotal = 0, paidTotal
             </TableBody>
           </Table>
         </div>
+        )}
 
         {/* Pay Modal */}
         <Dialog open={payModalOpen} onOpenChange={setPayModalOpen}>

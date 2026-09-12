@@ -21,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { usePageLoading, TableSkeleton } from "@/components/loading/PageSkeletons";
 
 export default function PackageProfit({ reportData, summary, filters, categories }) {
   const safeReportData = Array.isArray(reportData) ? reportData : [];
@@ -28,11 +29,14 @@ export default function PackageProfit({ reportData, summary, filters, categories
   const safeFilters = filters || {};
   const safeCategories = Array.isArray(categories) ? categories : [];
 
+  const isNavigating = usePageLoading();
+  const [isFiltering, setIsFiltering] = useState(false);
   const [startDate, setStartDate] = useState(safeFilters.start_date || "");
   const [endDate, setEndDate] = useState(safeFilters.end_date || "");
   const [category, setCategory] = useState(safeFilters.category || "");
 
   const handleFilter = () => {
+    setIsFiltering(true);
     router.get(
       "/admin/reports/package-profit",
       {
@@ -40,9 +44,14 @@ export default function PackageProfit({ reportData, summary, filters, categories
         end_date: endDate,
         category: category,
       },
-      { preserveState: true }
+      {
+        preserveState: true,
+        onFinish: () => setIsFiltering(false),
+      }
     );
   };
+
+  const isLoading = isNavigating || isFiltering;
 
   return (
     <>
@@ -154,21 +163,24 @@ export default function PackageProfit({ reportData, summary, filters, categories
           </Card>
         </div>
 
-        {/* Per Package Profitability Comparison Table */}
-        <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
-          <Table>
-            <TableHeader className="bg-slate-50">
-              <TableRow>
-                <TableHead className="font-semibold text-slate-700">Nama Paket Foto</TableHead>
-                <TableHead className="font-semibold text-slate-700 text-center">MUA</TableHead>
-                <TableHead className="font-semibold text-slate-700 text-center">Jumlah Project</TableHead>
-                <TableHead className="font-semibold text-slate-700 text-right">Total Revenue</TableHead>
-                <TableHead className="font-semibold text-slate-700 text-right">Total Cost</TableHead>
-                <TableHead className="font-semibold text-slate-700 text-right">Total Profit</TableHead>
-                <TableHead className="font-semibold text-slate-700 text-right">Avg Profit / Project</TableHead>
-                <TableHead className="font-semibold text-slate-700 text-center">Avg Margin</TableHead>
-              </TableRow>
-            </TableHeader>
+        {/* Per Package Profitability Comparison Table or Skeleton */}
+        {isLoading ? (
+          <TableSkeleton rows={6} cols={8} hasActions={false} />
+        ) : (
+          <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
+            <Table>
+              <TableHeader className="bg-slate-50">
+                <TableRow>
+                  <TableHead className="font-semibold text-slate-700">Nama Paket Foto</TableHead>
+                  <TableHead className="font-semibold text-slate-700 text-center">MUA</TableHead>
+                  <TableHead className="font-semibold text-slate-700 text-center">Jumlah Project</TableHead>
+                  <TableHead className="font-semibold text-slate-700 text-right">Total Revenue</TableHead>
+                  <TableHead className="font-semibold text-slate-700 text-right">Total Cost</TableHead>
+                  <TableHead className="font-semibold text-slate-700 text-right">Total Profit</TableHead>
+                  <TableHead className="font-semibold text-slate-700 text-right">Avg Profit / Project</TableHead>
+                  <TableHead className="font-semibold text-slate-700 text-center">Avg Margin</TableHead>
+                </TableRow>
+              </TableHeader>
             <TableBody>
               {safeReportData.length === 0 ? (
                 <TableRow>
@@ -229,6 +241,7 @@ export default function PackageProfit({ reportData, summary, filters, categories
             </TableBody>
           </Table>
         </div>
+        )}
       </div>
     </>
   );

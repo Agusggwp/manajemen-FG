@@ -30,10 +30,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+import { usePageLoading, CardGridSkeleton } from "@/components/loading/PageSkeletons";
+
 export default function Index({ muas, filters }) {
   const safeMuas = muas?.data ? muas : { data: [] };
   const safeFilters = filters || {};
 
+  const isNavigating = usePageLoading();
+  const [isSearching, setIsSearching] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingMua, setEditingMua] = useState(null);
   const [search, setSearch] = useState(safeFilters.search || "");
@@ -86,7 +90,15 @@ export default function Index({ muas, filters }) {
   };
 
   const handleSearch = () => {
-    router.get("/admin/muas", { search }, { preserveState: true });
+    setIsSearching(true);
+    router.get(
+      "/admin/muas",
+      { search },
+      {
+        preserveState: true,
+        onFinish: () => setIsSearching(false),
+      }
+    );
   };
 
   const handleDeleteClick = (mua) => {
@@ -103,6 +115,8 @@ export default function Index({ muas, filters }) {
       },
     });
   };
+
+  const isLoading = isNavigating || isSearching;
 
   return (
     <>
@@ -132,24 +146,27 @@ export default function Index({ muas, filters }) {
                   placeholder="Cari nama, nomor HP, atau spesialisasi MUA..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                   className="pl-9"
                 />
               </div>
-              <Button variant="secondary" onClick={handleSearch}>
+              <Button variant="secondary" onClick={handleSearch} disabled={isLoading}>
                 <Search /> Cari
               </Button>
             </div>
           </CardContent>
         </Card>
 
-        {/* MUA Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {safeMuas.data.length === 0 ? (
-            <div className="col-span-full text-center py-12 bg-white rounded-xl border border-slate-200 text-slate-400">
-              Belum ada data Make Up Artist (MUA).
-            </div>
-          ) : (
-            safeMuas.data.map((mua) => (
+        {/* MUA Cards Grid or Skeleton */}
+        {isLoading ? (
+          <CardGridSkeleton count={6} />
+        ) : safeMuas.data.length === 0 ? (
+          <div className="col-span-full text-center py-12 bg-white rounded-xl border border-slate-200 text-slate-400">
+            Belum ada data Make Up Artist (MUA).
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {safeMuas.data.map((mua) => (
               <Card key={mua.id} className="border-slate-200 hover:shadow-md transition-shadow">
                 <CardContent className="p-5 space-y-3">
                   <div className="flex items-start justify-between">
@@ -222,9 +239,9 @@ export default function Index({ muas, filters }) {
                   </div>
                 </CardContent>
               </Card>
-            ))
-          )}
-        </div>
+            ))}
+          </div>
+        )}
 
         {/* Modal Form */}
         <Dialog open={modalOpen} onOpenChange={setModalOpen}>

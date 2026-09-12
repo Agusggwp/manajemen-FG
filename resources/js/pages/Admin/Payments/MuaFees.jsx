@@ -28,8 +28,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { usePageLoading, TableSkeleton } from "@/components/loading/PageSkeletons";
 
 export default function MuaFees({ fees = { data: [] }, filters = {}, unpaidTotal = 0, paidTotal = 0 }) {
+  const isNavigating = usePageLoading();
   const [payModalOpen, setPayModalOpen] = useState(false);
   const [selectedFee, setSelectedFee] = useState(null);
 
@@ -88,8 +90,11 @@ export default function MuaFees({ fees = { data: [] }, filters = {}, unpaidTotal
           </Card>
         </div>
 
-        {/* Table */}
-        <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
+        {/* Table or Skeleton */}
+        {isNavigating ? (
+          <TableSkeleton rows={6} cols={5} />
+        ) : (
+          <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
           <Table>
             <TableHeader className="bg-slate-50">
               <TableRow>
@@ -157,6 +162,7 @@ export default function MuaFees({ fees = { data: [] }, filters = {}, unpaidTotal
             </TableBody>
           </Table>
         </div>
+        )}
 
         {/* Modal Pay MUA */}
         <Dialog open={payModalOpen} onOpenChange={setPayModalOpen}>

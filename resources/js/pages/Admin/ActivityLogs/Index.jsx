@@ -21,17 +21,30 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { usePageLoading, TableSkeleton } from "@/components/loading/PageSkeletons";
 
 export default function Index({ logs, filters }) {
   const safeLogs = logs?.data ? logs : { data: [] };
   const safeFilters = filters || {};
 
+  const isNavigating = usePageLoading();
+  const [isSearching, setIsSearching] = useState(false);
   const [search, setSearch] = useState(safeFilters.search || "");
   const [module, setModule] = useState(safeFilters.module || "");
 
   const handleFilter = () => {
-    router.get("/admin/activity-logs", { search, module }, { preserveState: true });
+    setIsSearching(true);
+    router.get(
+      "/admin/activity-logs",
+      { search, module },
+      {
+        preserveState: true,
+        onFinish: () => setIsSearching(false),
+      }
+    );
   };
+
+  const isLoading = isNavigating || isSearching;
 
   return (
     <>
@@ -77,15 +90,18 @@ export default function Index({ logs, filters }) {
                 </SelectContent>
               </Select>
 
-              <Button variant="secondary" onClick={handleFilter}>
+              <Button variant="secondary" onClick={handleFilter} disabled={isLoading}>
                 <Filter /> Filter
               </Button>
             </div>
           </CardContent>
         </Card>
 
-        {/* Table Logs */}
-        <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
+        {/* Table Logs or Skeleton */}
+        {isLoading ? (
+          <TableSkeleton rows={8} cols={6} hasActions={false} />
+        ) : (
+          <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
           <Table>
             <TableHeader className="bg-slate-50">
               <TableRow>
@@ -131,6 +147,7 @@ export default function Index({ logs, filters }) {
             </TableBody>
           </Table>
         </div>
+        )}
       </div>
     </>
   );
