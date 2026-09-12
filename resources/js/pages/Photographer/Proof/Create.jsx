@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { toast } from "@/components/ui/sonner";
 
 export default function Create({ schedule, type, existingProof }) {
   const [gpsLoading, setGpsLoading] = useState(true);
@@ -77,11 +78,11 @@ export default function Create({ schedule, type, existingProof }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!form.data.photo) {
-      alert("Harap ambil/pilih foto bukti pemotretan terlebih dahulu.");
+      toast.warning("Harap ambil/pilih foto bukti pemotretan terlebih dahulu.");
       return;
     }
     if (!form.data.latitude || !form.data.longitude) {
-      alert("Koordinat GPS belum terdeteksi. Silakan coba muat ulang GPS.");
+      toast.warning("Koordinat GPS belum terdeteksi. Silakan coba muat ulang GPS.");
       return;
     }
 

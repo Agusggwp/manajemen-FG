@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useForm } from "@inertiajs/react";
+import React, { useState, useEffect } from "react";
+import { useForm, usePage } from "@inertiajs/react";
 import {
   Camera,
   Lock,
@@ -20,8 +20,10 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { Separator } from "@/components/ui/separator";
+import { toast } from "@/components/ui/sonner";
 
 export default function Login() {
+  const { flash } = usePage().props;
   const [showPassword, setShowPassword] = useState(false);
 
   const { data, setData, post, processing, errors } = useForm({
@@ -29,13 +31,29 @@ export default function Login() {
     password: "",
   });
 
+  useEffect(() => {
+    if (flash?.success) toast.success(flash.success);
+    if (flash?.error) toast.error(flash.error);
+    if (flash?.warning) toast.warning(flash.warning);
+    if (flash?.info) toast.info(flash.info);
+  }, [flash]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    post("/login");
+    post("/login", {
+      onError: (errs) => {
+        const errorMsg = errs.email || errs.password || "Email atau kata sandi tidak valid.";
+        toast.error(errorMsg);
+      },
+      onSuccess: () => {
+        toast.success("Login berhasil! Mengalihkan...");
+      },
+    });
   };
 
-  const handleQuickRole = (email, password) => {
+  const handleQuickRole = (email, password, roleLabel) => {
     setData({ email, password });
+    toast.info(`Akun demo ${roleLabel} dipilih.`);
   };
 
   return (
@@ -78,7 +96,7 @@ export default function Login() {
                   type="button"
                   variant="outline"
                   size="sm"
-                  onClick={() => handleQuickRole("admin@artdevata.com", "password")}
+                  onClick={() => handleQuickRole("admin@artdevata.com", "password", "Admin")}
                   className="w-full"
                 >
                   <ShieldCheck className="text-emerald-600" />
@@ -88,7 +106,7 @@ export default function Login() {
                   type="button"
                   variant="outline"
                   size="sm"
-                  onClick={() => handleQuickRole("agus@artdevata.com", "password")}
+                  onClick={() => handleQuickRole("agus@artdevata.com", "password", "Fotografer")}
                   className="w-full"
                 >
                   <Camera className="text-emerald-600" />

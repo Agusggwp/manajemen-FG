@@ -1,13 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { usePage } from "@inertiajs/react";
 import AppSidebar from "./AppSidebar";
 import AppHeader from "./AppHeader";
+import { toast } from "@/components/ui/sonner";
 
 export default function AppLayout({ children, title }) {
   const { auth, flash, title: pageTitle } = usePage().props;
   const user = auth?.user;
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+
+  // Trigger toast notifications whenever flash messages are received
+  useEffect(() => {
+    if (flash?.success) {
+      toast.success(flash.success);
+    }
+    if (flash?.error) {
+      toast.error(flash.error);
+    }
+    if (flash?.warning) {
+      toast.warning(flash.warning);
+    }
+    if (flash?.info) {
+      toast.info(flash.info);
+    }
+  }, [flash]);
 
   const toggleSidebar = () => {
     if (typeof window !== "undefined" && window.innerWidth >= 1024) {
@@ -78,21 +95,10 @@ export default function AppLayout({ children, title }) {
 
         {/* Main Content Area */}
         <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 bg-slate-50">
-          {/* Flash Alert Banners */}
-          {flash?.success && (
-            <div className="mb-6 p-4 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-medium flex items-center justify-between shadow-2xs">
-              <span>{flash.success}</span>
-            </div>
-          )}
-          {flash?.error && (
-            <div className="mb-6 p-4 rounded-lg bg-red-50 border border-red-200 text-red-800 text-sm font-medium flex items-center justify-between shadow-2xs">
-              <span>{flash.error}</span>
-            </div>
-          )}
-
           {children}
         </main>
       </div>
     </div>
   );
 }
+
