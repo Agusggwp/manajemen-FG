@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AdminLayout from "@/layouts/AdminLayout";
 import { formatDate, formatRupiah } from "@/lib/utils";
 import { Link, router } from "@inertiajs/react";
@@ -16,8 +16,17 @@ export default function Index({ projects, filters, statuses }) {
   const [search, setSearch] = useState(safeFilters.search || "");
   const [status, setStatus] = useState(safeFilters.status || "");
 
-  const handleSearch = () => {
-    router.get("/admin/projects", { search, status }, { preserveState: true });
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      router.get("/admin/projects", { search, status }, { preserveState: true });
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [search]);
+
+  const handleStatusChange = (e) => {
+    const newStatus = e.target.value;
+    setStatus(newStatus);
+    router.get("/admin/projects", { search, status: newStatus }, { preserveState: true });
   };
 
   return (
@@ -48,7 +57,7 @@ export default function Index({ projects, filters, statuses }) {
 
               <select
                 value={status}
-                onChange={(e) => setStatus(e.target.value)}
+                onChange={handleStatusChange}
                 className="h-9 px-3 text-sm rounded-md border border-slate-200 bg-white"
               >
                 <option value="">Semua Status</option>
@@ -56,10 +65,6 @@ export default function Index({ projects, filters, statuses }) {
                   <option key={s} value={s}>{s}</option>
                 ))}
               </select>
-
-              <Button variant="secondary" onClick={handleSearch}>
-                Filter
-              </Button>
             </div>
           </CardContent>
         </Card>
