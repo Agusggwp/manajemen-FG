@@ -10,6 +10,7 @@ import {
   Camera,
   User,
   AlertCircle,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -183,19 +184,17 @@ export default function Index({ proofs, counts, activeTab = "pending" }) {
                 {activeTab === "pending" && (
                   <div className="p-4 pt-0 grid grid-cols-2 gap-2">
                     <Button
-                      variant="outline"
+                      variant="destructive"
                       size="sm"
-                      className="border-red-300 text-red-700 hover:bg-red-50"
                       onClick={() => handleOpenReject(proof)}
                     >
-                      <XCircle className="h-4 w-4 mr-1" /> TIDAK VALID
+                      <XCircle /> TIDAK VALID
                     </Button>
                     <Button
                       size="sm"
-                      className="bg-emerald-600 hover:bg-emerald-500 text-white"
                       onClick={() => handleApprove(proof)}
                     >
-                      <CheckCircle2 className="h-4 w-4 mr-1" /> VALID
+                      <CheckCircle2 /> VALID
                     </Button>
                   </div>
                 )}
@@ -229,10 +228,10 @@ export default function Index({ proofs, counts, activeTab = "pending" }) {
 
               <DialogFooter>
                 <Button type="button" variant="outline" onClick={() => setRejectModalOpen(false)}>
-                  Batal
+                  <X /> Batal
                 </Button>
                 <Button type="submit" variant="destructive">
-                  Konfirmasi Tolak
+                  <XCircle /> Konfirmasi Tolak
                 </Button>
               </DialogFooter>
             </form>

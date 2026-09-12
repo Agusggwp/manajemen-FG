@@ -34,7 +34,7 @@ export default function Index({ settings }) {
   return (
     <>
       <Head title="Pengaturan Sistem & Web Publik" />
-      <form onSubmit={handleSubmit} className="space-y-6 max-w-4xl">
+      <form onSubmit={handleSubmit} className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
@@ -44,8 +44,8 @@ export default function Index({ settings }) {
               Atur profil studio, radius validasi GPS, serta tema dan konten halaman katalog web publik (/)
             </p>
           </div>
-          <Button type="submit" className="bg-slate-900 text-white shadow-sm" disabled={form.processing}>
-            <Save className="h-4 w-4 mr-2" />
+          <Button type="submit" disabled={form.processing}>
+            <Save />
             {form.processing ? "Menyimpan..." : "Simpan Semua Pengaturan"}
           </Button>
         </div>
@@ -76,11 +76,10 @@ export default function Index({ settings }) {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div
                   onClick={() => form.setData("public_theme_mode", "light")}
-                  className={`p-4 rounded-xl border text-sm flex items-start space-x-3 cursor-pointer transition-all ${
-                    form.data.public_theme_mode === "light"
+                  className={`p-4 rounded-xl border text-sm flex items-start space-x-3 cursor-pointer transition-all ${form.data.public_theme_mode === "light"
                       ? "border-emerald-600 bg-emerald-50/50 ring-1 ring-emerald-600"
                       : "border-slate-200 bg-white hover:bg-slate-50"
-                  }`}
+                    }`}
                 >
                   <div className="h-5 w-5 rounded-full border border-slate-300 flex items-center justify-center mt-0.5 shrink-0 bg-white">
                     {form.data.public_theme_mode === "light" && (
@@ -97,11 +96,10 @@ export default function Index({ settings }) {
 
                 <div
                   onClick={() => form.setData("public_theme_mode", "dark")}
-                  className={`p-4 rounded-xl border text-sm flex items-start space-x-3 cursor-pointer transition-all ${
-                    form.data.public_theme_mode === "dark"
+                  className={`p-4 rounded-xl border text-sm flex items-start space-x-3 cursor-pointer transition-all ${form.data.public_theme_mode === "dark"
                       ? "border-emerald-600 bg-slate-900 text-white ring-1 ring-emerald-600"
                       : "border-slate-200 bg-slate-900/90 text-slate-300 hover:bg-slate-900"
-                  }`}
+                    }`}
                 >
                   <div className="h-5 w-5 rounded-full border border-slate-600 flex items-center justify-center mt-0.5 shrink-0 bg-slate-800">
                     {form.data.public_theme_mode === "dark" && (
@@ -256,8 +254,8 @@ export default function Index({ settings }) {
         </Card>
 
         <div className="pt-2">
-          <Button type="submit" className="bg-slate-900 text-white shadow-sm" disabled={form.processing}>
-            <Save className="h-4 w-4 mr-2" />
+          <Button type="submit" disabled={form.processing}>
+            <Save />
             {form.processing ? "Menyimpan..." : "Simpan Semua Pengaturan"}
           </Button>
         </div>

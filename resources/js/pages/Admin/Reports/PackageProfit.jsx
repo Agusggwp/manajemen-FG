@@ -1,11 +1,26 @@
 import React, { useState } from "react";
 import { formatRupiah } from "@/lib/utils";
 import { Head, router } from "@inertiajs/react";
-import { TrendingUp, Filter, DollarSign, PieChart, Sparkles } from "lucide-react";
+import { TrendingUp, Filter, DollarSign, PieChart, Sparkles, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "@/components/ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function PackageProfit({ reportData, summary, filters, categories }) {
   const safeReportData = Array.isArray(reportData) ? reportData : [];
@@ -18,16 +33,20 @@ export default function PackageProfit({ reportData, summary, filters, categories
   const [category, setCategory] = useState(safeFilters.category || "");
 
   const handleFilter = () => {
-    router.get("/admin/reports/package-profit", {
-      start_date: startDate,
-      end_date: endDate,
-      category,
-    }, { preserveState: true });
+    router.get(
+      "/admin/reports/package-profit",
+      {
+        start_date: startDate,
+        end_date: endDate,
+        category: category,
+      },
+      { preserveState: true }
+    );
   };
 
   return (
     <>
-      <Head title="Laporan Profit Per Paket" />
+      <Head title="Laporan Profitability Paket" />
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
@@ -43,8 +62,8 @@ export default function PackageProfit({ reportData, summary, filters, categories
             target="_blank"
             rel="noopener noreferrer"
           >
-            <Button className="bg-slate-900 text-white shadow-sm">
-              Unduh Laporan CSV
+            <Button>
+              <Download /> Unduh Laporan CSV
             </Button>
           </a>
         </div>
@@ -73,20 +92,21 @@ export default function PackageProfit({ reportData, summary, filters, categories
 
               <div className="flex-1 space-y-1">
                 <label className="text-xs font-semibold text-slate-600">Kategori Paket</label>
-                <select
-                  className="flex h-9 w-full rounded-md border border-slate-200 bg-white px-3 py-1 text-sm shadow-sm"
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                >
-                  <option value="">Semua Kategori</option>
-                  {safeCategories.map((c) => (
-                    <option key={c} value={c}>{c}</option>
-                  ))}
-                </select>
+                <Select value={category || "all"} onValueChange={(val) => setCategory(val === "all" ? "" : val)}>
+                  <SelectTrigger className="w-full bg-white">
+                    <SelectValue placeholder="Semua Kategori" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Semua Kategori</SelectItem>
+                    {safeCategories.map((c) => (
+                      <SelectItem key={c} value={c}>{c}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               <Button variant="secondary" onClick={handleFilter}>
-                <Filter className="h-4 w-4 mr-2" /> Terapkan Filter
+                <Filter /> Terapkan Filter
               </Button>
             </div>
           </CardContent>
@@ -135,77 +155,79 @@ export default function PackageProfit({ reportData, summary, filters, categories
         </div>
 
         {/* Per Package Profitability Comparison Table */}
-        <div className="overflow-x-auto bg-white rounded-xl border border-slate-200 shadow-2xs">
-          <table className="w-full text-sm text-left text-slate-600">
-            <thead className="text-xs uppercase bg-slate-50 text-slate-500 border-b border-slate-200">
-              <tr>
-                <th className="px-4 py-3">Nama Paket Foto</th>
-                <th className="px-4 py-3 text-center">MUA</th>
-                <th className="px-4 py-3 text-center">Jumlah Project</th>
-                <th className="px-4 py-3 text-right">Total Revenue</th>
-                <th className="px-4 py-3 text-right">Total Cost</th>
-                <th className="px-4 py-3 text-right">Total Profit</th>
-                <th className="px-4 py-3 text-right">Avg Profit / Project</th>
-                <th className="px-4 py-3 text-center">Avg Margin</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
+        <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
+          <Table>
+            <TableHeader className="bg-slate-50">
+              <TableRow>
+                <TableHead className="font-semibold text-slate-700">Nama Paket Foto</TableHead>
+                <TableHead className="font-semibold text-slate-700 text-center">MUA</TableHead>
+                <TableHead className="font-semibold text-slate-700 text-center">Jumlah Project</TableHead>
+                <TableHead className="font-semibold text-slate-700 text-right">Total Revenue</TableHead>
+                <TableHead className="font-semibold text-slate-700 text-right">Total Cost</TableHead>
+                <TableHead className="font-semibold text-slate-700 text-right">Total Profit</TableHead>
+                <TableHead className="font-semibold text-slate-700 text-right">Avg Profit / Project</TableHead>
+                <TableHead className="font-semibold text-slate-700 text-center">Avg Margin</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {safeReportData.length === 0 ? (
-                <tr>
-                  <td colSpan={8} className="text-center py-8 text-slate-400">
+                <TableRow>
+                  <TableCell colSpan={8} className="text-center py-8 text-slate-400">
                     Tidak ada data profitabilitas paket foto.
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ) : (
                 safeReportData.map((row) => (
-                  <tr key={row.package_id} className="hover:bg-slate-50/50">
-                    <td className="px-4 py-3 font-bold text-slate-900">
+                  <TableRow key={row.package_id}>
+                    <TableCell className="font-bold text-slate-900">
                       {row.package_name}
                       <span className="text-xs text-slate-400 font-normal block">{row.category}</span>
-                    </td>
+                    </TableCell>
 
-                    <td className="px-4 py-3 text-center">
+                    <TableCell className="text-center">
                       {row.includes_mua ? (
-                        <Badge variant="info">MUA</Badge>
+                        <Badge variant="outline" className="text-amber-700 border-amber-300 bg-amber-50 text-[10px]">
+                          MUA
+                        </Badge>
                       ) : (
-                        <span className="text-xs text-slate-400">—</span>
+                        <span className="text-xs text-slate-400">-</span>
                       )}
-                    </td>
+                    </TableCell>
 
-                    <td className="px-4 py-3 text-center font-bold text-slate-900">
+                    <TableCell className="text-center font-bold text-slate-900">
                       {row.project_count}
-                    </td>
+                    </TableCell>
 
-                    <td className="px-4 py-3 text-right font-semibold text-slate-900">
+                    <TableCell className="text-right font-semibold text-slate-900">
                       {formatRupiah(row.total_revenue)}
-                    </td>
+                    </TableCell>
 
-                    <td className="px-4 py-3 text-right font-medium text-slate-600">
+                    <TableCell className="text-right font-medium text-slate-600">
                       {formatRupiah(row.total_cost)}
-                    </td>
+                    </TableCell>
 
-                    <td className="px-4 py-3 text-right font-bold">
+                    <TableCell className="text-right font-bold">
                       {row.total_profit >= 0 ? (
                         <span className="text-emerald-600">{formatRupiah(row.total_profit)}</span>
                       ) : (
                         <span className="text-red-600">RUGI {formatRupiah(row.total_profit)}</span>
                       )}
-                    </td>
+                    </TableCell>
 
-                    <td className="px-4 py-3 text-right font-medium text-slate-800">
+                    <TableCell className="text-right font-medium text-slate-800">
                       {formatRupiah(row.avg_profit)}
-                    </td>
+                    </TableCell>
 
-                    <td className="px-4 py-3 text-center">
+                    <TableCell className="text-center">
                       <Badge variant={row.avg_margin >= 35 ? "success" : row.avg_margin > 0 ? "warning" : "destructive"}>
                         {row.avg_margin}%
                       </Badge>
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 ))
               )}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
       </div>
     </>

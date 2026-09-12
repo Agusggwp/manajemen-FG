@@ -15,6 +15,10 @@ import {
   AlertCircle,
   ShieldCheck,
   Image,
+  RefreshCw,
+  Check,
+  X,
+  Save,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -28,6 +32,13 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function Show({ project, allPhotographers = [], allMuas = [] }) {
   const safeProject = project || {};
@@ -140,17 +151,21 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
 
           {/* Quick Status Update Form */}
           <form onSubmit={handleStatusSubmit} className="flex items-center space-x-2">
-            <select
-              className="h-9 px-3 text-xs font-semibold rounded-md border border-slate-200 bg-white"
+            <Select
               value={statusForm.data.status}
-              onChange={(e) => statusForm.setData("status", e.target.value)}
+              onValueChange={(val) => statusForm.setData("status", val)}
             >
-              {["PLANNING", "SCHEDULED", "SHOOTING", "EDITING", "REVIEW", "COMPLETED", "DELIVERED", "CANCELLED"].map((s) => (
-                <option key={s} value={s}>{s}</option>
-              ))}
-            </select>
+              <SelectTrigger className="w-36 h-9 text-xs font-semibold bg-white">
+                <SelectValue placeholder="Status" />
+              </SelectTrigger>
+              <SelectContent>
+                {["PLANNING", "SCHEDULED", "SHOOTING", "EDITING", "REVIEW", "COMPLETED", "DELIVERED", "CANCELLED"].map((s) => (
+                  <SelectItem key={s} value={s}>{s}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             <Button type="submit" size="sm" variant="secondary" disabled={statusForm.processing}>
-              Update Status
+              <RefreshCw /> Update Status
             </Button>
           </form>
         </div>
@@ -219,8 +234,8 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
                   value={durationForm.data.work_end_time}
                   onChange={(e) => durationForm.setData("work_end_time", e.target.value)}
                 />
-                <Button type="submit" size="sm" variant="outline" className="h-8 text-xs">
-                  Set
+                <Button type="submit" size="sm" variant="outline">
+                  <Check /> Set
                 </Button>
               </form>
             </div>
@@ -250,7 +265,7 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
 
               {/* Add Photographer Trigger */}
               <Button size="sm" variant="outline" onClick={() => setPhotographerModalOpen(true)}>
-                <Plus className="h-3.5 w-3.5 mr-1" /> Assign
+                <Plus /> Assign
               </Button>
             </CardHeader>
             <CardContent className="pt-4">
@@ -299,7 +314,7 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
               </CardTitle>
 
               <Button size="sm" variant="outline" onClick={() => setMuaModalOpen(true)}>
-                <Plus className="h-3.5 w-3.5 mr-1" /> Assign
+                <Plus /> Assign
               </Button>
             </CardHeader>
             <CardContent className="pt-4">
@@ -451,11 +466,10 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
               </span>
               <Button
                 size="sm"
-                variant="outline"
-                className="border-slate-700 text-slate-200 hover:bg-slate-800 hover:text-white text-xs"
+                variant="secondary"
                 onClick={() => setExpenseModalOpen(true)}
               >
-                <Plus className="h-3.5 w-3.5 mr-1" /> Tambah Operasional
+                <Plus /> Tambah Operasional
               </Button>
             </CardTitle>
           </CardHeader>
@@ -570,10 +584,10 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
 
               <DialogFooter>
                 <Button type="button" variant="outline" onClick={() => setExpenseModalOpen(false)}>
-                  Batal
+                  <X /> Batal
                 </Button>
-                <Button type="submit" className="bg-slate-900 text-white" disabled={expenseForm.processing}>
-                  Simpan Biaya
+                <Button type="submit" disabled={expenseForm.processing}>
+                  <Save /> Simpan Biaya
                 </Button>
               </DialogFooter>
             </form>
@@ -590,17 +604,19 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
             <form onSubmit={handleAddPhotographer} className="space-y-4 py-2">
               <div className="space-y-2">
                 <Label>Pilih Photographer</Label>
-                <select
-                  required
-                  className="flex h-9 w-full rounded-md border border-slate-200 bg-white px-3 py-1 text-sm shadow-sm"
-                  value={photographerForm.data.photographer_id}
-                  onChange={(e) => photographerForm.setData("photographer_id", e.target.value)}
+                <Select
+                  value={photographerForm.data.photographer_id ? String(photographerForm.data.photographer_id) : ""}
+                  onValueChange={(val) => photographerForm.setData("photographer_id", val)}
                 >
-                  <option value="">-- Pilih Photographer --</option>
-                  {allPhotographers?.map((p) => (
-                    <option key={p.id} value={p.id}>{p.name}</option>
-                  ))}
-                </select>
+                  <SelectTrigger className="w-full bg-white">
+                    <SelectValue placeholder="-- Pilih Photographer --" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {allPhotographers?.map((p) => (
+                      <SelectItem key={p.id} value={String(p.id)}>{p.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               <div className="space-y-2">
@@ -616,10 +632,10 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
 
               <DialogFooter>
                 <Button type="button" variant="outline" onClick={() => setPhotographerModalOpen(false)}>
-                  Batal
+                  <X /> Batal
                 </Button>
-                <Button type="submit" className="bg-slate-900 text-white" disabled={photographerForm.processing}>
-                  Assign Photographer
+                <Button type="submit" disabled={photographerForm.processing}>
+                  <Plus /> Assign Photographer
                 </Button>
               </DialogFooter>
             </form>
@@ -636,17 +652,19 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
             <form onSubmit={handleAddMua} className="space-y-4 py-2">
               <div className="space-y-2">
                 <Label>Pilih MUA</Label>
-                <select
-                  required
-                  className="flex h-9 w-full rounded-md border border-slate-200 bg-white px-3 py-1 text-sm shadow-sm"
-                  value={muaForm.data.mua_id}
-                  onChange={(e) => muaForm.setData("mua_id", e.target.value)}
+                <Select
+                  value={muaForm.data.mua_id ? String(muaForm.data.mua_id) : ""}
+                  onValueChange={(val) => muaForm.setData("mua_id", val)}
                 >
-                  <option value="">-- Pilih MUA --</option>
-                  {allMuas?.map((m) => (
-                    <option key={m.id} value={m.id}>{m.name}</option>
-                  ))}
-                </select>
+                  <SelectTrigger className="w-full bg-white">
+                    <SelectValue placeholder="-- Pilih MUA --" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {allMuas?.map((m) => (
+                      <SelectItem key={m.id} value={String(m.id)}>{m.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               <div className="space-y-2">
@@ -662,10 +680,10 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
 
               <DialogFooter>
                 <Button type="button" variant="outline" onClick={() => setMuaModalOpen(false)}>
-                  Batal
+                  <X /> Batal
                 </Button>
-                <Button type="submit" className="bg-slate-900 text-white" disabled={muaForm.processing}>
-                  Assign MUA
+                <Button type="submit" disabled={muaForm.processing}>
+                  <Plus /> Assign MUA
                 </Button>
               </DialogFooter>
             </form>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Head, useForm, router, Link } from "@inertiajs/react";
-import { Plus, Search, Sparkles, Edit3, Trash2, Eye, Phone, MapPin } from "lucide-react";
+import { Plus, Search, Sparkles, Edit3, Trash2, Eye, Phone, MapPin, MoreVertical, X, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,6 +14,20 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function Index({ muas, filters }) {
   const safeMuas = muas?.data ? muas : { data: [] };
@@ -91,8 +105,8 @@ export default function Index({ muas, filters }) {
               Kelola data partner MUA, spesialisasi, dan riwayat penugasan project.
             </p>
           </div>
-          <Button onClick={handleOpenCreate} className="bg-slate-900 text-white shadow-sm">
-            <Plus className="h-4 w-4 mr-2" />
+          <Button onClick={handleOpenCreate}>
+            <Plus />
             Tambah MUA Baru
           </Button>
         </div>
@@ -110,7 +124,7 @@ export default function Index({ muas, filters }) {
                 />
               </div>
               <Button variant="secondary" onClick={handleSearch}>
-                Cari
+                <Search /> Cari
               </Button>
             </div>
           </CardContent>
@@ -158,19 +172,41 @@ export default function Index({ muas, filters }) {
                     <span className="text-slate-500">
                       Total Project: <strong className="text-slate-900">{mua.projects_count || 0}</strong>
                     </span>
-                    <div className="flex space-x-1">
-                      <Link href={`/admin/muas/${mua.id}`}>
-                        <Button variant="ghost" size="icon" title="Lihat Detail">
-                          <Eye className="h-4 w-4 text-slate-600" />
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="h-8 w-8 text-slate-600 hover:text-slate-900 focus-visible:ring-1"
+                          title="Aksi MUA"
+                        >
+                          <MoreVertical className="h-4 w-4" />
                         </Button>
-                      </Link>
-                      <Button variant="ghost" size="icon" onClick={() => handleOpenEdit(mua)} title="Edit">
-                        <Edit3 className="h-4 w-4 text-slate-600" />
-                      </Button>
-                      <Button variant="ghost" size="icon" onClick={() => handleDelete(mua.id)} title="Hapus">
-                        <Trash2 className="h-4 w-4 text-red-600" />
-                      </Button>
-                    </div>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-36 shadow-md">
+                        <DropdownMenuItem asChild>
+                          <Link href={`/admin/muas/${mua.id}`} className="cursor-pointer text-xs flex items-center">
+                            <Eye className="mr-2 h-3.5 w-3.5 text-slate-600" />
+                            <span>Lihat Detail</span>
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => handleOpenEdit(mua)}
+                          className="cursor-pointer text-xs"
+                        >
+                          <Edit3 className="mr-2 h-3.5 w-3.5 text-slate-600" />
+                          <span>Edit Data</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          onClick={() => handleDelete(mua.id)}
+                          className="cursor-pointer text-xs text-red-600 focus:text-red-600 focus:bg-red-50"
+                        >
+                          <Trash2 className="mr-2 h-3.5 w-3.5 text-red-600" />
+                          <span>Hapus</span>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </div>
                 </CardContent>
               </Card>
@@ -230,14 +266,18 @@ export default function Index({ muas, filters }) {
                 </div>
                 <div className="space-y-2">
                   <Label>Status</Label>
-                  <select
-                    className="flex h-9 w-full rounded-md border border-slate-200 bg-white px-3 py-1 text-sm shadow-sm"
-                    value={form.data.status}
-                    onChange={(e) => form.setData("status", e.target.value)}
+                  <Select
+                    value={form.data.status || "ACTIVE"}
+                    onValueChange={(val) => form.setData("status", val)}
                   >
-                    <option value="ACTIVE">ACTIVE</option>
-                    <option value="INACTIVE">INACTIVE</option>
-                  </select>
+                    <SelectTrigger className="w-full bg-white">
+                      <SelectValue placeholder="Pilih Status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="ACTIVE">ACTIVE</SelectItem>
+                      <SelectItem value="INACTIVE">INACTIVE</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
 
@@ -261,9 +301,10 @@ export default function Index({ muas, filters }) {
 
               <DialogFooter>
                 <Button type="button" variant="outline" onClick={() => setModalOpen(false)}>
-                  Batal
+                  <X /> Batal
                 </Button>
-                <Button type="submit" className="bg-slate-900 text-white" disabled={form.processing}>
+                <Button type="submit" disabled={form.processing}>
+                  <Save />
                   {form.processing ? "Menyimpan..." : "Simpan MUA"}
                 </Button>
               </DialogFooter>

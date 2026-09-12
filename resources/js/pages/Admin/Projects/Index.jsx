@@ -6,6 +6,21 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "@/components/ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function Index({ projects, filters, statuses }) {
   const safeProjects = projects?.data ? projects : { data: [] };
@@ -55,98 +70,106 @@ export default function Index({ projects, filters, statuses }) {
                 />
               </div>
 
-              <select
-                value={status}
-                onChange={handleStatusChange}
-                className="h-9 px-3 text-sm rounded-md border border-slate-200 bg-white"
+              <Select
+                value={status || "all"}
+                onValueChange={(val) => {
+                  const newStatus = val === "all" ? "" : val;
+                  setStatus(newStatus);
+                  router.get("/admin/projects", { search, status: newStatus }, { preserveState: true });
+                }}
               >
-                <option value="">Semua Status</option>
-                {statuses.map((s) => (
-                  <option key={s} value={s}>{s}</option>
-                ))}
-              </select>
+                <SelectTrigger className="w-full sm:w-48 bg-white">
+                  <SelectValue placeholder="Semua Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Semua Status</SelectItem>
+                  {statuses.map((s) => (
+                    <SelectItem key={s} value={s}>{s}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </CardContent>
         </Card>
 
         {/* Project Table */}
-        <div className="overflow-x-auto bg-white rounded-xl border border-slate-200 shadow-2xs">
-          <table className="w-full text-sm text-left text-slate-600">
-            <thead className="text-xs uppercase bg-slate-50 text-slate-500 border-b border-slate-200">
-              <tr>
-                <th className="px-4 py-3">Kode & Project</th>
-                <th className="px-4 py-3">Pelanggan</th>
-                <th className="px-4 py-3">Durasi Kerja</th>
-                <th className="px-4 py-3 text-right">Harga Jual</th>
-                <th className="px-4 py-3 text-right">Biaya / Cost</th>
-                <th className="px-4 py-3 text-right">Profit Aktual</th>
-                <th className="px-4 py-3 text-center">Status</th>
-                <th className="px-4 py-3 text-center">Aksi</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
+        <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
+          <Table>
+            <TableHeader className="bg-slate-50">
+              <TableRow>
+                <TableHead className="font-semibold text-slate-700">Kode & Project</TableHead>
+                <TableHead className="font-semibold text-slate-700">Pelanggan</TableHead>
+                <TableHead className="font-semibold text-slate-700">Durasi Kerja</TableHead>
+                <TableHead className="font-semibold text-slate-700 text-right">Harga Jual</TableHead>
+                <TableHead className="font-semibold text-slate-700 text-right">Biaya / Cost</TableHead>
+                <TableHead className="font-semibold text-slate-700 text-right">Profit Aktual</TableHead>
+                <TableHead className="font-semibold text-slate-700 text-center">Status</TableHead>
+                <TableHead className="font-semibold text-slate-700 text-center">Aksi</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {safeProjects.data.length === 0 ? (
-                <tr>
-                  <td colSpan={8} className="text-center py-8 text-slate-400">
+                <TableRow>
+                  <TableCell colSpan={8} className="text-center py-8 text-slate-400">
                     Belum ada data project.
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ) : (
                 safeProjects.data.map((prj) => (
-                  <tr key={prj.id} className="hover:bg-slate-50/50">
-                    <td className="px-4 py-3">
+                  <TableRow key={prj.id}>
+                    <TableCell>
                       <span className="font-mono text-xs text-slate-400 font-bold block">{prj.project_code}</span>
                       <span className="font-bold text-slate-900">{prj.project_name}</span>
                       <span className="text-xs text-slate-400 block">{formatDate(prj.date)}</span>
-                    </td>
+                    </TableCell>
 
-                    <td className="px-4 py-3 font-semibold text-slate-800">
+                    <TableCell className="font-semibold text-slate-800">
                       {prj.customer?.name}
-                    </td>
+                    </TableCell>
 
-                    <td className="px-4 py-3">
+                    <TableCell>
                       <span className="font-medium text-slate-800">{prj.formatted_work_duration}</span>
                       {prj.work_start_time && prj.work_end_time && (
                         <span className="text-xs text-slate-400 block">
                           {prj.work_start_time?.substring(0, 5)} - {prj.work_end_time?.substring(0, 5)}
                         </span>
                       )}
-                    </td>
+                    </TableCell>
 
-                    <td className="px-4 py-3 text-right font-bold text-slate-900">
+                    <TableCell className="text-right font-bold text-slate-900">
                       {formatRupiah(prj.package_price)}
-                    </td>
+                    </TableCell>
 
-                    <td className="px-4 py-3 text-right font-medium text-slate-600">
+                    <TableCell className="text-right font-medium text-slate-600">
                       {formatRupiah(prj.actual_total_cost)}
-                    </td>
+                    </TableCell>
 
-                    <td className="px-4 py-3 text-right font-bold">
+                    <TableCell className="text-right font-bold">
                       {prj.actual_profit >= 0 ? (
                         <span className="text-emerald-600">{formatRupiah(prj.actual_profit)}</span>
                       ) : (
                         <span className="text-red-600">RUGI {formatRupiah(prj.actual_profit)}</span>
                       )}
-                    </td>
+                    </TableCell>
 
-                    <td className="px-4 py-3 text-center">
+                    <TableCell className="text-center">
                       <Badge variant={prj.status === "COMPLETED" ? "success" : "secondary"}>
                         {prj.status}
                       </Badge>
-                    </td>
+                    </TableCell>
 
-                    <td className="px-4 py-3 text-center">
+                    <TableCell className="text-center">
                       <Link href={`/admin/projects/${prj.id}`}>
                         <Button variant="ghost" size="icon" title="Detail Project">
-                          <Eye className="h-4 w-4 text-slate-600" />
+                          <Eye className="h-4 w-4" />
                         </Button>
                       </Link>
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 ))
               )}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
       </div>
     </>

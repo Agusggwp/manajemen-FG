@@ -5,6 +5,14 @@ import { ArrowLeft, Sparkles, Phone, Mail, MapPin, Calendar, CheckCircle2 } from
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "@/components/ui/table";
 
 export default function Show({ mua }) {
   return (
@@ -70,58 +78,56 @@ export default function Show({ mua }) {
                 Histori Project & Pembayaran Fee ({mua.projects?.length || 0})
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm text-left text-slate-600">
-                  <thead className="text-xs uppercase bg-slate-50 text-slate-500 border-b border-slate-200">
-                    <tr>
-                      <th className="px-4 py-3">Tanggal</th>
-                      <th className="px-4 py-3">Project / Pelanggan</th>
-                      <th className="px-4 py-3">Paket</th>
-                      <th className="px-4 py-3 text-right">Fee MUA</th>
-                      <th className="px-4 py-3 text-center">Status Fee</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {!mua.projects || mua.projects.length === 0 ? (
-                      <tr>
-                        <td colSpan={5} className="text-center py-6 text-slate-400">
-                          Belum ada histori penugasan project untuk MUA ini.
-                        </td>
-                      </tr>
-                    ) : (
-                      mua.projects.map((prj) => {
-                        const feeRecord = mua.project_fees?.find(f => f.project_id === prj.id);
-                        return (
-                          <tr key={prj.id} className="hover:bg-slate-50/50">
-                            <td className="px-4 py-3 font-medium text-slate-900 whitespace-nowrap">
-                              {formatDate(prj.date)}
-                            </td>
-                            <td className="px-4 py-3">
-                              <span className="font-bold text-slate-900 block">{prj.project_name}</span>
-                              <span className="text-xs text-slate-500">{prj.customer?.name}</span>
-                            </td>
-                            <td className="px-4 py-3">{prj.package_name}</td>
-                            <td className="px-4 py-3 text-right font-semibold text-slate-900">
-                              {feeRecord ? formatRupiah(feeRecord.amount) : "-"}
-                            </td>
-                            <td className="px-4 py-3 text-center">
-                              {feeRecord ? (
-                                <Badge variant={feeRecord.payment_status === "PAID" ? "success" : "warning"}>
-                                  {feeRecord.payment_status}
-                                </Badge>
-                              ) : (
-                                <span className="text-xs text-slate-400">-</span>
-                              )}
-                            </td>
-                          </tr>
-                        );
-                      })
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </CardContent>
+          <CardContent className="p-0">
+            <Table>
+              <TableHeader className="bg-slate-50">
+                <TableRow>
+                  <TableHead className="font-semibold text-slate-700">Tanggal</TableHead>
+                  <TableHead className="font-semibold text-slate-700">Project / Pelanggan</TableHead>
+                  <TableHead className="font-semibold text-slate-700">Paket</TableHead>
+                  <TableHead className="font-semibold text-slate-700 text-right">Fee MUA</TableHead>
+                  <TableHead className="font-semibold text-slate-700 text-center">Status Fee</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {!mua.projects || mua.projects.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center py-6 text-slate-400">
+                      Belum ada histori penugasan project untuk MUA ini.
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  mua.projects.map((prj) => {
+                    const feeRecord = mua.project_fees?.find(f => f.project_id === prj.id);
+                    return (
+                      <TableRow key={prj.id}>
+                        <TableCell className="font-medium text-slate-900 whitespace-nowrap">
+                          {formatDate(prj.date)}
+                        </TableCell>
+                        <TableCell>
+                          <span className="font-bold text-slate-900 block">{prj.project_name}</span>
+                          <span className="text-xs text-slate-500">{prj.customer?.name}</span>
+                        </TableCell>
+                        <TableCell>{prj.package_name}</TableCell>
+                        <TableCell className="text-right font-semibold text-slate-900">
+                          {feeRecord ? formatRupiah(feeRecord.amount) : "-"}
+                        </TableCell>
+                        <TableCell className="text-center">
+                          {feeRecord ? (
+                            <Badge variant={feeRecord.payment_status === "PAID" ? "success" : "warning"}>
+                              {feeRecord.payment_status}
+                            </Badge>
+                          ) : (
+                            <span className="text-xs text-slate-400">-</span>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })
+                )}
+              </TableBody>
+            </Table>
+          </CardContent>
           </Card>
         </div>
       </div>

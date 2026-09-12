@@ -17,6 +17,14 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "@/components/ui/table";
 
 export default function Dashboard({ stats = {}, recentSchedules = [], pendingProofs = [] }) {
   const safeStats = stats || {};
@@ -152,8 +160,8 @@ export default function Dashboard({ stats = {}, recentSchedules = [], pendingPro
                 </p>
               </div>
               <Link href="/admin/proofs">
-                <Button size="sm" variant="outline" className="border-amber-300 text-amber-900 hover:bg-amber-100">
-                  Lihat Semua Proof <ArrowRight className="ml-1 h-3.5 w-3.5" />
+                <Button size="sm" variant="outline">
+                  Lihat Semua Proof <ArrowRight />
                 </Button>
               </Link>
             </CardHeader>
@@ -177,8 +185,8 @@ export default function Dashboard({ stats = {}, recentSchedules = [], pendingPro
                     </p>
                     <div className="pt-2 flex justify-end">
                       <Link href="/admin/proofs">
-                        <Button size="sm" className="bg-slate-900 text-white text-xs">
-                          Validasi Sekarang
+                        <Button size="xs">
+                          <ShieldCheck /> Validasi Sekarang
                         </Button>
                       </Link>
                     </div>
@@ -197,68 +205,66 @@ export default function Dashboard({ stats = {}, recentSchedules = [], pendingPro
             </CardTitle>
             <Link href="/admin/schedules">
               <Button size="sm" variant="outline">
-                Semua Jadwal <ArrowRight className="ml-1 h-3.5 w-3.5" />
+                Semua Jadwal <ArrowRight />
               </Button>
             </Link>
           </CardHeader>
-          <CardContent>
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm text-left text-slate-600">
-                <thead className="text-xs uppercase bg-slate-50 text-slate-500 border-b border-slate-200">
-                  <tr>
-                    <th className="px-4 py-3">Tanggal & Jam</th>
-                    <th className="px-4 py-3">Pelanggan</th>
-                    <th className="px-4 py-3">Paket Foto</th>
-                    <th className="px-4 py-3">Lokasi Pemotretan</th>
-                    <th className="px-4 py-3">Status</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {safeSchedules.length === 0 ? (
-                    <tr>
-                      <td colSpan={5} className="text-center py-6 text-slate-400">
-                        Belum ada data jadwal pemotretan.
-                      </td>
-                    </tr>
-                  ) : (
-                    safeSchedules.map((schedule) => (
-                      <tr key={schedule.id} className="hover:bg-slate-50/50">
-                        <td className="px-4 py-3 font-medium text-slate-900 whitespace-nowrap">
-                          {formatDate(schedule.date)} <br />
-                          <span className="text-xs text-slate-400">
-                            {schedule.start_time} - {schedule.end_time}
-                          </span>
-                        </td>
-                        <td className="px-4 py-3 font-semibold text-slate-800">
-                          {schedule.customer?.name}
-                        </td>
-                        <td className="px-4 py-3">
-                          {schedule.photo_package?.name || "-"}
-                        </td>
-                        <td className="px-4 py-3 max-w-xs truncate" title={schedule.location_address}>
-                          <span className="font-medium text-slate-800">{schedule.location_name}</span>
-                          <br />
-                          <span className="text-xs text-slate-400 truncate block">{schedule.location_address}</span>
-                        </td>
-                        <td className="px-4 py-3">
-                          <Badge
-                            variant={
-                              schedule.status === "COMPLETED"
-                                ? "success"
-                                : schedule.status === "SHOOTING"
-                                ? "warning"
-                                : "secondary"
-                            }
-                          >
-                            {schedule.status}
-                          </Badge>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
+          <CardContent className="p-0">
+            <Table>
+              <TableHeader className="bg-slate-50">
+                <TableRow>
+                  <TableHead className="font-semibold text-slate-700">Tanggal & Jam</TableHead>
+                  <TableHead className="font-semibold text-slate-700">Pelanggan</TableHead>
+                  <TableHead className="font-semibold text-slate-700">Paket Foto</TableHead>
+                  <TableHead className="font-semibold text-slate-700">Lokasi Pemotretan</TableHead>
+                  <TableHead className="font-semibold text-slate-700">Status</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {safeSchedules.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center py-6 text-slate-400">
+                      Belum ada data jadwal pemotretan.
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  safeSchedules.map((schedule) => (
+                    <TableRow key={schedule.id}>
+                      <TableCell className="font-medium text-slate-900 whitespace-nowrap">
+                        {formatDate(schedule.date)} <br />
+                        <span className="text-xs text-slate-400">
+                          {schedule.start_time} - {schedule.end_time}
+                        </span>
+                      </TableCell>
+                      <TableCell className="font-semibold text-slate-800">
+                        {schedule.customer?.name}
+                      </TableCell>
+                      <TableCell>
+                        {schedule.photo_package?.name || "-"}
+                      </TableCell>
+                      <TableCell className="max-w-xs truncate" title={schedule.location_address}>
+                        <span className="font-medium text-slate-800">{schedule.location_name}</span>
+                        <br />
+                        <span className="text-xs text-slate-400 truncate block">{schedule.location_address}</span>
+                      </TableCell>
+                      <TableCell>
+                        <Badge
+                          variant={
+                            schedule.status === "COMPLETED"
+                              ? "success"
+                              : schedule.status === "SHOOTING"
+                              ? "warning"
+                              : "secondary"
+                          }
+                        >
+                          {schedule.status}
+                        </Badge>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
           </CardContent>
         </Card>
       </div>

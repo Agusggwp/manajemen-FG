@@ -6,6 +6,21 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "@/components/ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function Index({ logs, filters }) {
   const safeLogs = logs?.data ? logs : { data: [] };
@@ -46,73 +61,75 @@ export default function Index({ logs, filters }) {
                 />
               </div>
 
-              <select
-                value={module}
-                onChange={(e) => setModule(e.target.value)}
-                className="h-10 px-3 text-sm rounded-md border border-slate-200 bg-white"
-              >
-                <option value="">Semua Modul</option>
-                <option value="Schedule">Schedule / Jadwal</option>
-                <option value="Project">Project</option>
-                <option value="Proof">Proofing</option>
-                <option value="SalaryPayment">Gaji</option>
-                <option value="MuaPayment">Fee MUA</option>
-                <option value="Package">Paket Foto</option>
-              </select>
+              <Select value={module || "all"} onValueChange={(val) => setModule(val === "all" ? "" : val)}>
+                <SelectTrigger className="w-full sm:w-48 bg-white">
+                  <SelectValue placeholder="Semua Modul" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Semua Modul</SelectItem>
+                  <SelectItem value="Schedule">Schedule / Jadwal</SelectItem>
+                  <SelectItem value="Project">Project</SelectItem>
+                  <SelectItem value="Proof">Proofing</SelectItem>
+                  <SelectItem value="Customer">Pelanggan</SelectItem>
+                  <SelectItem value="Photographer">Photographer</SelectItem>
+                  <SelectItem value="Mua">MUA</SelectItem>
+                  <SelectItem value="Package">Paket Foto</SelectItem>
+                </SelectContent>
+              </Select>
 
-              <Button onClick={handleFilter} className="bg-slate-900 text-white">
-                <Filter className="h-4 w-4 mr-1.5" /> Filter
+              <Button variant="secondary" onClick={handleFilter}>
+                <Filter /> Filter
               </Button>
             </div>
           </CardContent>
         </Card>
 
         {/* Table Logs */}
-        <div className="overflow-x-auto bg-white rounded-xl border border-slate-200 shadow-2xs">
-          <table className="w-full text-sm text-left text-slate-600">
-            <thead className="text-xs uppercase bg-slate-50 text-slate-500 border-b border-slate-200">
-              <tr>
-                <th className="px-4 py-3">Waktu</th>
-                <th className="px-4 py-3">User</th>
-                <th className="px-4 py-3">Modul</th>
-                <th className="px-4 py-3">Aksi</th>
-                <th className="px-4 py-3">Deskripsi</th>
-                <th className="px-4 py-3">IP Address</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
+        <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
+          <Table>
+            <TableHeader className="bg-slate-50">
+              <TableRow>
+                <TableHead className="font-semibold text-slate-700">Waktu</TableHead>
+                <TableHead className="font-semibold text-slate-700">User</TableHead>
+                <TableHead className="font-semibold text-slate-700">Modul</TableHead>
+                <TableHead className="font-semibold text-slate-700">Aksi</TableHead>
+                <TableHead className="font-semibold text-slate-700">Deskripsi</TableHead>
+                <TableHead className="font-semibold text-slate-700">IP Address</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {safeLogs.data.length === 0 ? (
-                <tr>
-                  <td colSpan={6} className="text-center py-10 text-slate-400">
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center py-10 text-slate-400">
                     Tidak ada catatan aktivitas ditemukan.
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ) : (
                 safeLogs.data.map((log) => (
-                  <tr key={log.id} className="hover:bg-slate-50/50">
-                    <td className="px-4 py-3 text-xs text-slate-400 whitespace-nowrap">
+                  <TableRow key={log.id}>
+                    <TableCell className="text-xs text-slate-400 whitespace-nowrap">
                       {formatDate(log.created_at)}
-                    </td>
-                    <td className="px-4 py-3 font-semibold text-slate-900">
+                    </TableCell>
+                    <TableCell className="font-semibold text-slate-900">
                       {log.user?.name || "Sistem"}
-                    </td>
-                    <td className="px-4 py-3">
+                    </TableCell>
+                    <TableCell>
                       <Badge variant="outline">{log.module}</Badge>
-                    </td>
-                    <td className="px-4 py-3 font-mono text-xs font-bold text-slate-700">
+                    </TableCell>
+                    <TableCell className="font-mono text-xs font-bold text-slate-700">
                       {log.action}
-                    </td>
-                    <td className="px-4 py-3 text-slate-800">
+                    </TableCell>
+                    <TableCell className="text-slate-800">
                       {log.description}
-                    </td>
-                    <td className="px-4 py-3 text-slate-400">
+                    </TableCell>
+                    <TableCell className="text-slate-400">
                       {log.ip_address || "-"}
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 ))
               )}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
       </div>
     </>

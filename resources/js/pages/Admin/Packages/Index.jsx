@@ -12,6 +12,9 @@ import {
   Edit3,
   Sparkles,
   TrendingUp,
+  MoreVertical,
+  X,
+  Save,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,6 +29,28 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "@/components/ui/table";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function Index({ packages, filters, categories, muas }) {
   const safePackages = packages?.data ? packages : { data: [] };
@@ -146,8 +171,8 @@ export default function Index({ packages, filters, categories, muas }) {
               Kelola master paket foto, estimasi biaya operasional, dan margin keuntungan.
             </p>
           </div>
-          <Button onClick={handleOpenCreate} className="bg-slate-900 text-white shadow-sm">
-            <Plus className="h-4 w-4 mr-2" />
+          <Button onClick={handleOpenCreate}>
+            <Plus />
             Tambah Paket Baru
           </Button>
         </div>
@@ -166,61 +191,63 @@ export default function Index({ packages, filters, categories, muas }) {
                 />
               </div>
 
-              <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                className="h-9 px-3 text-sm rounded-md border border-slate-200 bg-white"
-              >
-                <option value="">Semua Kategori</option>
-                {safeCategories.map((c) => (
-                  <option key={c} value={c}>{c}</option>
-                ))}
-              </select>
+              <Select value={category || "all"} onValueChange={(val) => setCategory(val === "all" ? "" : val)}>
+                <SelectTrigger className="w-full sm:w-44 bg-white">
+                  <SelectValue placeholder="Semua Kategori" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Semua Kategori</SelectItem>
+                  {safeCategories.map((c) => (
+                    <SelectItem key={c} value={c}>{c}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
 
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="h-9 px-3 text-sm rounded-md border border-slate-200 bg-white"
-              >
-                <option value="created_at">Urutkan: Terbaru</option>
-                <option value="price">Urutkan: Harga</option>
-                <option value="profit">Urutkan: Profit Est.</option>
-                <option value="margin">Urutkan: Margin Est.</option>
-              </select>
+              <Select value={sortBy || "created_at"} onValueChange={(val) => setSortBy(val)}>
+                <SelectTrigger className="w-full sm:w-44 bg-white">
+                  <SelectValue placeholder="Urutkan" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="created_at">Urutkan: Terbaru</SelectItem>
+                  <SelectItem value="price">Urutkan: Harga</SelectItem>
+                  <SelectItem value="profit">Urutkan: Profit Est.</SelectItem>
+                  <SelectItem value="margin">Urutkan: Margin Est.</SelectItem>
+                </SelectContent>
+              </Select>
 
               <Button variant="secondary" onClick={handleFilter}>
-                <Filter className="h-4 w-4 mr-2" /> Filter
+                <Filter /> Filter
               </Button>
             </div>
           </CardContent>
         </Card>
 
         {/* Packages Table Grid */}
-        <div className="overflow-x-auto bg-white rounded-xl border border-slate-200 shadow-2xs">
-          <table className="w-full text-sm text-left text-slate-600">
-            <thead className="text-xs uppercase bg-slate-50 text-slate-500 border-b border-slate-200">
-              <tr>
-                <th className="px-4 py-3">Paket Foto</th>
-                <th className="px-4 py-3 text-right">Harga Jual</th>
-                <th className="px-4 py-3 text-right">Est. Total Biaya</th>
-                <th className="px-4 py-3 text-right">Est. Profit</th>
-                <th className="px-4 py-3 text-center">Margin</th>
-                <th className="px-4 py-3 text-center">MUA</th>
-                <th className="px-4 py-3 text-center">Status</th>
-                <th className="px-4 py-3 text-center">Aksi</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
+        <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
+          <Table>
+            <TableHeader className="bg-slate-50">
+              <TableRow>
+                <TableHead className="font-semibold text-slate-700">Paket Foto</TableHead>
+                <TableHead className="font-semibold text-slate-700 text-right">Harga Jual</TableHead>
+                <TableHead className="font-semibold text-slate-700 text-right">Est. Total Biaya</TableHead>
+                <TableHead className="font-semibold text-slate-700 text-right">Est. Profit</TableHead>
+                <TableHead className="font-semibold text-slate-700 text-center">Margin</TableHead>
+                <TableHead className="font-semibold text-slate-700 text-center">MUA</TableHead>
+                <TableHead className="font-semibold text-slate-700 text-center">Status</TableHead>
+                <TableHead className="font-semibold text-slate-700 text-center">Aksi</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {safePackages.data.length === 0 ? (
-                <tr>
-                  <td colSpan={8} className="text-center py-8 text-slate-400">
+                <TableRow>
+                  <TableCell colSpan={8} className="text-center py-8 text-slate-400">
                     Tidak ada data paket foto ditemukan.
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ) : (
                 safePackages.data.map((pkg) => (
-                  <tr key={pkg.id} className="hover:bg-slate-50/50">
-                    <td className="px-4 py-3">
+                  <TableRow key={pkg.id}>
+                    <TableCell>
                       <div className="font-bold text-slate-900">{pkg.name}</div>
                       <div className="text-xs text-slate-400 flex items-center gap-2 mt-0.5">
                         <span className="font-medium text-slate-600">{pkg.category}</span>
@@ -229,83 +256,92 @@ export default function Index({ packages, filters, categories, muas }) {
                         <span>•</span>
                         <span>{pkg.number_of_photos} Foto</span>
                       </div>
-                    </td>
+                    </TableCell>
 
-                    <td className="px-4 py-3 text-right font-bold text-slate-900">
+                    <TableCell className="text-right font-bold text-slate-900">
                       {formatRupiah(pkg.price)}
-                    </td>
+                    </TableCell>
 
-                    <td className="px-4 py-3 text-right font-medium text-slate-600">
+                    <TableCell className="text-right font-medium text-slate-600">
                       {formatRupiah(pkg.estimated_total_cost)}
-                    </td>
+                    </TableCell>
 
-                    <td className="px-4 py-3 text-right font-semibold text-emerald-600">
+                    <TableCell className="text-right font-semibold text-emerald-600">
                       {formatRupiah(pkg.estimated_profit)}
-                    </td>
+                    </TableCell>
 
-                    <td className="px-4 py-3 text-center">
+                    <TableCell className="text-center">
                       <Badge variant={pkg.estimated_margin >= 30 ? "success" : "warning"}>
                         {pkg.estimated_margin}%
                       </Badge>
-                    </td>
+                    </TableCell>
 
-                    <td className="px-4 py-3 text-center">
+                    <TableCell className="text-center">
                       {pkg.includes_mua ? (
-                        <Badge variant="info" className="gap-1">
-                          <Sparkles className="h-3 w-3" /> {pkg.mua?.name || "Termasuk MUA"}
+                        <Badge variant="outline" className="text-amber-700 border-amber-300 bg-amber-50 text-[10px]">
+                          MUA Inc.
                         </Badge>
                       ) : (
-                        <span className="text-xs text-slate-400">— Tidak</span>
+                        <span className="text-xs text-slate-400">-</span>
                       )}
-                    </td>
+                    </TableCell>
 
-                    <td className="px-4 py-3 text-center">
-                      <Badge variant={pkg.status === "ACTIVE" ? "success" : "secondary"}>
-                        {pkg.status}
+                    <TableCell className="text-center">
+                      <Badge variant={pkg.is_active ? "success" : "secondary"}>
+                        {pkg.is_active ? "Aktif" : "Non-Aktif"}
                       </Badge>
-                    </td>
+                    </TableCell>
 
-                    <td className="px-4 py-3 text-center">
-                      <div className="flex items-center justify-center space-x-1">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleOpenEdit(pkg)}
-                          title="Edit"
-                        >
-                          <Edit3 className="h-4 w-4 text-slate-600" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleDuplicate(pkg.id)}
-                          title="Duplikasi"
-                        >
-                          <Copy className="h-4 w-4 text-slate-600" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleToggleStatus(pkg.id)}
-                          title={pkg.status === "ACTIVE" ? "Nonaktifkan" : "Aktifkan"}
-                        >
-                          <Power className={`h-4 w-4 ${pkg.status === "ACTIVE" ? "text-emerald-600" : "text-slate-400"}`} />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleDelete(pkg.id)}
-                          title="Hapus"
-                        >
-                          <Trash2 className="h-4 w-4 text-red-600" />
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
+                    <TableCell className="text-center whitespace-nowrap">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            className="h-8 w-8 text-slate-600 hover:text-slate-900 focus-visible:ring-1"
+                            title="Aksi Paket"
+                          >
+                            <MoreVertical className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-44 shadow-md">
+                          <DropdownMenuItem
+                            onClick={() => handleOpenEdit(pkg)}
+                            className="cursor-pointer text-xs"
+                          >
+                            <Edit3 className="mr-2 h-3.5 w-3.5 text-slate-600" />
+                            <span>Edit Paket</span>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => handleDuplicate(pkg.id)}
+                            className="cursor-pointer text-xs"
+                          >
+                            <Copy className="mr-2 h-3.5 w-3.5 text-slate-600" />
+                            <span>Duplikasi Paket</span>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => handleToggleActive(pkg.id)}
+                            className="cursor-pointer text-xs"
+                          >
+                            <Power className={`mr-2 h-3.5 w-3.5 ${pkg.is_active ? "text-amber-600" : "text-emerald-600"}`} />
+                            <span>{pkg.is_active ? "Nonaktifkan" : "Aktifkan"}</span>
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem
+                            onClick={() => handleDelete(pkg.id)}
+                            className="cursor-pointer text-xs text-red-600 focus:text-red-600 focus:bg-red-50"
+                          >
+                            <Trash2 className="mr-2 h-3.5 w-3.5 text-red-600" />
+                            <span>Hapus Paket</span>
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
                 ))
               )}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
 
         {/* Modal Form Create/Edit Package */}
@@ -331,15 +367,19 @@ export default function Index({ packages, filters, categories, muas }) {
 
                 <div className="space-y-2">
                   <Label>Kategori</Label>
-                  <select
-                    className="flex h-9 w-full rounded-md border border-slate-200 bg-white px-3 py-1 text-sm shadow-sm"
-                    value={form.data.category}
-                    onChange={(e) => form.setData("category", e.target.value)}
+                  <Select
+                    value={form.data.category || ""}
+                    onValueChange={(val) => form.setData("category", val)}
                   >
-                    {safeCategories.map((cat) => (
-                      <option key={cat} value={cat}>{cat}</option>
-                    ))}
-                  </select>
+                    <SelectTrigger className="w-full bg-white">
+                      <SelectValue placeholder="Pilih Kategori" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {safeCategories.map((cat) => (
+                        <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
 
@@ -398,7 +438,7 @@ export default function Index({ packages, filters, categories, muas }) {
                             mua_id: checked ? form.data.mua_id : "",
                           });
                         }}
-                        className="rounded border-slate-300 text-slate-900 focus:ring-slate-950 mr-2"
+                        className="rounded border-slate-300 text-slate-900 focus:ring-slate-950"
                       />
                       {form.data.includes_mua ? "✓ Termasuk MUA" : "— Tanpa MUA"}
                     </label>
@@ -406,20 +446,23 @@ export default function Index({ packages, filters, categories, muas }) {
                 </div>
 
                 {form.data.includes_mua && (
-                  <div>
-                    <Label className="text-xs mb-1 block">Pilih MUA Paket</Label>
-                    <select
-                      value={form.data.mua_id}
-                      onChange={(e) => form.setData("mua_id", e.target.value)}
-                      className="w-full h-9 rounded-md border border-slate-200 bg-white px-3 py-1 text-xs shadow-2xs focus:outline-hidden focus:ring-1 focus:ring-slate-950"
+                  <div className="space-y-2">
+                    <Label className="text-xs block">Pilih MUA Paket</Label>
+                    <Select
+                      value={form.data.mua_id ? String(form.data.mua_id) : ""}
+                      onValueChange={(val) => form.setData("mua_id", val)}
                     >
-                      <option value="">-- Pilih MUA (Default Paket) --</option>
-                      {safeMuas.map((m) => (
-                        <option key={m.id} value={m.id}>
-                          {m.name} ({m.specialty})
-                        </option>
-                      ))}
-                    </select>
+                      <SelectTrigger className="w-full bg-white">
+                        <SelectValue placeholder="-- Pilih MUA (Default Paket) --" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {safeMuas.map((m) => (
+                          <SelectItem key={m.id} value={String(m.id)}>
+                            {m.name} ({m.specialty})
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                 )}
               </div>
@@ -487,9 +530,10 @@ export default function Index({ packages, filters, categories, muas }) {
 
               <DialogFooter>
                 <Button type="button" variant="outline" onClick={() => setModalOpen(false)}>
-                  Batal
+                  <X /> Batal
                 </Button>
-                <Button type="submit" className="bg-slate-900 text-white" disabled={form.processing}>
+                <Button type="submit" disabled={form.processing}>
+                  <Save />
                   {form.processing ? "Menyimpan..." : "Simpan Paket"}
                 </Button>
               </DialogFooter>

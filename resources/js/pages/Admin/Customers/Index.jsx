@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Head, useForm, router } from "@inertiajs/react";
-import { Plus, Search, Users, Edit3, Trash2, Phone, Mail, MapPin } from "lucide-react";
+import { Plus, Search, Users, Edit3, Trash2, Phone, Mail, MapPin, MoreVertical, X, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,6 +13,20 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "@/components/ui/table";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
 
 export default function Index({ customers, filters }) {
   const safeCustomers = customers?.data ? customers : { data: [] };
@@ -84,8 +98,8 @@ export default function Index({ customers, filters }) {
               Database pelanggan ARTDEVATA beserta kontak dan alamat pemotretan.
             </p>
           </div>
-          <Button onClick={handleOpenCreate} className="bg-slate-900 text-white">
-            <Plus className="h-4 w-4 mr-2" /> Tambah Pelanggan
+          <Button onClick={handleOpenCreate}>
+            <Plus /> Tambah Pelanggan
           </Button>
         </div>
 
@@ -104,39 +118,39 @@ export default function Index({ customers, filters }) {
                 />
               </div>
               <Button variant="secondary" onClick={handleSearch}>
-                Cari
+                <Search /> Cari
               </Button>
             </div>
           </CardContent>
         </Card>
 
         {/* Customers Table */}
-        <div className="overflow-x-auto bg-white rounded-xl border border-slate-200 shadow-2xs">
-          <table className="w-full text-sm text-left text-slate-600">
-            <thead className="text-xs uppercase bg-slate-50 text-slate-500 border-b border-slate-200">
-              <tr>
-                <th className="px-4 py-3">Nama Pelanggan</th>
-                <th className="px-4 py-3">Kontak</th>
-                <th className="px-4 py-3">Alamat</th>
-                <th className="px-4 py-3">Catatan</th>
-                <th className="px-4 py-3 text-right">Aksi</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
+        <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
+          <Table>
+            <TableHeader className="bg-slate-50">
+              <TableRow>
+                <TableHead className="font-semibold text-slate-700">Nama Pelanggan</TableHead>
+                <TableHead className="font-semibold text-slate-700">Kontak</TableHead>
+                <TableHead className="font-semibold text-slate-700">Alamat</TableHead>
+                <TableHead className="font-semibold text-slate-700">Catatan</TableHead>
+                <TableHead className="font-semibold text-slate-700 text-right">Aksi</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {safeCustomers.data.length === 0 ? (
-                <tr>
-                  <td colSpan={5} className="text-center py-8 text-slate-400 font-sans">
+                <TableRow>
+                  <TableCell colSpan={5} className="text-center py-8 text-slate-400 font-sans">
                     Belum ada data pelanggan.
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ) : (
                 safeCustomers.data.map((c) => (
-                  <tr key={c.id} className="hover:bg-slate-50/50">
-                    <td className="px-4 py-3 font-semibold text-slate-900">
+                  <TableRow key={c.id}>
+                    <TableCell className="font-semibold text-slate-900">
                       {c.name}
-                    </td>
+                    </TableCell>
 
-                    <td className="px-4 py-3">
+                    <TableCell>
                       <div className="flex flex-col gap-0.5 text-xs">
                         <span className="flex items-center text-slate-700">
                           <Phone className="h-3 w-3 mr-1 text-slate-400" /> {c.phone}
@@ -147,9 +161,9 @@ export default function Index({ customers, filters }) {
                           </span>
                         )}
                       </div>
-                    </td>
+                    </TableCell>
 
-                    <td className="px-4 py-3 text-xs text-slate-600 max-w-xs truncate">
+                    <TableCell className="text-xs text-slate-600 max-w-xs truncate">
                       {c.address ? (
                         <span className="flex items-center">
                           <MapPin className="h-3 w-3 mr-1 text-slate-400 shrink-0" />
@@ -158,35 +172,47 @@ export default function Index({ customers, filters }) {
                       ) : (
                         "-"
                       )}
-                    </td>
+                    </TableCell>
 
-                    <td className="px-4 py-3 text-xs text-slate-500 max-w-xs truncate">
+                    <TableCell className="text-xs text-slate-500 max-w-xs truncate">
                       {c.notes || "-"}
-                    </td>
+                    </TableCell>
 
-                    <td className="px-4 py-3 text-right space-x-1 whitespace-nowrap">
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="h-8 w-8 text-slate-600 hover:text-slate-900"
-                        onClick={() => handleOpenEdit(c)}
-                      >
-                        <Edit3 className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="h-8 w-8 text-red-600 hover:bg-red-50"
-                        onClick={() => handleDelete(c.id)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </td>
-                  </tr>
+                    <TableCell className="text-right whitespace-nowrap">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            className="h-8 w-8 text-slate-600 hover:text-slate-900 focus-visible:ring-1"
+                            title="Aksi Pelanggan"
+                          >
+                            <MoreVertical className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-36 shadow-md">
+                          <DropdownMenuItem
+                            onClick={() => handleOpenEdit(c)}
+                            className="cursor-pointer text-xs"
+                          >
+                            <Edit3 className="mr-2 h-3.5 w-3.5 text-slate-600" />
+                            <span>Edit Data</span>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => handleDelete(c.id)}
+                            className="cursor-pointer text-xs text-red-600 focus:text-red-600 focus:bg-red-50"
+                          >
+                            <Trash2 className="mr-2 h-3.5 w-3.5 text-red-600" />
+                            <span>Hapus</span>
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
                 ))
               )}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
 
         {/* Modal Create/Edit Customer */}
@@ -255,9 +281,10 @@ export default function Index({ customers, filters }) {
 
               <DialogFooter className="pt-2">
                 <Button type="button" variant="outline" onClick={() => setModalOpen(false)}>
-                  Batal
+                  <X /> Batal
                 </Button>
-                <Button type="submit" className="bg-slate-900 text-white" disabled={form.processing}>
+                <Button type="submit" disabled={form.processing}>
+                  <Save />
                   {form.processing ? "Menyimpan..." : "Simpan Pelanggan"}
                 </Button>
               </DialogFooter>

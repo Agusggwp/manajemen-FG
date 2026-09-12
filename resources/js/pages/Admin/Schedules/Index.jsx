@@ -12,6 +12,8 @@ import {
   Camera,
   Eye,
   CheckCircle2,
+  LayoutList,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,6 +28,21 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "@/components/ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function Index({ schedules, existingAssignments, filters, customers, packages, photographers, muas }) {
   const safeSchedules = schedules?.data ? schedules : { data: [] };
@@ -133,25 +150,23 @@ export default function Index({ schedules, existingAssignments, filters, custome
           <div className="flex items-center gap-2">
             <div className="bg-slate-100 p-1 rounded-lg flex space-x-1 border border-slate-200">
               <Button
-                variant={viewMode === "table" ? "default" : "ghost"}
+                variant={viewMode === "table" ? "secondary" : "ghost"}
                 size="sm"
                 onClick={() => setViewMode("table")}
-                className={viewMode === "table" ? "bg-white text-slate-900 shadow-2xs" : "text-slate-600"}
               >
-                Tabel
+                <LayoutList /> Tabel
               </Button>
               <Button
-                variant={viewMode === "calendar" ? "default" : "ghost"}
+                variant={viewMode === "calendar" ? "secondary" : "ghost"}
                 size="sm"
                 onClick={() => setViewMode("calendar")}
-                className={viewMode === "calendar" ? "bg-white text-slate-900 shadow-2xs" : "text-slate-600"}
               >
-                <Calendar className="h-3.5 w-3.5 mr-1" /> Kalender
+                <Calendar /> Kalender
               </Button>
             </div>
 
-            <Button onClick={() => setModalOpen(true)} className="bg-slate-900 text-white shadow-sm">
-              <Plus className="h-4 w-4 mr-2" />
+            <Button onClick={() => setModalOpen(true)}>
+              <Plus />
               Buat Jadwal Baru
             </Button>
           </div>
@@ -171,7 +186,7 @@ export default function Index({ schedules, existingAssignments, filters, custome
                 />
               </div>
               <Button variant="secondary" onClick={handleSearch}>
-                Cari
+                <Search /> Cari
               </Button>
             </div>
           </CardContent>
@@ -212,8 +227,8 @@ export default function Index({ schedules, existingAssignments, filters, custome
                     <div className="flex items-center justify-between pt-2 border-t border-slate-100">
                       <span className="text-xs font-semibold text-slate-700">{formatDate(s.date)}</span>
                       <Link href={`/admin/schedules/${s.id}`}>
-                        <Button size="sm" variant="outline" className="text-xs h-8">
-                          Lihat Detail <Eye className="ml-1 h-3 w-3" />
+                        <Button size="sm" variant="outline">
+                          Lihat Detail <Eye />
                         </Button>
                       </Link>
                     </div>
@@ -225,45 +240,45 @@ export default function Index({ schedules, existingAssignments, filters, custome
         ) : null}
 
         {viewMode === "table" && (
-          <div className="overflow-x-auto bg-white rounded-xl border border-slate-200 shadow-2xs">
-            <table className="w-full text-sm text-left text-slate-600">
-              <thead className="text-xs uppercase bg-slate-50 text-slate-500 border-b border-slate-200">
-                <tr>
-                  <th className="px-4 py-3">Tanggal & Waktu</th>
-                  <th className="px-4 py-3">Pelanggan</th>
-                  <th className="px-4 py-3">Paket Foto</th>
-                  <th className="px-4 py-3">Lokasi Pemotretan (Wajib)</th>
-                  <th className="px-4 py-3">Tim Bertugas</th>
-                  <th className="px-4 py-3 text-center">Status</th>
-                  <th className="px-4 py-3 text-center">Aksi</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
+          <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
+            <Table>
+              <TableHeader className="bg-slate-50">
+                <TableRow>
+                  <TableHead className="font-semibold text-slate-700">Tanggal & Waktu</TableHead>
+                  <TableHead className="font-semibold text-slate-700">Pelanggan</TableHead>
+                  <TableHead className="font-semibold text-slate-700">Paket Foto</TableHead>
+                  <TableHead className="font-semibold text-slate-700">Lokasi Pemotretan (Wajib)</TableHead>
+                  <TableHead className="font-semibold text-slate-700">Tim Bertugas</TableHead>
+                  <TableHead className="font-semibold text-slate-700 text-center">Status</TableHead>
+                  <TableHead className="font-semibold text-slate-700 text-center">Aksi</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 {safeSchedules.data.length === 0 ? (
-                  <tr>
-                    <td colSpan={7} className="text-center py-8 text-slate-400">
+                  <TableRow>
+                    <TableCell colSpan={7} className="text-center py-8 text-slate-400">
                       Tidak ada jadwal pemotretan ditemukan.
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 ) : (
                   safeSchedules.data.map((s) => (
-                    <tr key={s.id} className="hover:bg-slate-50/50">
-                      <td className="px-4 py-3 font-medium text-slate-900 whitespace-nowrap">
+                    <TableRow key={s.id}>
+                      <TableCell className="font-medium text-slate-900 whitespace-nowrap">
                         {formatDate(s.date)} <br />
                         <span className="text-xs text-slate-400 flex items-center gap-1 mt-0.5">
                           <Clock className="h-3 w-3" /> {s.start_time?.substring(0, 5)} - {s.end_time?.substring(0, 5)}
                         </span>
-                      </td>
+                      </TableCell>
 
-                      <td className="px-4 py-3 font-semibold text-slate-900">
+                      <TableCell className="font-semibold text-slate-900">
                         {s.customer?.name}
-                      </td>
+                      </TableCell>
 
-                      <td className="px-4 py-3 font-medium text-slate-800">
+                      <TableCell className="font-medium text-slate-800">
                         {s.photo_package?.name || s.project?.package_name || "-"}
-                      </td>
+                      </TableCell>
 
-                      <td className="px-4 py-3 max-w-xs">
+                      <TableCell className="max-w-xs">
                         <div className="font-semibold text-slate-900 flex items-center gap-1">
                           <MapPin className="h-3.5 w-3.5 text-rose-500 shrink-0" />
                           <span className="truncate">{s.location_name}</span>
@@ -272,9 +287,9 @@ export default function Index({ schedules, existingAssignments, filters, custome
                         <span className="text-[10px] text-slate-500 font-mono">
                           Radius GPS: {s.location_radius}m
                         </span>
-                      </td>
+                      </TableCell>
 
-                      <td className="px-4 py-3 text-xs">
+                      <TableCell className="text-xs">
                         <div className="space-y-1">
                           {s.project?.photographers?.map((p) => (
                             <div key={p.id} className="flex items-center space-x-1 text-slate-800 font-medium">
@@ -289,34 +304,34 @@ export default function Index({ schedules, existingAssignments, filters, custome
                             </div>
                           ))}
                         </div>
-                      </td>
+                      </TableCell>
 
-                      <td className="px-4 py-3 text-center">
+                      <TableCell className="text-center">
                         <Badge
                           variant={
                             s.status === "COMPLETED"
                               ? "success"
                               : s.status === "SHOOTING"
-                              ? "warning"
-                              : "secondary"
+                                ? "warning"
+                                : "secondary"
                           }
                         >
                           {s.status}
                         </Badge>
-                      </td>
+                      </TableCell>
 
-                      <td className="px-4 py-3 text-center">
+                      <TableCell className="text-center">
                         <Link href={`/admin/schedules/${s.id}`}>
                           <Button variant="ghost" size="icon" title="Lihat Detail">
                             <Eye className="h-4 w-4 text-slate-600" />
                           </Button>
                         </Link>
-                      </td>
-                    </tr>
+                      </TableCell>
+                    </TableRow>
                   ))
                 )}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           </div>
         )}
 
@@ -332,36 +347,40 @@ export default function Index({ schedules, existingAssignments, filters, custome
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>Pelanggan (Customer)</Label>
-                  <select
-                    required
-                    className="flex h-9 w-full rounded-md border border-slate-200 bg-white px-3 py-1 text-sm shadow-sm"
-                    value={form.data.customer_id}
-                    onChange={(e) => form.setData("customer_id", e.target.value)}
+                  <Select
+                    value={form.data.customer_id ? String(form.data.customer_id) : ""}
+                    onValueChange={(val) => form.setData("customer_id", val)}
                   >
-                    <option value="">-- Pilih Pelanggan --</option>
-                    {customers.map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.name} ({c.phone})
-                      </option>
-                    ))}
-                  </select>
+                    <SelectTrigger className="w-full bg-white">
+                      <SelectValue placeholder="-- Pilih Pelanggan --" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {customers.map((c) => (
+                        <SelectItem key={c.id} value={String(c.id)}>
+                          {c.name} ({c.phone})
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 <div className="space-y-2">
                   <Label>Paket Foto</Label>
-                  <select
-                    required
-                    className="flex h-9 w-full rounded-md border border-slate-200 bg-white px-3 py-1 text-sm shadow-sm"
-                    value={form.data.photo_package_id}
-                    onChange={(e) => handlePackageChange(e.target.value)}
+                  <Select
+                    value={form.data.photo_package_id ? String(form.data.photo_package_id) : ""}
+                    onValueChange={(val) => handlePackageChange(val)}
                   >
-                    <option value="">-- Pilih Paket Foto --</option>
-                    {packages.map((pkg) => (
-                      <option key={pkg.id} value={pkg.id}>
-                        {pkg.name} - {formatRupiah(pkg.price)} ({pkg.category})
-                      </option>
-                    ))}
-                  </select>
+                    <SelectTrigger className="w-full bg-white">
+                      <SelectValue placeholder="-- Pilih Paket Foto --" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {packages.map((pkg) => (
+                        <SelectItem key={pkg.id} value={String(pkg.id)}>
+                          {pkg.name} - {formatRupiah(pkg.price)} ({pkg.category})
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
 
@@ -380,8 +399,8 @@ export default function Index({ schedules, existingAssignments, filters, custome
                       {selectedPackage.mua?.name
                         ? `MUA Paket: ${selectedPackage.mua.name}`
                         : selectedPackage.includes_mua
-                        ? "Termasuk MUA Paket"
-                        : "— Tanpa MUA"}
+                          ? "Termasuk MUA Paket"
+                          : "— Tanpa MUA"}
                     </span>
                   </div>
                 </div>
@@ -502,13 +521,12 @@ export default function Index({ schedules, existingAssignments, filters, custome
                               ? `Photographer ${p.name} sudah ada jadwal ${conflict.start_time} - ${conflict.end_time} (${conflict.customer_name || "Pelanggan"})`
                               : ""
                           }
-                          className={`p-2.5 rounded-lg border text-xs flex flex-col justify-between transition-colors ${
-                            isBusy
+                          className={`p-2.5 rounded-lg border text-xs flex flex-col justify-between transition-colors ${isBusy
                               ? "bg-rose-50/80 border-rose-200 text-rose-500 cursor-not-allowed opacity-80"
                               : isSelected
-                              ? "bg-slate-900 text-white border-slate-900 cursor-pointer"
-                              : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50 cursor-pointer"
-                          }`}
+                                ? "bg-slate-900 text-white border-slate-900 cursor-pointer"
+                                : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50 cursor-pointer"
+                            }`}
                         >
                           <div className="flex items-center space-x-2">
                             <input
@@ -570,9 +588,10 @@ export default function Index({ schedules, existingAssignments, filters, custome
 
               <DialogFooter>
                 <Button type="button" variant="outline" onClick={() => setModalOpen(false)}>
-                  Batal
+                  <X /> Batal
                 </Button>
-                <Button type="submit" className="bg-slate-900 text-white" disabled={form.processing}>
+                <Button type="submit" disabled={form.processing}>
+                  <Plus />
                   {form.processing ? "Memproses..." : "Buat Jadwal & Project"}
                 </Button>
               </DialogFooter>
