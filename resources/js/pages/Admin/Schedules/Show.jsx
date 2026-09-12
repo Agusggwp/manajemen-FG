@@ -1,28 +1,44 @@
 import React from "react";
 import { formatDate, formatRupiah } from "@/lib/utils";
-import { Head, Link } from "@inertiajs/react";
-import { ArrowLeft, MapPin, Clock, Camera, Sparkles, User, CheckCircle2 } from "lucide-react";
+import { Head, Link, router } from "@inertiajs/react";
+import { ArrowLeft, MapPin, Clock, Camera, Sparkles, User, CheckCircle2, Mail } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
 export default function Show({ schedule }) {
+  const handleSendReminder = () => {
+    if (confirm("Kirim email peringatan (reminder) ke Pelanggan, Fotografer, dan MUA untuk jadwal ini?")) {
+      router.post(`/admin/schedules/${schedule.id}/send-reminder`);
+    }
+  };
+
   return (
     <>
       <Head title={`Detail Jadwal - ${schedule.customer?.name || ""}`} />
       <div className="space-y-6">
-        <div className="flex items-center space-x-3">
-          <Link href="/admin/schedules">
-            <Button variant="outline" size="icon">
-              <ArrowLeft className="h-4 w-4" />
-            </Button>
-          </Link>
-          <div>
-            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
-              Detail Jadwal Pemotretan
-            </h1>
-            <p className="text-xs text-slate-500">Informasi lokasi, waktu, dan tim bertugas</p>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <Link href="/admin/schedules">
+              <Button variant="outline" size="icon">
+                <ArrowLeft className="h-4 w-4" />
+              </Button>
+            </Link>
+            <div>
+              <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+                Detail Jadwal Pemotretan
+              </h1>
+              <p className="text-xs text-slate-500">Informasi lokasi, waktu, dan tim bertugas</p>
+            </div>
           </div>
+
+          <Button
+            onClick={handleSendReminder}
+            className="bg-indigo-600 hover:bg-indigo-700 text-white flex items-center gap-2"
+          >
+            <Mail className="h-4 w-4" />
+            <span>Kirim Email Peringatan</span>
+          </Button>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -30,9 +46,16 @@ export default function Show({ schedule }) {
           <Card className="border-slate-200 lg:col-span-2">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-base font-semibold">Informasi Jadwal</CardTitle>
-              <Badge variant={schedule.status === "COMPLETED" ? "success" : "warning"}>
-                {schedule.status}
-              </Badge>
+              <div className="flex items-center space-x-2">
+                {schedule.reminder_sent_at && (
+                  <Badge variant="outline" className="border-emerald-500 text-emerald-700 bg-emerald-50">
+                    Email Reminder Terkirim
+                  </Badge>
+                )}
+                <Badge variant={schedule.status === "COMPLETED" ? "success" : "warning"}>
+                  {schedule.status}
+                </Badge>
+              </div>
             </CardHeader>
             <CardContent className="space-y-4 text-sm">
               <div className="grid grid-cols-2 gap-4">

@@ -268,4 +268,57 @@ class ScheduleController extends Controller
 
         return back()->with('success', 'Jadwal berhasil dihapus.');
     }
+
+    public function sendReminder(Schedule $schedule)
+    {
+        $schedule->load(['customer', 'photoPackage', 'project.photographers', 'project.muas']);
+
+        $customerSent = false;
+        $photographersCount = 0;
+        $muasCount = 0;
+
+        if ($schedule->customer && ! empty($schedule->customer->email)) {
+            try {
+                \Illuminate\Support\Facades\Mail::to($schedule->customer->email)
+                    ->send(new \App\Mail\CustomerPhotoSessionReminderMail($schedule));
+                $customerSent = true;
+            } catch (\Exception $e) {
+                return back()->with('error', "Gagal mengirim email ke pelanggan: {$e->getMessage()}");
+            }
+        }
+
+        if ($schedule->project) {
+            foreach ($schedule->project->photographers as $photographer) {
+                if (! empty($photographer->email)) {
+                    try {
+                        \Illuminate\Support\Facades\Mail::to($photographer->email)
+                            ->send(new \App\Mail\PhotographerPhotoSessionReminderMail($schedule, $photographer));
+                        $photographersCount++;
+                    } catch (\Exception $e) {
+                        // ignore/log
+                    }
+                }
+            }
+
+            foreach ($schedule->project->muas as $mua) {
+                if (! empty($mua->email)) {
+                    try {
+                        \Illuminate\Support\Facades\Mail::to($mua->email)
+                            ->send(new \App\Mail\MuaPhotoSessionReminderMail($schedule, $mua));
+                        $muasCount++;
+                    } catch (\Exception $e) {
+                        // ignore/log
+                    }
+                }
+            }
+        }
+
+        $schedule->update(['reminder_sent_at' => now()]);
+
+        $logMsg = "Email pengingat manual dikirim untuk Jadwal #{$schedule->id} ({$schedule->location_name}). Pelanggan: " . ($customerSent ? 'Ya' : 'Tidak') . ", Fotografer: {$photographersCount}, MUA: {$muasCount}.";
+
+        ActivityLogger::log('EMAIL_REMINDER_SENT', 'SCHEDULE', $logMsg, $schedule->id);
+
+        return back()->with('success', "Email peringatan berhasil dikirim ke Pelanggan, Fotografer ({$photographersCount}), dan MUA ({$muasCount}).");
+    }
 }

@@ -52,6 +52,7 @@ Route::middleware(['auth', 'role.admin'])->prefix('admin')->as('admin.')->group(
     Route::resource('customers', CustomerController::class)->except(['create', 'edit']);
 
     // Schedules (WAJIB LOKASI)
+    Route::post('/schedules/{schedule}/send-reminder', [AdminScheduleController::class, 'sendReminder'])->name('schedules.send-reminder');
     Route::resource('schedules', AdminScheduleController::class);
 
     // Projects

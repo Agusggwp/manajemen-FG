@@ -11,6 +11,7 @@ import {
   User,
   Camera,
   Eye,
+  Mail,
   CheckCircle2,
   LayoutList,
   X,
@@ -321,11 +322,25 @@ export default function Index({ schedules, existingAssignments, filters, custome
                       </TableCell>
 
                       <TableCell className="text-center">
-                        <Link href={`/admin/schedules/${s.id}`}>
-                          <Button variant="ghost" size="icon" title="Lihat Detail">
-                            <Eye className="h-4 w-4 text-slate-600" />
+                        <div className="flex items-center justify-center space-x-1">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => {
+                              if (confirm("Kirim email peringatan (reminder) ke Pelanggan, Fotografer, dan MUA untuk jadwal ini?")) {
+                                router.post(`/admin/schedules/${s.id}/send-reminder`);
+                              }
+                            }}
+                            title={s.reminder_sent_at ? `Email Peringatan Terkirim (${formatDate(s.reminder_sent_at)}) - Klik untuk kirim ulang` : "Kirim Email Peringatan H-1"}
+                          >
+                            <Mail className={`h-4 w-4 ${s.reminder_sent_at ? "text-emerald-600 font-bold" : "text-slate-600"}`} />
                           </Button>
-                        </Link>
+                          <Link href={`/admin/schedules/${s.id}`}>
+                            <Button variant="ghost" size="icon" title="Lihat Detail">
+                              <Eye className="h-4 w-4 text-slate-600" />
+                            </Button>
+                          </Link>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))

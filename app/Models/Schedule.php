@@ -25,6 +25,7 @@ class Schedule extends Model
         'location_notes',
         'notes',
         'status',
+        'reminder_sent_at',
     ];
 
     protected $casts = [
@@ -32,6 +33,7 @@ class Schedule extends Model
         'latitude' => 'float',
         'longitude' => 'float',
         'location_radius' => 'integer',
+        'reminder_sent_at' => 'datetime',
     ];
 
     public function booking()

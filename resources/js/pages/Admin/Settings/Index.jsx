@@ -1,6 +1,6 @@
 import React from "react";
 import { Head, useForm } from "@inertiajs/react";
-import { Settings, Save, Globe, Palette, Sparkles, MessageCircle } from "lucide-react";
+import { Settings, Save, Globe, Palette, Sparkles, MessageCircle, Mail, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -14,6 +14,7 @@ export default function Index({ settings }) {
     company_phone: settings?.company_phone || "081999888777",
     company_address: settings?.company_address || "Denpasar, Bali",
     default_location_radius: settings?.default_location_radius || 100,
+    reminder_email_time: settings?.reminder_email_time || "08:00",
 
     // Public Web Display Settings
     public_theme_mode: settings?.public_theme_mode || "light",
@@ -249,6 +250,42 @@ export default function Index({ settings }) {
                 value={form.data.company_address}
                 onChange={(e) => form.setData("company_address", e.target.value)}
               />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* SECTION 3: EMAIL REMINDER SETTINGS */}
+        <Card className="border-slate-200 shadow-2xs">
+          <CardHeader className="bg-slate-50/50 border-b border-slate-100">
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-base font-semibold flex items-center gap-2 text-slate-900">
+                  <Mail className="h-5 w-5 text-indigo-600" /> Pengaturan Email Peringatan H-1 (Reminder)
+                </CardTitle>
+                <CardDescription className="text-xs text-slate-500 mt-1">
+                  Atur jam eksekusi otomatis pengiriman email pengingat H-1 ke Pelanggan, Fotografer, dan MUA.
+                </CardDescription>
+              </div>
+              <Badge variant="outline" className="border-indigo-200 text-indigo-700 bg-indigo-50">
+                Otomatis Harian
+              </Badge>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-4 pt-6">
+            <div className="space-y-2 max-w-xs">
+              <Label className="flex items-center gap-1.5 font-bold text-slate-800">
+                <Clock className="h-4 w-4 text-indigo-600" /> Jam Pengiriman Email (WITA / Local)
+              </Label>
+              <Input
+                type="time"
+                required
+                value={form.data.reminder_email_time}
+                onChange={(e) => form.setData("reminder_email_time", e.target.value)}
+                className="bg-white text-base font-semibold"
+              />
+              <p className="text-xs text-slate-500">
+                Sistem akan secara otomatis memproses dan mengirimkan email pengingat H-1 pada jam yang ditentukan ini setiap hari.
+              </p>
             </div>
           </CardContent>
         </Card>
