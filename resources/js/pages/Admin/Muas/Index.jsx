@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Head, useForm, router, Link } from "@inertiajs/react";
 import { Plus, Search, Sparkles, Edit3, Trash2, Eye, Phone, MapPin, MoreVertical, X, Save, Wallet } from "lucide-react";
 import { formatRupiah } from "@/lib/utils";
@@ -92,16 +92,19 @@ export default function Index({ muas, filters }) {
     }
   };
 
-  const handleSearch = () => {
-    setIsSearching(true);
-    router.get(
-      "/admin/muas",
-      { search },
-      {
+  const debounceRef = useRef(null);
+
+  const handleSearchChange = (e) => {
+    const val = e.target.value;
+    setSearch(val);
+    clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      setIsSearching(true);
+      router.get("/admin/muas", { search: val }, {
         preserveState: true,
         onFinish: () => setIsSearching(false),
-      }
-    );
+      });
+    }, 500);
   };
 
   const handleDeleteClick = (mua) => {
@@ -148,14 +151,10 @@ export default function Index({ muas, filters }) {
                 <Input
                   placeholder="Cari nama, nomor HP, atau spesialisasi MUA..."
                   value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+                  onChange={handleSearchChange}
                   className="pl-9"
                 />
               </div>
-              <Button variant="secondary" onClick={handleSearch} disabled={isLoading}>
-                <Search /> Cari
-              </Button>
             </div>
           </CardContent>
         </Card>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { formatDate, formatRupiah } from "@/lib/utils";
 import { Head, useForm, router, Link } from "@inertiajs/react";
 import {
@@ -161,16 +161,19 @@ export default function Index({ schedules, existingAssignments, filters, custome
   const [isSearching, setIsSearching] = useState(false);
   const [viewMode, setViewMode] = useState("table"); // "table" | "calendar"
 
-  const handleSearch = () => {
-    setIsSearching(true);
-    router.get(
-      "/admin/schedules",
-      { search },
-      {
+  const debounceRef = useRef(null);
+
+  const handleSearchChange = (e) => {
+    const val = e.target.value;
+    setSearch(val);
+    clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      setIsSearching(true);
+      router.get("/admin/schedules", { search: val }, {
         preserveState: true,
         onFinish: () => setIsSearching(false),
-      }
-    );
+      });
+    }, 500);
   };
 
   const isLoading = isNavigating || isSearching;
@@ -218,14 +221,10 @@ export default function Index({ schedules, existingAssignments, filters, custome
                 <Input
                   placeholder="Cari pelanggan, nama lokasi, atau alamat..."
                   value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+                  onChange={handleSearchChange}
                   className="pl-9"
                 />
               </div>
-              <Button variant="secondary" onClick={handleSearch} disabled={isLoading}>
-                <Search /> Cari
-              </Button>
             </div>
           </CardContent>
         </Card>

@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { formatDate } from "@/lib/utils";
 import { Head, router } from "@inertiajs/react";
-import { History, Search, Filter } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { History, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -31,17 +30,31 @@ export default function Index({ logs, filters }) {
   const [isSearching, setIsSearching] = useState(false);
   const [search, setSearch] = useState(safeFilters.search || "");
   const [module, setModule] = useState(safeFilters.module || "");
+  const debounceRef = useRef(null);
 
-  const handleFilter = () => {
+  const doFilter = (newSearch, newModule) => {
     setIsSearching(true);
     router.get(
       "/admin/activity-logs",
-      { search, module },
+      { search: newSearch, module: newModule },
       {
         preserveState: true,
         onFinish: () => setIsSearching(false),
       }
     );
+  };
+
+  const handleSearchChange = (e) => {
+    const val = e.target.value;
+    setSearch(val);
+    clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => doFilter(val, module), 500);
+  };
+
+  const handleModuleChange = (val) => {
+    const newModule = val === "all" ? "" : val;
+    setModule(newModule);
+    doFilter(search, newModule);
   };
 
   const isLoading = isNavigating || isSearching;
@@ -69,12 +82,11 @@ export default function Index({ logs, filters }) {
                   placeholder="Cari deskripsi, user, atau aktivitas..."
                   className="pl-9"
                   value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleFilter()}
+                  onChange={handleSearchChange}
                 />
               </div>
 
-              <Select value={module || "all"} onValueChange={(val) => setModule(val === "all" ? "" : val)}>
+              <Select value={module || "all"} onValueChange={handleModuleChange}>
                 <SelectTrigger className="w-full sm:w-48 bg-white">
                   <SelectValue placeholder="Semua Modul" />
                 </SelectTrigger>
@@ -89,10 +101,6 @@ export default function Index({ logs, filters }) {
                   <SelectItem value="Package">Paket Foto</SelectItem>
                 </SelectContent>
               </Select>
-
-              <Button variant="secondary" onClick={handleFilter} disabled={isLoading}>
-                <Filter /> Filter
-              </Button>
             </div>
           </CardContent>
         </Card>

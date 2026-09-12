@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Head, useForm, router } from "@inertiajs/react";
 import { Plus, Search, Users, Edit3, Trash2, Phone, Mail, MapPin, MoreVertical, X, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -81,16 +81,19 @@ export default function Index({ customers, filters }) {
     }
   };
 
-  const handleSearch = () => {
-    setIsSearching(true);
-    router.get(
-      "/admin/customers",
-      { search },
-      {
+  const debounceRef = useRef(null);
+
+  const handleSearchChange = (e) => {
+    const val = e.target.value;
+    setSearch(val);
+    clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      setIsSearching(true);
+      router.get("/admin/customers", { search: val }, {
         preserveState: true,
         onFinish: () => setIsSearching(false),
-      }
-    );
+      });
+    }, 500);
   };
 
   const handleDeleteClick = (customer) => {
@@ -137,14 +140,10 @@ export default function Index({ customers, filters }) {
                 <Input
                   placeholder="Cari nama, nomor HP, atau email pelanggan..."
                   value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+                  onChange={handleSearchChange}
                   className="pl-9"
                 />
               </div>
-              <Button variant="secondary" onClick={handleSearch} disabled={isLoading}>
-                <Search /> Cari
-              </Button>
             </div>
           </CardContent>
         </Card>

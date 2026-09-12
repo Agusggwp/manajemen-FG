@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { formatRupiah } from "@/lib/utils";
 import { Head, router } from "@inertiajs/react";
-import { TrendingUp, Filter, DollarSign, PieChart, Sparkles, Download } from "lucide-react";
+import { TrendingUp, DollarSign, PieChart, Sparkles, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -34,21 +34,38 @@ export default function PackageProfit({ reportData, summary, filters, categories
   const [startDate, setStartDate] = useState(safeFilters.start_date || "");
   const [endDate, setEndDate] = useState(safeFilters.end_date || "");
   const [category, setCategory] = useState(safeFilters.category || "");
+  const debounceRef = useRef(null);
 
-  const handleFilter = () => {
+  const doFilter = (newStart, newEnd, newCat) => {
     setIsFiltering(true);
     router.get(
       "/admin/reports/package-profit",
-      {
-        start_date: startDate,
-        end_date: endDate,
-        category: category,
-      },
+      { start_date: newStart, end_date: newEnd, category: newCat },
       {
         preserveState: true,
         onFinish: () => setIsFiltering(false),
       }
     );
+  };
+
+  const handleStartDate = (e) => {
+    const val = e.target.value;
+    setStartDate(val);
+    clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => doFilter(val, endDate, category), 300);
+  };
+
+  const handleEndDate = (e) => {
+    const val = e.target.value;
+    setEndDate(val);
+    clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => doFilter(startDate, val, category), 300);
+  };
+
+  const handleCategoryChange = (val) => {
+    const newCat = val === "all" ? "" : val;
+    setCategory(newCat);
+    doFilter(startDate, endDate, newCat);
   };
 
   const isLoading = isNavigating || isFiltering;
@@ -86,7 +103,7 @@ export default function PackageProfit({ reportData, summary, filters, categories
                 <Input
                   type="date"
                   value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
+                  onChange={handleStartDate}
                 />
               </div>
 
@@ -95,13 +112,13 @@ export default function PackageProfit({ reportData, summary, filters, categories
                 <Input
                   type="date"
                   value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
+                  onChange={handleEndDate}
                 />
               </div>
 
               <div className="flex-1 space-y-1">
                 <label className="text-xs font-semibold text-slate-600">Kategori Paket</label>
-                <Select value={category || "all"} onValueChange={(val) => setCategory(val === "all" ? "" : val)}>
+                <Select value={category || "all"} onValueChange={handleCategoryChange}>
                   <SelectTrigger className="w-full bg-white">
                     <SelectValue placeholder="Semua Kategori" />
                   </SelectTrigger>
@@ -113,10 +130,6 @@ export default function PackageProfit({ reportData, summary, filters, categories
                   </SelectContent>
                 </Select>
               </div>
-
-              <Button variant="secondary" onClick={handleFilter}>
-                <Filter /> Terapkan Filter
-              </Button>
             </div>
           </CardContent>
         </Card>
