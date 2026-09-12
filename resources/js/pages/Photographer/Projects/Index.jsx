@@ -44,8 +44,8 @@ export default function Index({ projects = { data: [] } }) {
                       {prj.status}
                     </Badge>
                     <Link href={`/photographer/projects/${prj.id}`}>
-                      <Button size="sm" variant="outline" className="text-xs">
-                        <Eye className="h-4 w-4 mr-1" /> Detail Project
+                      <Button size="sm" variant="outline">
+                        <Eye /> Detail Project
                       </Button>
                     </Link>
                   </div>

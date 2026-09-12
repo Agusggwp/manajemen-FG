@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Head, useForm } from "@inertiajs/react";
-import { Image, Upload, CheckCircle2, FolderKanban } from "lucide-react";
+import { Image, Upload, CheckCircle2, FolderKanban, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -64,8 +64,8 @@ export default function Index({ projects = [] }) {
                     <CardTitle className="text-base font-bold">{project.project_name}</CardTitle>
                     <p className="text-xs text-slate-500">{project.customer?.name} • {project.package_name}</p>
                   </div>
-                  <Button size="sm" onClick={() => handleOpenUpload(project)} className="bg-slate-900 text-white text-xs">
-                    <Upload className="h-3.5 w-3.5 mr-1" /> Unggah Foto
+                  <Button size="sm" onClick={() => handleOpenUpload(project)}>
+                    <Upload /> Unggah Foto
                   </Button>
                 </CardHeader>
                 <CardContent className="p-4 pt-3">
@@ -128,10 +128,10 @@ export default function Index({ projects = [] }) {
 
               <DialogFooter>
                 <Button type="button" variant="outline" onClick={() => setUploadModalOpen(false)}>
-                  Batal
+                  <X /> Batal
                 </Button>
-                <Button type="submit" className="bg-slate-900 text-white" disabled={form.processing}>
-                  {form.processing ? "Mengunggah..." : "Unggah Hasil Foto"}
+                <Button type="submit" disabled={form.processing}>
+                  <Upload /> {form.processing ? "Mengunggah..." : "Unggah Hasil Foto"}
                 </Button>
               </DialogFooter>
             </form>

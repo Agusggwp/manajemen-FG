@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { formatDate } from "@/lib/utils";
 import { Head, Link, router } from "@inertiajs/react";
-import { Calendar, MapPin, Clock, Camera, Eye } from "lucide-react";
+import { Calendar, MapPin, Clock, Camera, Eye, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -39,7 +39,7 @@ export default function Index({ schedules = { data: [] }, filters = {} }) {
                 className="max-w-xs"
               />
               <Button variant="secondary" size="sm" onClick={handleFilter}>
-                Filter
+                <Filter /> Filter
               </Button>
             </div>
           </CardContent>
@@ -78,8 +78,8 @@ export default function Index({ schedules = { data: [] }, filters = {} }) {
 
                   <div>
                     <Link href={`/photographer/schedules/${sch.id}`}>
-                      <Button size="sm" className="bg-slate-900 text-white text-xs w-full sm:w-auto">
-                        Detail & Bukti Foto
+                      <Button size="sm" className="w-full sm:w-auto">
+                        <Camera /> Detail & Bukti Foto
                       </Button>
                     </Link>
                   </div>

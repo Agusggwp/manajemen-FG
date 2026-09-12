@@ -5,6 +5,21 @@ import { DollarSign, Clock, CheckCircle2, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "@/components/ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function Index({ salaries = { data: [] }, unpaidTotal = 0, paidTotal = 0, filters = {} }) {
   const safeFilters = filters || {};
@@ -53,56 +68,57 @@ export default function Index({ salaries = { data: [] }, unpaidTotal = 0, paidTo
         {/* Filter */}
         <Card className="border-slate-200">
           <CardContent className="pt-4 pb-4 flex gap-2 items-center">
-            <select
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
-              className="h-9 px-3 text-xs rounded-md border border-slate-200 bg-white"
-            >
-              <option value="">Semua Status Pembayaran</option>
-              <option value="UNPAID">UNPAID (Belum Dibayar)</option>
-              <option value="PAID">PAID (Sudah Lunas)</option>
-            </select>
+            <Select value={status || "all"} onValueChange={(val) => setStatus(val === "all" ? "" : val)}>
+              <SelectTrigger className="w-full sm:w-56 bg-white text-xs">
+                <SelectValue placeholder="Semua Status Pembayaran" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Semua Status Pembayaran</SelectItem>
+                <SelectItem value="UNPAID">UNPAID (Belum Dibayar)</SelectItem>
+                <SelectItem value="PAID">PAID (Sudah Lunas)</SelectItem>
+              </SelectContent>
+            </Select>
             <Button variant="secondary" size="sm" onClick={handleFilter}>
-              <Filter className="h-3.5 w-3.5 mr-1" /> Filter
+              <Filter /> Filter
             </Button>
           </CardContent>
         </Card>
 
         {/* Table */}
-        <div className="overflow-x-auto bg-white rounded-xl border border-slate-200 shadow-2xs">
-          <table className="w-full text-sm text-left text-slate-600">
-            <thead className="text-xs uppercase bg-slate-50 text-slate-500 border-b border-slate-200">
-              <tr>
-                <th className="px-4 py-3">Project / Pelanggan</th>
-                <th className="px-4 py-3">Paket</th>
-                <th className="px-4 py-3 text-right">Gaji Project</th>
-                <th className="px-4 py-3 text-center">Status Pembayaran</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
+        <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
+          <Table>
+            <TableHeader className="bg-slate-50">
+              <TableRow>
+                <TableHead className="font-semibold text-slate-700">Project / Pelanggan</TableHead>
+                <TableHead className="font-semibold text-slate-700">Paket</TableHead>
+                <TableHead className="font-semibold text-slate-700 text-right">Gaji Project</TableHead>
+                <TableHead className="font-semibold text-slate-700 text-center">Status Pembayaran</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {(!salaries?.data || salaries.data.length === 0) ? (
-                <tr>
-                  <td colSpan={4} className="text-center py-8 text-slate-400">
+                <TableRow>
+                  <TableCell colSpan={4} className="text-center py-8 text-slate-400">
                     Belum ada rekaman gaji penugasan project.
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ) : (
                 (salaries?.data || []).map((sal) => (
-                  <tr key={sal.id} className="hover:bg-slate-50/50">
-                    <td className="px-4 py-3">
+                  <TableRow key={sal.id}>
+                    <TableCell>
                       <span className="font-bold text-slate-900 block">{sal.project?.project_name}</span>
                       <span className="text-xs text-slate-500">{sal.project?.customer?.name}</span>
-                    </td>
+                    </TableCell>
 
-                    <td className="px-4 py-3 text-slate-700">
+                    <TableCell className="text-slate-700">
                       {sal.project?.photoPackage?.name || sal.project?.package_name || "-"}
-                    </td>
+                    </TableCell>
 
-                    <td className="px-4 py-3 text-right font-bold text-slate-900">
+                    <TableCell className="text-right font-bold text-slate-900">
                       {formatRupiah(sal.amount)}
-                    </td>
+                    </TableCell>
 
-                    <td className="px-4 py-3 text-center">
+                    <TableCell className="text-center">
                       <Badge variant={sal.payment_status === "PAID" ? "success" : "warning"}>
                         {sal.payment_status}
                       </Badge>
@@ -111,12 +127,12 @@ export default function Index({ salaries = { data: [] }, unpaidTotal = 0, paidTo
                           Lunas pada: {formatDate(sal.paid_at)}
                         </span>
                       )}
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 ))
               )}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
       </div>
     </>

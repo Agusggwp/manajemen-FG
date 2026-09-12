@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Head, useForm, Link } from "@inertiajs/react";
-import { ArrowLeft, Camera, MapPin, Navigation, ShieldCheck, AlertCircle } from "lucide-react";
+import { ArrowLeft, Camera, MapPin, Navigation, ShieldCheck, AlertCircle, RefreshCw, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -123,6 +123,7 @@ export default function Create({ schedule, type, existingProof }) {
                   <Navigation className="h-4 w-4 text-rose-600 animate-pulse" /> Deteksi GPS Lokasi
                 </span>
                 <Button type="button" size="xs" variant="outline" onClick={getGpsPosition} disabled={gpsLoading}>
+                  <RefreshCw className={gpsLoading ? "animate-spin" : ""} />
                   {gpsLoading ? "Mendeteksi..." : "Muat Ulang GPS"}
                 </Button>
               </div>
@@ -193,9 +194,10 @@ export default function Create({ schedule, type, existingProof }) {
 
               <Button
                 type="submit"
-                className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5"
+                className="w-full font-bold"
                 disabled={form.processing || gpsLoading}
               >
+                <Upload />
                 {form.processing ? "Mengirim..." : `KIRIM BUKTI FOTO ${type}`}
               </Button>
             </form>

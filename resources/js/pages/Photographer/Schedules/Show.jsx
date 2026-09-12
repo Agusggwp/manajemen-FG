@@ -79,19 +79,19 @@ export default function Show({ schedule }) {
 
               {/* START BUTTON LOGIC */}
               {startProof ? (
-                <Button disabled className="w-full bg-slate-100 text-slate-400 border border-slate-200 font-medium text-xs" size="sm">
-                  <CheckCircle2 className="h-4 w-4 mr-2 text-emerald-600" />
+                <Button disabled variant="outline" className="w-full" size="sm">
+                  <CheckCircle2 className="text-emerald-600" />
                   [ START TELAH DIKIRIM ]
                 </Button>
               ) : !isTimeForStart ? (
-                <Button disabled className="w-full bg-slate-100 text-slate-400 border border-slate-200 font-medium text-xs" size="sm">
-                  <Clock className="h-4 w-4 mr-2 text-amber-500" />
+                <Button disabled variant="outline" className="w-full" size="sm">
+                  <Clock className="text-amber-500" />
                   [ BELUM WAKTUNYA DIMULAI ]
                 </Button>
               ) : (
                 <Link href={`/photographer/schedules/${schedule.id}/proof/start`}>
-                  <Button className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs" size="sm">
-                    <PlayCircle className="h-4 w-4 mr-2 text-emerald-400" />
+                  <Button className="w-full font-bold" size="sm">
+                    <PlayCircle className="text-emerald-400" />
                     [ MULAI PEMOTRETAN ]
                   </Button>
                 </Link>
@@ -133,19 +133,19 @@ export default function Show({ schedule }) {
 
               {/* END BUTTON LOGIC */}
               {endProof ? (
-                <Button disabled className="w-full bg-slate-100 text-slate-400 border border-slate-200 font-medium text-xs" size="sm">
-                  <CheckCircle2 className="h-4 w-4 mr-2 text-emerald-600" />
+                <Button disabled variant="outline" className="w-full" size="sm">
+                  <CheckCircle2 className="text-emerald-600" />
                   [ SELESAI (END) TELAH DIKIRIM ]
                 </Button>
               ) : !startProof ? (
-                <Button disabled className="w-full bg-slate-100 text-slate-400 border border-slate-200 font-medium text-xs" size="sm">
-                  <Lock className="h-4 w-4 mr-2" />
+                <Button disabled variant="outline" className="w-full" size="sm">
+                  <Lock />
                   [ AMBIL BUKTI START DULU ]
                 </Button>
               ) : (
                 <Link href={`/photographer/schedules/${schedule.id}/proof/end`}>
-                  <Button className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs" size="sm">
-                    <StopCircle className="h-4 w-4 mr-2" />
+                  <Button className="w-full font-bold" size="sm">
+                    <StopCircle />
                     [ SELESAIKAN PEMOTRETAN ]
                   </Button>
                 </Link>

@@ -79,9 +79,9 @@ export default function Login() {
                   variant="outline"
                   size="sm"
                   onClick={() => handleQuickRole("admin@artdevata.com", "password")}
-                  className="w-full text-xs font-medium"
+                  className="w-full"
                 >
-                  <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
+                  <ShieldCheck className="text-emerald-600" />
                   Admin
                 </Button>
                 <Button
@@ -89,9 +89,9 @@ export default function Login() {
                   variant="outline"
                   size="sm"
                   onClick={() => handleQuickRole("agus@artdevata.com", "password")}
-                  className="w-full text-xs font-medium"
+                  className="w-full"
                 >
-                  <Camera className="h-3.5 w-3.5 text-emerald-600" />
+                  <Camera className="text-emerald-600" />
                   Fotografer
                 </Button>
               </CardContent>
@@ -148,7 +148,7 @@ export default function Login() {
 
               <Button type="submit" className="w-full" disabled={processing}>
                 {processing ? "Memproses..." : "Masuk"}
-                <ArrowRight className="h-4 w-4" />
+                <ArrowRight />
               </Button>
             </form>
           </div>

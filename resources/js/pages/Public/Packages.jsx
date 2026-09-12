@@ -14,6 +14,7 @@ import {
   LayoutDashboard,
   Image as ImageIcon,
   Info,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -75,21 +76,19 @@ export default function Packages({ packages, categories, settings, auth }) {
 
   return (
     <div
-      className={`min-h-screen font-sans relative selection:bg-[#21C9A4] ${
-        isDarkTheme
+      className={`min-h-screen font-sans relative selection:bg-[#21C9A4] ${isDarkTheme
           ? "bg-[#14433B] text-[#F5F7F6] selection:text-[#0B302B]"
           : "bg-white text-slate-900 selection:text-slate-900"
-      }`}
+        }`}
     >
       <Head title={`Katalog Paket Foto - ${companyName}`} />
 
       {/* SUBTLE TECHNICAL GRID BACKGROUND */}
       <div
-        className={`fixed inset-0 pointer-events-none opacity-30 bg-[size:44px_44px] z-0 ${
-          isDarkTheme
+        className={`fixed inset-0 pointer-events-none opacity-30 bg-[size:44px_44px] z-0 ${isDarkTheme
             ? "bg-[linear-gradient(to_right,rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.08)_1px,transparent_1px)]"
             : "bg-[linear-gradient(to_right,rgba(20,67,59,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(20,67,59,0.06)_1px,transparent_1px)]"
-        }`}
+          }`}
       />
 
       {/* SOFT TURQUOISE RADIAL GLOW */}
@@ -97,28 +96,25 @@ export default function Packages({ packages, categories, settings, auth }) {
 
       {/* NAVBAR */}
       <header
-        className={`sticky top-0 z-50 backdrop-blur-md border-b ${
-          isDarkTheme
+        className={`sticky top-0 z-50 backdrop-blur-md border-b ${isDarkTheme
             ? "bg-[#0B302B]/85 border-white/10"
             : "bg-white/90 border-slate-200/80 shadow-2xs"
-        }`}
+          }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between relative z-10">
           <div className="flex items-center space-x-3">
             <div
-              className={`h-10 w-10 rounded-xl flex items-center justify-center shadow-xs ${
-                isDarkTheme
+              className={`h-10 w-10 rounded-xl flex items-center justify-center shadow-xs ${isDarkTheme
                   ? "bg-[#21C9A4]/15 border border-[#21C9A4]/30"
                   : "bg-[#14433B]"
-              }`}
+                }`}
             >
               <Camera className="h-5 w-5 text-[#21C9A4]" />
             </div>
             <div>
               <span
-                className={`text-lg font-extrabold tracking-wider flex items-center gap-1 ${
-                  isDarkTheme ? "text-[#F5F7F6]" : "text-[#14433B]"
-                }`}
+                className={`text-lg font-extrabold tracking-wider flex items-center gap-1 ${isDarkTheme ? "text-[#F5F7F6]" : "text-[#14433B]"
+                  }`}
               >
                 {companyName.split(" ")[0] || "ARTDEVATA"}
               </span>
@@ -129,9 +125,8 @@ export default function Packages({ packages, categories, settings, auth }) {
           </div>
 
           <nav
-            className={`hidden md:flex items-center space-x-8 text-sm font-medium ${
-              isDarkTheme ? "text-[#B8C8C4]" : "text-slate-600"
-            }`}
+            className={`hidden md:flex items-center space-x-8 text-sm font-medium ${isDarkTheme ? "text-[#B8C8C4]" : "text-slate-600"
+              }`}
           >
             <a href="#katalog" className="hover:text-[#21C9A4] transition-colors">
               Katalog Paket
@@ -148,13 +143,12 @@ export default function Packages({ packages, categories, settings, auth }) {
             <div>
               <Link href={dashboardUrl}>
                 <Button
-                  className={`font-bold rounded-xl text-xs ${
-                    isDarkTheme
+                  className={`font-bold rounded-xl text-xs ${isDarkTheme
                       ? "bg-[#21C9A4] hover:bg-[#2ED9B2] text-[#0B302B] shadow-md shadow-[#21C9A4]/15"
                       : "bg-[#14433B] hover:bg-[#0B302B] text-[#21C9A4] shadow-xs"
-                  }`}
+                    }`}
                 >
-                  <LayoutDashboard className="h-4 w-4 mr-2" />
+                  <LayoutDashboard className="h-4 w-4 mr-1.5" />
                   Dashboard Staff
                 </Button>
               </Link>
@@ -165,34 +159,30 @@ export default function Packages({ packages, categories, settings, auth }) {
 
       {/* HERO SECTION */}
       <section
-        className={`relative pt-14 pb-16 md:pt-20 md:pb-24 overflow-hidden z-10 border-b ${
-          isDarkTheme ? "border-white/10" : "border-slate-100"
-        }`}
+        className={`relative pt-14 pb-16 md:pt-20 md:pb-24 overflow-hidden z-10 border-b ${isDarkTheme ? "border-white/10" : "border-slate-100"
+          }`}
       >
         <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center space-y-6">
           <div
-            className={`inline-flex items-center space-x-2 px-4 py-1.5 rounded-full text-xs font-semibold shadow-2xs ${
-              isDarkTheme
+            className={`inline-flex items-center space-x-2 px-4 py-1.5 rounded-full text-xs font-semibold shadow-2xs ${isDarkTheme
                 ? "bg-[#0B302B]/90 border border-[#21C9A4]/30 text-[#21C9A4]"
                 : "bg-[#14433B]/5 border border-[#14433B]/15 text-[#14433B]"
-            }`}
+              }`}
           >
             <Sparkles className="h-3.5 w-3.5 text-[#21C9A4]" />
             <span>{heroBadge}</span>
           </div>
 
           <h1
-            className={`text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight ${
-              isDarkTheme ? "text-[#F5F7F6]" : "text-slate-900"
-            }`}
+            className={`text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight ${isDarkTheme ? "text-[#F5F7F6]" : "text-slate-900"
+              }`}
           >
             {heroTitle}
           </h1>
 
           <p
-            className={`max-w-2xl mx-auto text-base sm:text-lg font-normal leading-relaxed ${
-              isDarkTheme ? "text-[#B8C8C4]" : "text-slate-600"
-            }`}
+            className={`max-w-2xl mx-auto text-base sm:text-lg font-normal leading-relaxed ${isDarkTheme ? "text-[#B8C8C4]" : "text-slate-600"
+              }`}
           >
             {heroSubtitle}
           </p>
@@ -202,20 +192,18 @@ export default function Packages({ packages, categories, settings, auth }) {
             <div className="max-w-xl mx-auto pt-2">
               <div className="relative flex items-center">
                 <Search
-                  className={`absolute left-4 h-5 w-5 ${
-                    isDarkTheme ? "text-[#829A94]" : "text-slate-400"
-                  }`}
+                  className={`absolute left-4 h-5 w-5 ${isDarkTheme ? "text-[#829A94]" : "text-slate-400"
+                    }`}
                 />
                 <Input
                   type="text"
                   placeholder="Cari paket (misal: Wisuda, Wedding, Prewedding)..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className={`w-full h-12 pl-12 pr-4 text-sm rounded-xl focus:border-[#21C9A4] focus:ring-[#21C9A4]/20 ${
-                    isDarkTheme
+                  className={`w-full h-12 pl-12 pr-4 text-sm rounded-xl focus:border-[#21C9A4] focus:ring-[#21C9A4]/20 ${isDarkTheme
                       ? "bg-[#0B302B]/90 border-white/15 text-[#F5F7F6] placeholder:text-[#829A94]"
                       : "bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 shadow-xs"
-                  }`}
+                    }`}
                 />
               </div>
             </div>
@@ -228,9 +216,8 @@ export default function Packages({ packages, categories, settings, auth }) {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
             <h2
-              className={`text-2xl sm:text-3xl font-bold tracking-tight ${
-                isDarkTheme ? "text-[#F5F7F6]" : "text-slate-900"
-              }`}
+              className={`text-2xl sm:text-3xl font-bold tracking-tight ${isDarkTheme ? "text-[#F5F7F6]" : "text-slate-900"
+                }`}
             >
               Pilihan Paket Foto Popular
             </h2>
@@ -244,15 +231,14 @@ export default function Packages({ packages, categories, settings, auth }) {
             <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
               <button
                 onClick={() => setSelectedCategory("ALL")}
-                className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
-                  selectedCategory === "ALL"
+                className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${selectedCategory === "ALL"
                     ? isDarkTheme
                       ? "bg-[#21C9A4] text-[#0B302B] font-bold shadow-md shadow-[#21C9A4]/15"
                       : "bg-[#14433B] text-[#21C9A4] font-bold shadow-xs"
                     : isDarkTheme
-                    ? "bg-[#0B302B]/70 text-[#B8C8C4] border border-white/10 hover:bg-[#14433B]"
-                    : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-50"
-                }`}
+                      ? "bg-[#0B302B]/70 text-[#B8C8C4] border border-white/10 hover:bg-[#14433B]"
+                      : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-50"
+                  }`}
               >
                 Semua Paket ({safePackages.length})
               </button>
@@ -262,15 +248,14 @@ export default function Packages({ packages, categories, settings, auth }) {
                   <button
                     key={cat}
                     onClick={() => setSelectedCategory(cat)}
-                    className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
-                      selectedCategory === cat
+                    className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${selectedCategory === cat
                         ? isDarkTheme
                           ? "bg-[#21C9A4] text-[#0B302B] font-bold shadow-md shadow-[#21C9A4]/15"
                           : "bg-[#14433B] text-[#21C9A4] font-bold shadow-xs"
                         : isDarkTheme
-                        ? "bg-[#0B302B]/70 text-[#B8C8C4] border border-white/10 hover:bg-[#14433B]"
-                        : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-50"
-                    }`}
+                          ? "bg-[#0B302B]/70 text-[#B8C8C4] border border-white/10 hover:bg-[#14433B]"
+                          : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-50"
+                      }`}
                   >
                     {cat} ({count})
                   </button>
@@ -283,16 +268,14 @@ export default function Packages({ packages, categories, settings, auth }) {
         {/* PACKAGE CARDS GRID */}
         {filteredPackages.length === 0 ? (
           <div
-            className={`text-center py-16 rounded-2xl border space-y-3 ${
-              isDarkTheme
+            className={`text-center py-16 rounded-2xl border space-y-3 ${isDarkTheme
                 ? "bg-[#0B302B]/60 border-white/10"
                 : "bg-slate-50 border-slate-200"
-            }`}
+              }`}
           >
             <Camera
-              className={`h-12 w-12 mx-auto ${
-                isDarkTheme ? "text-[#829A94]" : "text-slate-400"
-              }`}
+              className={`h-12 w-12 mx-auto ${isDarkTheme ? "text-[#829A94]" : "text-slate-400"
+                }`}
             />
             <h3 className={isDarkTheme ? "text-lg font-bold text-[#F5F7F6]" : "text-lg font-bold text-slate-800"}>
               Tidak ada paket foto ditemukan
@@ -306,33 +289,30 @@ export default function Packages({ packages, categories, settings, auth }) {
             {filteredPackages.map((pkg) => (
               <Card
                 key={pkg.id}
-                className={`transition-all duration-300 flex flex-col justify-between overflow-hidden group rounded-2xl ${
-                  isDarkTheme
+                className={`transition-all duration-300 flex flex-col justify-between overflow-hidden group rounded-2xl ${isDarkTheme
                     ? "bg-[#0B302B]/75 border-white/12 hover:border-[#21C9A4]/40 hover:bg-[#0B302B]/90 shadow-xl backdrop-blur-xs"
                     : "bg-white border-slate-200/90 hover:border-[#21C9A4] hover:shadow-xl hover:shadow-[#14433B]/5"
-                }`}
+                  }`}
               >
                 <CardContent className="p-6 space-y-5">
                   {/* Top Badges */}
                   <div className="flex items-center justify-between gap-2">
                     <Badge
                       variant="outline"
-                      className={`text-xs font-semibold rounded-lg px-2.5 py-0.5 ${
-                        isDarkTheme
+                      className={`text-xs font-semibold rounded-lg px-2.5 py-0.5 ${isDarkTheme
                           ? "border-[#21C9A4]/30 text-[#21C9A4] bg-[#21C9A4]/10"
                           : "border-slate-200 text-[#14433B] bg-slate-100"
-                      }`}
+                        }`}
                     >
                       {pkg.category}
                     </Badge>
 
                     {pkg.includes_mua ? (
                       <Badge
-                        className={`gap-1 text-[11px] font-medium rounded-lg ${
-                          isDarkTheme
+                        className={`gap-1 text-[11px] font-medium rounded-lg ${isDarkTheme
                             ? "bg-[#21C9A4]/15 text-[#21C9A4] border border-[#21C9A4]/30"
                             : "bg-[#E6FFFA] text-[#0D9488] border border-[#99F6E4]"
-                        }`}
+                          }`}
                       >
                         <Sparkles className="h-3 w-3 text-[#21C9A4]" />
                         {pkg.mua?.name ? `MUA: ${pkg.mua.name}` : "Termasuk MUA"}
@@ -347,11 +327,10 @@ export default function Packages({ packages, categories, settings, auth }) {
                   {/* Title & Price */}
                   <div>
                     <h3
-                      className={`text-xl font-bold transition-colors ${
-                        isDarkTheme
+                      className={`text-xl font-bold transition-colors ${isDarkTheme
                           ? "text-[#F5F7F6] group-hover:text-[#21C9A4]"
                           : "text-slate-900 group-hover:text-[#14433B]"
-                      }`}
+                        }`}
                     >
                       {pkg.name}
                     </h3>
@@ -367,11 +346,10 @@ export default function Packages({ packages, categories, settings, auth }) {
 
                   {/* Quick Specs Grid */}
                   <div
-                    className={`grid grid-cols-2 gap-2 text-xs p-3 rounded-xl border ${
-                      isDarkTheme
+                    className={`grid grid-cols-2 gap-2 text-xs p-3 rounded-xl border ${isDarkTheme
                         ? "bg-[#14433B]/60 border-white/10 text-[#B8C8C4]"
                         : "bg-slate-50 border-slate-100 text-slate-700"
-                    }`}
+                      }`}
                   >
                     <div className="flex items-center space-x-2">
                       <Clock className="h-3.5 w-3.5 text-[#21C9A4] shrink-0" />
@@ -423,11 +401,10 @@ export default function Packages({ packages, categories, settings, auth }) {
                   <Button
                     variant="outline"
                     onClick={() => setActiveModalPackage(pkg)}
-                    className={`flex-1 text-xs h-9 rounded-xl ${
-                      isDarkTheme
+                    className={`flex-1 text-xs h-9 rounded-xl ${isDarkTheme
                         ? "border-white/15 bg-transparent text-[#F5F7F6] hover:bg-[#14433B]"
                         : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
-                    }`}
+                      }`}
                   >
                     <Info className="h-3.5 w-3.5 mr-1" /> Detail
                   </Button>
@@ -447,21 +424,19 @@ export default function Packages({ packages, categories, settings, auth }) {
       {/* KEUNGGULAN SECTION */}
       <section
         id="keunggulan"
-        className={`py-16 border-t border-b relative z-10 ${
-          isDarkTheme
+        className={`py-16 border-t border-b relative z-10 ${isDarkTheme
             ? "bg-[#0B302B]/60 border-white/10"
             : "bg-slate-50/80 border-slate-200/80"
-        }`}
+          }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
           <div className="text-center space-y-3 max-w-2xl mx-auto">
             <Badge
               variant="outline"
-              className={`rounded-lg px-3 py-1 font-semibold ${
-                isDarkTheme
+              className={`rounded-lg px-3 py-1 font-semibold ${isDarkTheme
                   ? "border-[#21C9A4]/30 text-[#21C9A4] bg-[#21C9A4]/10"
                   : "border-[#14433B]/20 text-[#14433B] bg-[#14433B]/5"
-              }`}
+                }`}
             >
               Mengapa {companyName}?
             </Badge>
@@ -475,11 +450,10 @@ export default function Packages({ packages, categories, settings, auth }) {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <Card
-              className={`p-6 space-y-3 rounded-2xl ${
-                isDarkTheme
+              className={`p-6 space-y-3 rounded-2xl ${isDarkTheme
                   ? "bg-[#14433B]/70 border-white/10"
                   : "bg-white border-slate-200/80 shadow-2xs"
-              }`}
+                }`}
             >
               <div className="h-10 w-10 rounded-xl bg-[#21C9A4]/10 border border-[#21C9A4]/30 flex items-center justify-center text-[#21C9A4]">
                 <Camera className="h-5 w-5" />
@@ -493,11 +467,10 @@ export default function Packages({ packages, categories, settings, auth }) {
             </Card>
 
             <Card
-              className={`p-6 space-y-3 rounded-2xl ${
-                isDarkTheme
+              className={`p-6 space-y-3 rounded-2xl ${isDarkTheme
                   ? "bg-[#14433B]/70 border-white/10"
                   : "bg-white border-slate-200/80 shadow-2xs"
-              }`}
+                }`}
             >
               <div className="h-10 w-10 rounded-xl bg-[#21C9A4]/10 border border-[#21C9A4]/30 flex items-center justify-center text-[#21C9A4]">
                 <Sparkles className="h-5 w-5" />
@@ -511,11 +484,10 @@ export default function Packages({ packages, categories, settings, auth }) {
             </Card>
 
             <Card
-              className={`p-6 space-y-3 rounded-2xl ${
-                isDarkTheme
+              className={`p-6 space-y-3 rounded-2xl ${isDarkTheme
                   ? "bg-[#14433B]/70 border-white/10"
                   : "bg-white border-slate-200/80 shadow-2xs"
-              }`}
+                }`}
             >
               <div className="h-10 w-10 rounded-xl bg-[#21C9A4]/10 border border-[#21C9A4]/30 flex items-center justify-center text-[#21C9A4]">
                 <ShieldCheck className="h-5 w-5" />
@@ -534,9 +506,8 @@ export default function Packages({ packages, categories, settings, auth }) {
       {/* FOOTER & CTA */}
       <footer
         id="kontak"
-        className={`pt-16 pb-12 border-t relative z-10 ${
-          isDarkTheme ? "bg-[#0B302B] text-[#829A94] border-white/10" : "bg-white text-slate-600 border-slate-200"
-        }`}
+        className={`pt-16 pb-12 border-t relative z-10 ${isDarkTheme ? "bg-[#0B302B] text-[#829A94] border-white/10" : "bg-white text-slate-600 border-slate-200"
+          }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
           <div className="bg-[#14433B] text-white p-8 rounded-2xl shadow-lg flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
@@ -558,9 +529,8 @@ export default function Packages({ packages, categories, settings, auth }) {
           </div>
 
           <div
-            className={`flex flex-col sm:flex-row items-center justify-between text-xs border-t pt-8 gap-4 ${
-              isDarkTheme ? "text-[#829A94] border-white/10" : "text-slate-500 border-slate-100"
-            }`}
+            className={`flex flex-col sm:flex-row items-center justify-between text-xs border-t pt-8 gap-4 ${isDarkTheme ? "text-[#829A94] border-white/10" : "text-slate-500 border-slate-100"
+              }`}
           >
             <div className="flex items-center space-x-2">
               <Camera className="h-4 w-4 text-[#21C9A4]" />
@@ -577,31 +547,28 @@ export default function Packages({ packages, categories, settings, auth }) {
       <Dialog open={Boolean(activeModalPackage)} onOpenChange={() => setActiveModalPackage(null)}>
         {activeModalPackage && (
           <DialogContent
-            className={`max-w-lg rounded-2xl ${
-              isDarkTheme
+            className={`max-w-lg rounded-2xl ${isDarkTheme
                 ? "bg-[#0B302B] border-white/15 text-[#F5F7F6]"
                 : "bg-white border-slate-200 text-slate-900"
-            }`}
+              }`}
           >
             <DialogHeader>
               <div className="flex items-center justify-between pr-4">
                 <Badge
                   variant="outline"
-                  className={`text-xs rounded-lg ${
-                    isDarkTheme
+                  className={`text-xs rounded-lg ${isDarkTheme
                       ? "border-[#21C9A4]/30 text-[#21C9A4] bg-[#21C9A4]/10"
                       : "border-slate-200 text-[#14433B] bg-slate-100"
-                  }`}
+                    }`}
                 >
                   {activeModalPackage.category}
                 </Badge>
                 {activeModalPackage.includes_mua && (
                   <Badge
-                    className={`gap-1 text-xs rounded-lg ${
-                      isDarkTheme
+                    className={`gap-1 text-xs rounded-lg ${isDarkTheme
                         ? "bg-[#21C9A4]/15 text-[#21C9A4] border border-[#21C9A4]/30"
                         : "bg-[#E6FFFA] text-[#0D9488] border border-[#99F6E4]"
-                    }`}
+                      }`}
                   >
                     <Sparkles className="h-3 w-3 text-[#21C9A4]" />
                     {activeModalPackage.mua?.name ? `MUA: ${activeModalPackage.mua.name}` : "Termasuk MUA"}
@@ -615,11 +582,10 @@ export default function Packages({ packages, categories, settings, auth }) {
 
             <div className="space-y-4 py-2">
               <div
-                className={`p-4 rounded-xl border flex items-center justify-between ${
-                  isDarkTheme
+                className={`p-4 rounded-xl border flex items-center justify-between ${isDarkTheme
                     ? "bg-[#14433B]/70 border-white/10"
                     : "bg-slate-50 border-slate-200"
-                }`}
+                  }`}
               >
                 <div>
                   <p className={`text-xs font-medium ${isDarkTheme ? "text-[#829A94]" : "text-slate-500"}`}>
@@ -641,11 +607,10 @@ export default function Packages({ packages, categories, settings, auth }) {
                     Deskripsi Paket
                   </h4>
                   <p
-                    className={`text-xs leading-relaxed p-3 rounded-lg border ${
-                      isDarkTheme
+                    className={`text-xs leading-relaxed p-3 rounded-lg border ${isDarkTheme
                         ? "bg-[#14433B]/50 border-white/10 text-[#B8C8C4]"
                         : "bg-slate-50 border-slate-200 text-slate-700"
-                    }`}
+                      }`}
                   >
                     {activeModalPackage.description}
                   </p>
@@ -658,11 +623,10 @@ export default function Packages({ packages, categories, settings, auth }) {
                     Semua Fitur & Fasilitas
                   </h4>
                   <div
-                    className={`space-y-1.5 p-3 rounded-lg border text-xs ${
-                      isDarkTheme
+                    className={`space-y-1.5 p-3 rounded-lg border text-xs ${isDarkTheme
                         ? "bg-[#14433B]/50 border-white/10"
                         : "bg-slate-50 border-slate-200"
-                    }`}
+                      }`}
                   >
                     {activeModalPackage.features.map((feat, idx) => (
                       <div key={idx} className={`flex items-center space-x-2 ${isDarkTheme ? "text-[#B8C8C4]" : "text-slate-800"}`}>
@@ -679,13 +643,12 @@ export default function Packages({ packages, categories, settings, auth }) {
               <Button
                 variant="outline"
                 onClick={() => setActiveModalPackage(null)}
-                className={`text-xs rounded-xl ${
-                  isDarkTheme
+                className={`text-xs rounded-xl ${isDarkTheme
                     ? "border-white/15 bg-transparent text-[#F5F7F6] hover:bg-[#14433B]"
                     : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
-                }`}
+                  }`}
               >
-                Tutup
+                <X className="h-3.5 w-3.5 mr-1" /> Tutup
               </Button>
               <Button
                 onClick={() => {

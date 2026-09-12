@@ -117,8 +117,8 @@ export default function Dashboard({ stats = {}, recentSchedules = [], recentProo
               <p className="text-xs text-slate-500">Daftar penugasan foto Anda</p>
             </div>
             <Link href="/photographer/schedules">
-              <Button variant="ghost" size="sm" className="text-xs font-semibold text-slate-700">
-                Semua Jadwal <ArrowRight className="h-3.5 w-3.5 ml-1" />
+              <Button variant="ghost" size="sm">
+                Semua Jadwal <ArrowRight />
               </Button>
             </Link>
           </CardHeader>
@@ -166,8 +166,8 @@ export default function Dashboard({ stats = {}, recentSchedules = [], recentProo
 
                   <div className="flex items-center space-x-2 shrink-0">
                     <Link href={`/photographer/schedules/${schedule.id}`}>
-                      <Button size="sm" variant="default" className="text-xs bg-slate-900 hover:bg-slate-800">
-                        Buka Jadwal & Kirim Proof
+                      <Button size="sm">
+                        <Camera /> Buka Jadwal & Kirim Proof
                       </Button>
                     </Link>
                   </div>
