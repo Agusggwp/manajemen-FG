@@ -38,15 +38,31 @@ class ScheduleController extends Controller
 
         $schedules = $query->orderBy('date', 'desc')->orderBy('start_time', 'asc')->paginate(10)->withQueryString();
 
+        $existingAssignments = Schedule::where('status', '!=', 'CANCELLED')
+            ->with(['project.photographers:id,name', 'customer:id,name'])
+            ->get(['id', 'date', 'start_time', 'end_time', 'status', 'customer_id', 'location_name'])
+            ->map(function ($s) {
+                return [
+                    'id' => $s->id,
+                    'date' => is_string($s->date) ? $s->date : $s->date->format('Y-m-d'),
+                    'start_time' => substr($s->start_time, 0, 5),
+                    'end_time' => substr($s->end_time, 0, 5),
+                    'customer_name' => $s->customer ? $s->customer->name : '',
+                    'location_name' => $s->location_name,
+                    'photographer_ids' => $s->project ? $s->project->photographers->pluck('id')->toArray() : [],
+                ];
+            });
+
         return Inertia::render('Admin/Schedules/Index', [
             'schedules' => $schedules,
+            'existingAssignments' => $existingAssignments,
             'filters' => [
                 'search' => (string) $request->input('search', ''),
                 'date' => (string) $request->input('date', ''),
                 'status' => (string) $request->input('status', ''),
             ],
             'customers' => Customer::all(['id', 'name', 'phone']),
-            'packages' => PhotoPackage::active()->get(['id', 'name', 'price', 'duration_minutes', 'includes_mua', 'category']),
+            'packages' => PhotoPackage::active()->with('mua')->get(['id', 'name', 'price', 'duration_minutes', 'includes_mua', 'category', 'mua_id', 'estimated_mua_fee']),
             'photographers' => User::photographer()->active()->get(['id', 'name', 'specialty']),
             'muas' => Mua::active()->get(['id', 'name', 'specialty']),
         ]);
@@ -75,6 +91,27 @@ class ScheduleController extends Controller
             'photographer_salary' => 'nullable|numeric|min:0',
             'mua_fee' => 'nullable|numeric|min:0',
         ]);
+
+        // Validate Photographer availability (check for overlapping schedules)
+        foreach ($validated['photographer_ids'] as $photographerId) {
+            $conflict = Schedule::where('status', '!=', 'CANCELLED')
+                ->whereDate('date', $validated['date'])
+                ->where('start_time', '<', $validated['end_time'])
+                ->where('end_time', '>', $validated['start_time'])
+                ->whereHas('project.photographers', function ($q) use ($photographerId) {
+                    $q->where('users.id', $photographerId);
+                })
+                ->first();
+
+            if ($conflict) {
+                $photographer = User::find($photographerId);
+                $startTimeStr = substr($conflict->start_time, 0, 5);
+                $endTimeStr = substr($conflict->end_time, 0, 5);
+                return back()->withErrors([
+                    'photographer_ids' => "Photographer '{$photographer->name}' tidak dapat dipilih karena sudah memiliki jadwal di waktu yang sama ({$startTimeStr} - {$endTimeStr}).",
+                ]);
+            }
+        }
 
         $package = PhotoPackage::findOrFail($validated['photo_package_id']);
         $customer = Customer::findOrFail($validated['customer_id']);
@@ -150,11 +187,19 @@ class ScheduleController extends Controller
             ]);
         }
 
+        // Determine MUAs: take directly from package if set, else fallback to mua_ids
+        $muaIds = [];
+        if ($package->mua_id) {
+            $muaIds[] = $package->mua_id;
+        } elseif (! empty($validated['mua_ids'])) {
+            $muaIds = $validated['mua_ids'];
+        }
+
         // Attach MUAs if applicable
-        if (! empty($validated['mua_ids'])) {
-            $project->muas()->attach($validated['mua_ids']);
+        if (! empty($muaIds)) {
+            $project->muas()->attach($muaIds);
             $muaFeeAmount = $validated['mua_fee'] ?? $package->estimated_mua_fee;
-            foreach ($validated['mua_ids'] as $muaId) {
+            foreach ($muaIds as $muaId) {
                 $project->muaFees()->create([
                     'mua_id' => $muaId,
                     'amount' => $muaFeeAmount,

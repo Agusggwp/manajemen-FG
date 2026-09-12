@@ -28,7 +28,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 
-export default function Index({ packages, filters, categories }) {
+export default function Index({ packages, filters, categories, muas }) {
   const safePackages = packages?.data ? packages : { data: [] };
   const safeFilters = {
     search: filters?.search ?? "",
@@ -38,6 +38,7 @@ export default function Index({ packages, filters, categories }) {
     direction: filters?.direction ?? "desc",
   };
   const safeCategories = Array.isArray(categories) ? categories : [];
+  const safeMuas = Array.isArray(muas) ? muas : [];
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editingPackage, setEditingPackage] = useState(null);
@@ -53,6 +54,7 @@ export default function Index({ packages, filters, categories }) {
     number_of_photos: 25,
     number_of_photographers: 1,
     includes_mua: false,
+    mua_id: "",
     estimated_photographer_cost: 0,
     estimated_mua_fee: 0,
     estimated_operational_cost: 0,
@@ -76,6 +78,7 @@ export default function Index({ packages, filters, categories }) {
       number_of_photos: pkg.number_of_photos,
       number_of_photographers: pkg.number_of_photographers,
       includes_mua: pkg.includes_mua,
+      mua_id: pkg.mua_id || "",
       estimated_photographer_cost: pkg.estimated_photographer_cost,
       estimated_mua_fee: pkg.estimated_mua_fee,
       estimated_operational_cost: pkg.estimated_operational_cost,
@@ -249,7 +252,7 @@ export default function Index({ packages, filters, categories }) {
                     <td className="px-4 py-3 text-center">
                       {pkg.includes_mua ? (
                         <Badge variant="info" className="gap-1">
-                          <Sparkles className="h-3 w-3" /> Ya
+                          <Sparkles className="h-3 w-3" /> {pkg.mua?.name || "Termasuk MUA"}
                         </Badge>
                       ) : (
                         <span className="text-xs text-slate-400">— Tidak</span>
@@ -376,22 +379,49 @@ export default function Index({ packages, filters, categories }) {
               </div>
 
               {/* MUA Selection */}
-              <div className="p-3 bg-slate-50 rounded-lg border border-slate-200 flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-semibold text-slate-900">Layanan MUA (Make Up Artist)</p>
-                  <p className="text-xs text-slate-500">Apakah paket ini sudah termasuk MUA?</p>
+              <div className="p-3 bg-slate-50 rounded-lg border border-slate-200 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-semibold text-slate-900">Layanan MUA (Make Up Artist)</p>
+                    <p className="text-xs text-slate-500">Pilih MUA yang otomatis digunakan untuk paket ini</p>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <label className="text-xs font-medium text-slate-700 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={form.data.includes_mua}
+                        onChange={(e) => {
+                          const checked = e.target.checked;
+                          form.setData({
+                            ...form.data,
+                            includes_mua: checked,
+                            mua_id: checked ? form.data.mua_id : "",
+                          });
+                        }}
+                        className="rounded border-slate-300 text-slate-900 focus:ring-slate-950 mr-2"
+                      />
+                      {form.data.includes_mua ? "✓ Termasuk MUA" : "— Tanpa MUA"}
+                    </label>
+                  </div>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <label className="text-xs font-medium text-slate-700 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={form.data.includes_mua}
-                      onChange={(e) => form.setData("includes_mua", e.target.checked)}
-                      className="rounded border-slate-300 text-slate-900 focus:ring-slate-950 mr-2"
-                    />
-                    {form.data.includes_mua ? "✓ Termasuk MUA" : "— Tanpa MUA"}
-                  </label>
-                </div>
+
+                {form.data.includes_mua && (
+                  <div>
+                    <Label className="text-xs mb-1 block">Pilih MUA Paket</Label>
+                    <select
+                      value={form.data.mua_id}
+                      onChange={(e) => form.setData("mua_id", e.target.value)}
+                      className="w-full h-9 rounded-md border border-slate-200 bg-white px-3 py-1 text-xs shadow-2xs focus:outline-hidden focus:ring-1 focus:ring-slate-950"
+                    >
+                      <option value="">-- Pilih MUA (Default Paket) --</option>
+                      {safeMuas.map((m) => (
+                        <option key={m.id} value={m.id}>
+                          {m.name} ({m.specialty})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
               </div>
 
               {/* Cost Estimations */}

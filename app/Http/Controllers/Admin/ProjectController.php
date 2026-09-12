@@ -108,6 +108,30 @@ class ProjectController extends Controller
             'amount' => 'required|numeric|min:0',
         ]);
 
+        $photographerId = $validated['photographer_id'];
+        $schedule = $project->schedule;
+
+        if ($schedule) {
+            $conflict = Schedule::where('status', '!=', 'CANCELLED')
+                ->where('id', '!=', $schedule->id)
+                ->whereDate('date', $schedule->date)
+                ->where('start_time', '<', $project->work_end_time ?? $schedule->end_time)
+                ->where('end_time', '>', $project->work_start_time ?? $schedule->start_time)
+                ->whereHas('project.photographers', function ($q) use ($photographerId) {
+                    $q->where('users.id', $photographerId);
+                })
+                ->first();
+
+            if ($conflict) {
+                $photographer = User::find($photographerId);
+                $startTimeStr = substr($conflict->start_time, 0, 5);
+                $endTimeStr = substr($conflict->end_time, 0, 5);
+                return back()->withErrors([
+                    'photographer_id' => "Photographer '{$photographer->name}' tidak tersedia karena sudah memiliki jadwal di waktu yang sama ({$startTimeStr} - {$endTimeStr}).",
+                ]);
+            }
+        }
+
         if (! $project->photographers->contains($validated['photographer_id'])) {
             $project->photographers()->attach($validated['photographer_id']);
         }

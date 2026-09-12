@@ -18,6 +18,7 @@ class PhotoPackage extends Model
         'number_of_photos',
         'number_of_photographers',
         'includes_mua',
+        'mua_id',
         'estimated_photographer_cost',
         'estimated_mua_fee',
         'estimated_operational_cost',
@@ -63,6 +64,11 @@ class PhotoPackage extends Model
     public function scopeActive($query)
     {
         return $query->where('status', 'ACTIVE');
+    }
+
+    public function mua()
+    {
+        return $this->belongsTo(Mua::class);
     }
 
     public function bookings()

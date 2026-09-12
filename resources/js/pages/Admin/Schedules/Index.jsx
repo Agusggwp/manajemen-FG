@@ -28,8 +28,9 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 
-export default function Index({ schedules, filters, customers, packages, photographers, muas }) {
+export default function Index({ schedules, existingAssignments, filters, customers, packages, photographers, muas }) {
   const safeSchedules = schedules?.data ? schedules : { data: [] };
+  const safeExistingAssignments = Array.isArray(existingAssignments) ? existingAssignments : [];
   const safeFilters = filters || {};
   const safeCustomers = Array.isArray(customers) ? customers : [];
   const safePackages = Array.isArray(packages) ? packages : [];
@@ -59,6 +60,22 @@ export default function Index({ schedules, filters, customers, packages, photogr
     photographer_salary: "",
     mua_fee: "",
   });
+
+  const checkPhotographerBusy = (photographerId) => {
+    if (!form.data.date || !form.data.start_time || !form.data.end_time) {
+      return null;
+    }
+    const formDate = form.data.date;
+    const formStart = form.data.start_time;
+    const formEnd = form.data.end_time;
+
+    return safeExistingAssignments.find((assignment) => {
+      if (assignment.date !== formDate) return false;
+      if (!assignment.photographer_ids.includes(photographerId)) return false;
+      // Time overlap check: start_time < existing_end && end_time > existing_start
+      return formStart < assignment.end_time && formEnd > assignment.start_time;
+    });
+  };
 
   const handlePackageChange = (packageId) => {
     form.setData("photo_package_id", packageId);
@@ -358,7 +375,14 @@ export default function Index({ schedules, filters, customers, packages, photogr
                   <div className="flex items-center space-x-4 text-slate-600">
                     <span>Durasi: {selectedPackage.duration_minutes} Menit</span>
                     <span>•</span>
-                    <span>{selectedPackage.includes_mua ? "✓ Termasuk MUA" : "— Tanpa MUA"}</span>
+                    <span className="flex items-center gap-1 font-medium text-amber-800">
+                      <Sparkles className="h-3 w-3 text-amber-600" />
+                      {selectedPackage.mua?.name
+                        ? `MUA Paket: ${selectedPackage.mua.name}`
+                        : selectedPackage.includes_mua
+                        ? "Termasuk MUA Paket"
+                        : "— Tanpa MUA"}
+                    </span>
                   </div>
                 </div>
               )}
@@ -400,30 +424,27 @@ export default function Index({ schedules, filters, customers, packages, photogr
                   <MapPin className="h-4 w-4 text-rose-600" /> Information Lokasi (WAJIB DIIISI)
                 </p>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label>Nama Lokasi</Label>
-                    <Input
-                      required
-                      placeholder="misal: Kampus Sudirman Unud / Pantai Sanur"
-                      value={form.data.location_name}
-                      onChange={(e) => form.setData("location_name", e.target.value)}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Radius Validasi GPS (Meter)</Label>
-                    <Input
-                      type="number"
-                      required
-                      min="10"
-                      max="5000"
-                      value={form.data.location_radius}
-                      onChange={(e) => form.setData("location_radius", e.target.value)}
-                    />
-                  </div>
+                <div>
+                  <Label>Nama Lokasi</Label>
+                  <Input
+                    required
+                    placeholder="misal: Kampus Sudirman Unud / Pantai Sanur"
+                    value={form.data.location_name}
+                    onChange={(e) => form.setData("location_name", e.target.value)}
+                  />
                 </div>
 
-                <div className="space-y-2">
+                <div>
+                  <Label>Radius Validasi GPS (Meter)</Label>
+                  <Input
+                    type="number"
+                    required
+                    value={form.data.location_radius}
+                    onChange={(e) => form.setData("location_radius", e.target.value)}
+                  />
+                </div>
+
+                <div>
                   <Label>Alamat Lengkap Lokasi</Label>
                   <Input
                     required
@@ -434,7 +455,7 @@ export default function Index({ schedules, filters, customers, packages, photogr
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
+                  <div>
                     <Label>Latitude GPS</Label>
                     <Input
                       type="number"
@@ -445,7 +466,7 @@ export default function Index({ schedules, filters, customers, packages, photogr
                       onChange={(e) => form.setData("latitude", e.target.value)}
                     />
                   </div>
-                  <div className="space-y-2">
+                  <div>
                     <Label>Longitude GPS</Label>
                     <Input
                       type="number"
@@ -468,51 +489,52 @@ export default function Index({ schedules, filters, customers, packages, photogr
                 <div>
                   <Label className="mb-2 block">Pilih Photographer (Minimal 1)</Label>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                    {photographers.map((p) => (
-                      <label
-                        key={p.id}
-                        className={`p-2.5 rounded-lg border text-xs flex items-center space-x-2 cursor-pointer transition-colors ${
-                          form.data.photographer_ids.includes(p.id)
-                            ? "bg-slate-900 text-white border-slate-900"
-                            : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
-                        }`}
-                      >
-                        <input
-                          type="checkbox"
-                          checked={form.data.photographer_ids.includes(p.id)}
-                          onChange={() => handlePhotographerCheckbox(p.id)}
-                          className="hidden"
-                        />
-                        <Camera className="h-3.5 w-3.5 shrink-0" />
-                        <span className="truncate">{p.name}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
+                    {photographers.map((p) => {
+                      const conflict = checkPhotographerBusy(p.id);
+                      const isBusy = Boolean(conflict);
+                      const isSelected = form.data.photographer_ids.includes(p.id);
 
-                <div>
-                  <Label className="mb-2 block">Pilih MUA (Opsional)</Label>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                    {muas.map((m) => (
-                      <label
-                        key={m.id}
-                        className={`p-2.5 rounded-lg border text-xs flex items-center space-x-2 cursor-pointer transition-colors ${
-                          form.data.mua_ids.includes(m.id)
-                            ? "bg-amber-900 text-white border-amber-900"
-                            : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
-                        }`}
-                      >
-                        <input
-                          type="checkbox"
-                          checked={form.data.mua_ids.includes(m.id)}
-                          onChange={() => handleMuaCheckbox(m.id)}
-                          className="hidden"
-                        />
-                        <Sparkles className="h-3.5 w-3.5 shrink-0" />
-                        <span className="truncate">{m.name}</span>
-                      </label>
-                    ))}
+                      return (
+                        <label
+                          key={p.id}
+                          title={
+                            isBusy
+                              ? `Photographer ${p.name} sudah ada jadwal ${conflict.start_time} - ${conflict.end_time} (${conflict.customer_name || "Pelanggan"})`
+                              : ""
+                          }
+                          className={`p-2.5 rounded-lg border text-xs flex flex-col justify-between transition-colors ${
+                            isBusy
+                              ? "bg-rose-50/80 border-rose-200 text-rose-500 cursor-not-allowed opacity-80"
+                              : isSelected
+                              ? "bg-slate-900 text-white border-slate-900 cursor-pointer"
+                              : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50 cursor-pointer"
+                          }`}
+                        >
+                          <div className="flex items-center space-x-2">
+                            <input
+                              type="checkbox"
+                              disabled={isBusy}
+                              checked={isSelected && !isBusy}
+                              onChange={() => !isBusy && handlePhotographerCheckbox(p.id)}
+                              className="hidden"
+                            />
+                            <Camera className="h-3.5 w-3.5 shrink-0" />
+                            <span className="truncate font-medium">{p.name}</span>
+                          </div>
+                          {isBusy && (
+                            <div className="mt-1 text-[10px] font-bold text-rose-600 flex items-center gap-1">
+                              <span>⚠️ Bentrok ({conflict.start_time} - {conflict.end_time})</span>
+                            </div>
+                          )}
+                        </label>
+                      );
+                    })}
                   </div>
+                  {form.errors.photographer_ids && (
+                    <p className="text-xs text-rose-600 font-semibold mt-1">
+                      {form.errors.photographer_ids}
+                    </p>
+                  )}
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">

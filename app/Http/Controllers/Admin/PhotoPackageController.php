@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\PhotoPackage;
+use App\Models\Mua;
 use App\Services\ActivityLogger;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -12,7 +13,7 @@ class PhotoPackageController extends Controller
 {
     public function index(Request $request)
     {
-        $query = PhotoPackage::query();
+        $query = PhotoPackage::with('mua');
 
         if ($search = $request->input('search')) {
             $query->where('name', 'like', "%{$search}%")
@@ -56,6 +57,7 @@ class PhotoPackageController extends Controller
                 'direction' => (string) $request->input('direction', 'desc'),
             ],
             'categories' => ['Wedding', 'Graduation', 'Portrait', 'Product', 'Event', 'Prewedding', 'Commercial', 'Other'],
+            'muas' => Mua::active()->get(['id', 'name', 'specialty']),
         ]);
     }
 
@@ -69,6 +71,7 @@ class PhotoPackageController extends Controller
             'number_of_photos' => 'required|integer|min:0',
             'number_of_photographers' => 'required|integer|min:1',
             'includes_mua' => 'required|boolean',
+            'mua_id' => 'nullable|exists:muas,id',
             'estimated_photographer_cost' => 'required|numeric|min:0',
             'estimated_mua_fee' => 'required|numeric|min:0',
             'estimated_operational_cost' => 'required|numeric|min:0',
@@ -94,6 +97,7 @@ class PhotoPackageController extends Controller
             'number_of_photos' => 'required|integer|min:0',
             'number_of_photographers' => 'required|integer|min:1',
             'includes_mua' => 'required|boolean',
+            'mua_id' => 'nullable|exists:muas,id',
             'estimated_photographer_cost' => 'required|numeric|min:0',
             'estimated_mua_fee' => 'required|numeric|min:0',
             'estimated_operational_cost' => 'required|numeric|min:0',
