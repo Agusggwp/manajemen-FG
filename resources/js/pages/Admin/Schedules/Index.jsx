@@ -45,6 +45,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { usePageLoading, TableSkeleton, CardGridSkeleton } from "@/components/loading/PageSkeletons";
 
 export default function Index({ schedules, existingAssignments, filters, customers, packages, photographers, muas }) {
@@ -57,6 +58,8 @@ export default function Index({ schedules, existingAssignments, filters, custome
   const safeMuas = Array.isArray(muas) ? muas : [];
 
   const [modalOpen, setModalOpen] = useState(false);
+  const [reminderOpen, setReminderOpen] = useState(false);
+  const [selectedScheduleId, setSelectedScheduleId] = useState(null);
   const [search, setSearch] = useState(safeFilters.search || "");
   const [selectedPackage, setSelectedPackage] = useState(null);
 
@@ -344,9 +347,8 @@ export default function Index({ schedules, existingAssignments, filters, custome
                             variant="ghost"
                             size="icon"
                             onClick={() => {
-                              if (confirm("Kirim email peringatan (reminder) ke Pelanggan, Fotografer, dan MUA untuk jadwal ini?")) {
-                                router.post(`/admin/schedules/${s.id}/send-reminder`);
-                              }
+                              setSelectedScheduleId(s.id);
+                              setReminderOpen(true);
                             }}
                             title={s.reminder_sent_at ? `Email Peringatan Terkirim (${formatDate(s.reminder_sent_at)}) - Klik untuk kirim ulang` : "Kirim Email Peringatan H-1"}
                           >
@@ -630,6 +632,23 @@ export default function Index({ schedules, existingAssignments, filters, custome
             </form>
           </DialogContent>
         </Dialog>
+
+        <ConfirmDialog
+          open={reminderOpen}
+          onOpenChange={setReminderOpen}
+          title="Kirim Email Peringatan"
+          description="Apakah Anda yakin ingin mengirim email peringatan (reminder) H-1 ke Pelanggan, Fotografer, dan MUA untuk jadwal pemotretan ini?"
+          confirmText="Kirim Email"
+          cancelText="Batal"
+          variant="default"
+          icon={Mail}
+          onConfirm={() => {
+            setReminderOpen(false);
+            if (selectedScheduleId) {
+              router.post(`/admin/schedules/${selectedScheduleId}/send-reminder`);
+            }
+          }}
+        />
       </div>
     </>
   );

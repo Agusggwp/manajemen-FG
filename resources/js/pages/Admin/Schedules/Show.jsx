@@ -1,17 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { formatDate, formatRupiah } from "@/lib/utils";
 import { Head, Link, router } from "@inertiajs/react";
 import { ArrowLeft, MapPin, Clock, Camera, Sparkles, User, CheckCircle2, Mail } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 export default function Show({ schedule }) {
-  const handleSendReminder = () => {
-    if (confirm("Kirim email peringatan (reminder) ke Pelanggan, Fotografer, dan MUA untuk jadwal ini?")) {
-      router.post(`/admin/schedules/${schedule.id}/send-reminder`);
-    }
-  };
+  const [reminderOpen, setReminderOpen] = useState(false);
 
   return (
     <>
@@ -33,7 +30,7 @@ export default function Show({ schedule }) {
           </div>
 
           <Button
-            onClick={handleSendReminder}
+            onClick={() => setReminderOpen(true)}
             className="bg-indigo-600 hover:bg-indigo-700 text-white flex items-center gap-2"
           >
             <Mail className="h-4 w-4" />
@@ -137,6 +134,21 @@ export default function Show({ schedule }) {
           </Card>
         </div>
       </div>
+
+      <ConfirmDialog
+        open={reminderOpen}
+        onOpenChange={setReminderOpen}
+        title="Kirim Email Peringatan"
+        description="Apakah Anda yakin ingin mengirim email peringatan (reminder) H-1 ke Pelanggan, Fotografer, dan MUA untuk jadwal pemotretan ini?"
+        confirmText="Kirim Email"
+        cancelText="Batal"
+        variant="default"
+        icon={Mail}
+        onConfirm={() => {
+          setReminderOpen(false);
+          router.post(`/admin/schedules/${schedule.id}/send-reminder`);
+        }}
+      />
     </>
   );
 }
