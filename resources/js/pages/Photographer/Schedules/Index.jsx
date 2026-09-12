@@ -6,14 +6,27 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { usePageLoading, CardGridSkeleton } from "@/components/loading/PageSkeletons";
 
 export default function Index({ schedules = { data: [] }, filters = {} }) {
   const safeFilters = filters || {};
+  const isNavigating = usePageLoading();
+  const [isFiltering, setIsFiltering] = useState(false);
   const [date, setDate] = useState(safeFilters.date || "");
 
   const handleFilter = () => {
-    router.get("/photographer/schedules", { date }, { preserveState: true });
+    setIsFiltering(true);
+    router.get(
+      "/photographer/schedules",
+      { date },
+      {
+        preserveState: true,
+        onFinish: () => setIsFiltering(false),
+      }
+    );
   };
+
+  const isLoading = isNavigating || isFiltering;
 
   return (
     <>
@@ -38,21 +51,23 @@ export default function Index({ schedules = { data: [] }, filters = {} }) {
                 onChange={(e) => setDate(e.target.value)}
                 className="max-w-xs"
               />
-              <Button variant="secondary" size="sm" onClick={handleFilter}>
+              <Button variant="secondary" size="sm" onClick={handleFilter} disabled={isLoading}>
                 <Filter /> Filter
               </Button>
             </div>
           </CardContent>
         </Card>
 
-        {/* Schedules Cards List */}
-        <div className="space-y-3">
-          {(!schedules?.data || schedules.data.length === 0) ? (
-            <div className="text-center py-12 bg-white rounded-xl border border-slate-200 text-slate-400">
-              Tidak ada jadwal pemotretan ditugaskan.
-            </div>
-          ) : (
-            (schedules?.data || []).map((sch) => (
+        {/* Schedules Cards List or Skeleton */}
+        {isLoading ? (
+          <CardGridSkeleton count={4} />
+        ) : (!schedules?.data || schedules.data.length === 0) ? (
+          <div className="text-center py-12 bg-white rounded-xl border border-slate-200 text-slate-400">
+            Tidak ada jadwal pemotretan ditugaskan.
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {(schedules?.data || []).map((sch) => (
               <Card key={sch.id} className="border-slate-200 hover:shadow-xs transition-shadow">
                 <CardContent className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div className="space-y-1">
@@ -85,9 +100,9 @@ export default function Index({ schedules = { data: [] }, filters = {} }) {
                   </div>
                 </CardContent>
               </Card>
-            ))
-          )}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </>
   );

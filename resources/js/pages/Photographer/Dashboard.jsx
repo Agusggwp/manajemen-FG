@@ -5,10 +5,22 @@ import { Calendar, FolderKanban, Clock, CheckCircle2, DollarSign, Camera, MapPin
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { usePageLoading, PhotographerDashboardSkeleton } from "@/components/loading/PageSkeletons";
 
 export default function Dashboard({ stats = {}, recentSchedules = [], recentProofs = [] }) {
+  const isNavigating = usePageLoading();
   const safeStats = stats || {};
   const safeSchedules = Array.isArray(recentSchedules) ? recentSchedules : (recentSchedules?.data || []);
+
+  if (isNavigating) {
+    return (
+      <>
+        <Head title="Dashboard Photographer" />
+        <PhotographerDashboardSkeleton />
+      </>
+    );
+  }
+
   return (
     <>
       <Head title="Dashboard Photographer" />

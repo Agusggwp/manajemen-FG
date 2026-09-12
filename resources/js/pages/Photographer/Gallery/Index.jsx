@@ -11,9 +11,11 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
+import { usePageLoading, GalleryPageSkeleton } from "@/components/loading/PageSkeletons";
 
 export default function Index({ projects = [] }) {
   const safeProjects = Array.isArray(projects) ? projects : (projects?.data || []);
+  const isNavigating = usePageLoading();
   const [selectedProject, setSelectedProject] = useState(null);
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
 
@@ -37,6 +39,10 @@ export default function Index({ projects = [] }) {
       onSuccess: () => setUploadModalOpen(false),
     });
   };
+
+  if (isNavigating) {
+    return <GalleryPageSkeleton />;
+  }
 
   return (
     <>

@@ -5,8 +5,11 @@ import { FolderKanban, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import { usePageLoading, CardGridSkeleton } from "@/components/loading/PageSkeletons";
 
 export default function Index({ projects = { data: [] } }) {
+  const isNavigating = usePageLoading();
+
   return (
     <>
       <Head title="Project Saya" />
@@ -20,13 +23,15 @@ export default function Index({ projects = { data: [] } }) {
           </p>
         </div>
 
-        <div className="space-y-3">
-          {(!projects?.data || projects.data.length === 0) ? (
-            <div className="text-center py-12 bg-white rounded-xl border border-slate-200 text-slate-400">
-              Belum ada project yang ditugaskan.
-            </div>
-          ) : (
-            (projects?.data || []).map((prj) => (
+        {isNavigating ? (
+          <CardGridSkeleton count={4} />
+        ) : (!projects?.data || projects.data.length === 0) ? (
+          <div className="text-center py-12 bg-white rounded-xl border border-slate-200 text-slate-400">
+            Belum ada project yang ditugaskan.
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {(projects?.data || []).map((prj) => (
               <Card key={prj.id} className="border-slate-200 hover:shadow-xs transition-shadow">
                 <CardContent className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div className="space-y-1">
@@ -51,9 +56,9 @@ export default function Index({ projects = { data: [] } }) {
                   </div>
                 </CardContent>
               </Card>
-            ))
-          )}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </>
   );

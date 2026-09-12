@@ -20,14 +20,27 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { usePageLoading, TableSkeleton } from "@/components/loading/PageSkeletons";
 
 export default function Index({ salaries = { data: [] }, unpaidTotal = 0, paidTotal = 0, filters = {} }) {
   const safeFilters = filters || {};
+  const isNavigating = usePageLoading();
+  const [isFiltering, setIsFiltering] = useState(false);
   const [status, setStatus] = useState(safeFilters.status || "");
 
   const handleFilter = () => {
-    router.get("/photographer/salary", { status }, { preserveState: true });
+    setIsFiltering(true);
+    router.get(
+      "/photographer/salary",
+      { status },
+      {
+        preserveState: true,
+        onFinish: () => setIsFiltering(false),
+      }
+    );
   };
+
+  const isLoading = isNavigating || isFiltering;
 
   return (
     <>
@@ -84,8 +97,11 @@ export default function Index({ salaries = { data: [] }, unpaidTotal = 0, paidTo
           </CardContent>
         </Card>
 
-        {/* Table */}
-        <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
+        {/* Table or Skeleton */}
+        {isLoading ? (
+          <TableSkeleton rows={5} cols={5} hasActions={false} />
+        ) : (
+          <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
           <Table>
             <TableHeader className="bg-slate-50">
               <TableRow>
@@ -134,6 +150,7 @@ export default function Index({ salaries = { data: [] }, unpaidTotal = 0, paidTo
             </TableBody>
           </Table>
         </div>
+        )}
       </div>
     </>
   );
