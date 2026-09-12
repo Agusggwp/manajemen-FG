@@ -44,6 +44,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function Index({ schedules, existingAssignments, filters, customers, packages, photographers, muas }) {
   const safeSchedules = schedules?.data ? schedules : { data: [] };
@@ -148,23 +149,19 @@ export default function Index({ schedules, existingAssignments, filters, custome
               Buat jadwal baru, tentukan penugasan tim, dan tetapkan koordinat lokasi pemotretan.
             </p>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="bg-slate-100 p-1 rounded-lg flex space-x-1 border border-slate-200">
-              <Button
-                variant={viewMode === "table" ? "secondary" : "ghost"}
-                size="sm"
-                onClick={() => setViewMode("table")}
-              >
-                <LayoutList /> Tabel
-              </Button>
-              <Button
-                variant={viewMode === "calendar" ? "secondary" : "ghost"}
-                size="sm"
-                onClick={() => setViewMode("calendar")}
-              >
-                <Calendar /> Kalender
-              </Button>
-            </div>
+          <div className="flex items-center gap-3">
+            <Tabs value={viewMode} onValueChange={setViewMode}>
+              <TabsList className="bg-slate-100 border border-slate-200">
+                <TabsTrigger value="table" className="flex items-center gap-1.5 data-[state=active]:bg-white data-[state=active]:shadow-sm">
+                  <LayoutList className="h-4 w-4" />
+                  <span>Tabel</span>
+                </TabsTrigger>
+                <TabsTrigger value="calendar" className="flex items-center gap-1.5 data-[state=active]:bg-white data-[state=active]:shadow-sm">
+                  <Calendar className="h-4 w-4" />
+                  <span>Kalender</span>
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
 
             <Button onClick={() => setModalOpen(true)}>
               <Plus />
