@@ -1,7 +1,7 @@
 import React from "react";
 import { formatDate, formatRupiah } from "@/lib/utils";
 import { Head, Link } from "@inertiajs/react";
-import { ArrowLeft, Sparkles, Phone, Mail, MapPin, Calendar, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, Sparkles, Phone, Mail, MapPin, Calendar, CheckCircle2, Wallet } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -45,6 +45,10 @@ export default function Show({ mua }) {
                 <p className="font-semibold text-slate-900">{mua.specialty || "General Makeup"}</p>
               </div>
               <div>
+                <p className="text-xs text-slate-400 font-medium uppercase">Fee</p>
+                <p className="font-bold text-emerald-700 text-base">{formatRupiah(mua.default_fee || 0)}</p>
+              </div>
+              <div>
                 <p className="text-xs text-slate-400 font-medium uppercase">Status</p>
                 <Badge variant={mua.status === "ACTIVE" ? "success" : "secondary"}>
                   {mua.status}
@@ -78,56 +82,56 @@ export default function Show({ mua }) {
                 Histori Project & Pembayaran Fee ({mua.projects?.length || 0})
               </CardTitle>
             </CardHeader>
-          <CardContent className="p-0">
-            <Table>
-              <TableHeader className="bg-slate-50">
-                <TableRow>
-                  <TableHead className="font-semibold text-slate-700">Tanggal</TableHead>
-                  <TableHead className="font-semibold text-slate-700">Project / Pelanggan</TableHead>
-                  <TableHead className="font-semibold text-slate-700">Paket</TableHead>
-                  <TableHead className="font-semibold text-slate-700 text-right">Fee MUA</TableHead>
-                  <TableHead className="font-semibold text-slate-700 text-center">Status Fee</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {!mua.projects || mua.projects.length === 0 ? (
+            <CardContent className="p-0">
+              <Table>
+                <TableHeader className="bg-slate-50">
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center py-6 text-slate-400">
-                      Belum ada histori penugasan project untuk MUA ini.
-                    </TableCell>
+                    <TableHead className="font-semibold text-slate-700">Tanggal</TableHead>
+                    <TableHead className="font-semibold text-slate-700">Project / Pelanggan</TableHead>
+                    <TableHead className="font-semibold text-slate-700">Paket</TableHead>
+                    <TableHead className="font-semibold text-slate-700 text-right">Fee MUA</TableHead>
+                    <TableHead className="font-semibold text-slate-700 text-center">Status Fee</TableHead>
                   </TableRow>
-                ) : (
-                  mua.projects.map((prj) => {
-                    const feeRecord = mua.project_fees?.find(f => f.project_id === prj.id);
-                    return (
-                      <TableRow key={prj.id}>
-                        <TableCell className="font-medium text-slate-900 whitespace-nowrap">
-                          {formatDate(prj.date)}
-                        </TableCell>
-                        <TableCell>
-                          <span className="font-bold text-slate-900 block">{prj.project_name}</span>
-                          <span className="text-xs text-slate-500">{prj.customer?.name}</span>
-                        </TableCell>
-                        <TableCell>{prj.package_name}</TableCell>
-                        <TableCell className="text-right font-semibold text-slate-900">
-                          {feeRecord ? formatRupiah(feeRecord.amount) : "-"}
-                        </TableCell>
-                        <TableCell className="text-center">
-                          {feeRecord ? (
-                            <Badge variant={feeRecord.payment_status === "PAID" ? "success" : "warning"}>
-                              {feeRecord.payment_status}
-                            </Badge>
-                          ) : (
-                            <span className="text-xs text-slate-400">-</span>
-                          )}
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })
-                )}
-              </TableBody>
-            </Table>
-          </CardContent>
+                </TableHeader>
+                <TableBody>
+                  {!mua.projects || mua.projects.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={5} className="text-center py-6 text-slate-400">
+                        Belum ada histori penugasan project untuk MUA ini.
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    mua.projects.map((prj) => {
+                      const feeRecord = mua.project_fees?.find(f => f.project_id === prj.id);
+                      return (
+                        <TableRow key={prj.id}>
+                          <TableCell className="font-medium text-slate-900 whitespace-nowrap">
+                            {formatDate(prj.date)}
+                          </TableCell>
+                          <TableCell>
+                            <span className="font-bold text-slate-900 block">{prj.project_name}</span>
+                            <span className="text-xs text-slate-500">{prj.customer?.name}</span>
+                          </TableCell>
+                          <TableCell>{prj.package_name}</TableCell>
+                          <TableCell className="text-right font-semibold text-slate-900">
+                            {feeRecord ? formatRupiah(feeRecord.amount) : "-"}
+                          </TableCell>
+                          <TableCell className="text-center">
+                            {feeRecord ? (
+                              <Badge variant={feeRecord.payment_status === "PAID" ? "success" : "warning"}>
+                                {feeRecord.payment_status}
+                              </Badge>
+                            ) : (
+                              <span className="text-xs text-slate-400">-</span>
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })
+                  )}
+                </TableBody>
+              </Table>
+            </CardContent>
           </Card>
         </div>
       </div>

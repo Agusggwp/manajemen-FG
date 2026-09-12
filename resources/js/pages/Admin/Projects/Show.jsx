@@ -686,14 +686,23 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
                 <Label>Pilih MUA</Label>
                 <Select
                   value={muaForm.data.mua_id ? String(muaForm.data.mua_id) : ""}
-                  onValueChange={(val) => muaForm.setData("mua_id", val)}
+                  onValueChange={(val) => {
+                    const selected = allMuas?.find((m) => String(m.id) === String(val));
+                    muaForm.setData({
+                      ...muaForm.data,
+                      mua_id: val,
+                      amount: selected?.default_fee ? selected.default_fee : muaForm.data.amount,
+                    });
+                  }}
                 >
                   <SelectTrigger className="w-full bg-white">
                     <SelectValue placeholder="-- Pilih MUA --" />
                   </SelectTrigger>
                   <SelectContent>
                     {allMuas?.map((m) => (
-                      <SelectItem key={m.id} value={String(m.id)}>{m.name}</SelectItem>
+                      <SelectItem key={m.id} value={String(m.id)}>
+                        {m.name} {m.default_fee ? `(${formatRupiah(m.default_fee)})` : ""}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>

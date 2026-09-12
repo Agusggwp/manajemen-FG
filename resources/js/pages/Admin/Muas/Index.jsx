@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Head, useForm, router, Link } from "@inertiajs/react";
-import { Plus, Search, Sparkles, Edit3, Trash2, Eye, Phone, MapPin, MoreVertical, X, Save } from "lucide-react";
+import { Plus, Search, Sparkles, Edit3, Trash2, Eye, Phone, MapPin, MoreVertical, X, Save, Wallet } from "lucide-react";
+import { formatRupiah } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -53,6 +54,7 @@ export default function Index({ muas, filters }) {
     bio: "",
     status: "ACTIVE",
     notes: "",
+    default_fee: "",
   });
 
   const handleOpenCreate = () => {
@@ -72,6 +74,7 @@ export default function Index({ muas, filters }) {
       bio: mua.bio || "",
       status: mua.status,
       notes: mua.notes || "",
+      default_fee: mua.default_fee ?? "",
     });
     setModalOpen(true);
   };
@@ -195,6 +198,10 @@ export default function Index({ muas, filters }) {
                         <span className="truncate">{mua.address}</span>
                       </div>
                     )}
+                    <div className="flex items-center space-x-2">
+                      <Wallet className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+                      <span>Fee: <strong className="text-slate-900">{formatRupiah(mua.default_fee || 0)}</strong></span>
+                    </div>
                   </div>
 
                   <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-xs">
@@ -294,6 +301,27 @@ export default function Index({ muas, filters }) {
                   />
                 </div>
                 <div className="space-y-2">
+                  <Label>Fee (Rp)</Label>
+                  <Input
+                    type="number"
+                    min="0"
+                    placeholder="misal: 300000"
+                    value={form.data.default_fee}
+                    onChange={(e) => form.setData("default_fee", e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Alamat / Dominasi Area</Label>
+                  <Input
+                    placeholder="misal: Denpasar, Bali"
+                    value={form.data.address}
+                    onChange={(e) => form.setData("address", e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
                   <Label>Status</Label>
                   <Select
                     value={form.data.status || "ACTIVE"}
@@ -308,15 +336,6 @@ export default function Index({ muas, filters }) {
                     </SelectContent>
                   </Select>
                 </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label>Alamat / Dominasi Area</Label>
-                <Input
-                  placeholder="misal: Denpasar, Bali"
-                  value={form.data.address}
-                  onChange={(e) => form.setData("address", e.target.value)}
-                />
               </div>
 
               <div className="space-y-2">

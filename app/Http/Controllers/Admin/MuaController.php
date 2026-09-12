@@ -48,6 +48,7 @@ class MuaController extends Controller
             'bio' => 'nullable|string',
             'status' => 'required|in:ACTIVE,INACTIVE',
             'notes' => 'nullable|string',
+            'default_fee' => 'nullable|numeric|min:0',
         ]);
 
         $mua = Mua::create($validated);
@@ -77,6 +78,7 @@ class MuaController extends Controller
             'bio' => 'nullable|string',
             'status' => 'required|in:ACTIVE,INACTIVE',
             'notes' => 'nullable|string',
+            'default_fee' => 'nullable|numeric|min:0',
         ]);
 
         $mua->update($validated);

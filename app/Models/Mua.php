@@ -22,6 +22,7 @@ class Mua extends Model
         'bio',
         'status',
         'notes',
+        'default_fee',
     ];
 
     public function scopeActive($query)

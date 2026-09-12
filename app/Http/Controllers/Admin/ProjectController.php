@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Mua;
 use App\Models\Project;
+use App\Models\Schedule;
 use App\Models\User;
 use App\Services\ActivityLogger;
 use Illuminate\Http\Request;
@@ -20,7 +21,7 @@ class ProjectController extends Controller
             $query->where(function ($q) use ($search) {
                 $q->where('project_code', 'like', "%{$search}%")
                     ->orWhere('project_name', 'like', "%{$search}%")
-                    ->orWhereHas('customer', fn ($c) => $c->where('name', 'like', "%{$search}%"));
+                    ->orWhereHas('customer', fn($c) => $c->where('name', 'like', "%{$search}%"));
             });
         }
 
@@ -60,7 +61,7 @@ class ProjectController extends Controller
         return Inertia::render('Admin/Projects/Show', [
             'project' => $project,
             'allPhotographers' => User::photographer()->active()->get(['id', 'name']),
-            'allMuas' => Mua::active()->get(['id', 'name']),
+            'allMuas' => Mua::active()->get(['id', 'name', 'default_fee']),
         ]);
     }
 
