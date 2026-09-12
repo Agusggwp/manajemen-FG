@@ -27,6 +27,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 export default function Index({ customers, filters }) {
   const safeCustomers = customers?.data ? customers : { data: [] };
@@ -35,6 +36,8 @@ export default function Index({ customers, filters }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingCustomer, setEditingCustomer] = useState(null);
   const [search, setSearch] = useState(safeFilters.search || "");
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
   const form = useForm({
     name: "",
@@ -79,10 +82,19 @@ export default function Index({ customers, filters }) {
     router.get("/admin/customers", { search }, { preserveState: true });
   };
 
-  const handleDelete = (id) => {
-    if (confirm("Apakah Anda yakin ingin menghapus pelanggan ini?")) {
-      router.delete(`/admin/customers/${id}`);
-    }
+  const handleDeleteClick = (customer) => {
+    setDeleteTarget(customer);
+    setDeleteOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (!deleteTarget) return;
+    router.delete(`/admin/customers/${deleteTarget.id}`, {
+      onSuccess: () => {
+        setDeleteOpen(false);
+        setDeleteTarget(null);
+      },
+    });
   };
 
   return (
@@ -199,7 +211,7 @@ export default function Index({ customers, filters }) {
                             <span>Edit Data</span>
                           </DropdownMenuItem>
                           <DropdownMenuItem
-                            onClick={() => handleDelete(c.id)}
+                            onClick={() => handleDeleteClick(c)}
                             className="cursor-pointer text-xs text-red-600 focus:text-red-600 focus:bg-red-50"
                           >
                             <Trash2 className="mr-2 h-3.5 w-3.5 text-red-600" />
@@ -291,6 +303,17 @@ export default function Index({ customers, filters }) {
             </form>
           </DialogContent>
         </Dialog>
+        {/* Confirm Delete Dialog */}
+        <ConfirmDialog
+          open={deleteOpen}
+          onOpenChange={setDeleteOpen}
+          title="Hapus Data Pelanggan"
+          description={`Apakah Anda yakin ingin menghapus pelanggan "${deleteTarget?.name}"? Seluruh data yang terkait akan terhapus.`}
+          confirmText="Hapus Pelanggan"
+          cancelText="Batal"
+          variant="destructive"
+          onConfirm={handleConfirmDelete}
+        />
       </div>
     </>
   );

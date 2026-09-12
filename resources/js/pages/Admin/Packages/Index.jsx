@@ -44,6 +44,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import {
   Select,
   SelectContent,
@@ -66,9 +67,11 @@ export default function Index({ packages, filters, categories, muas }) {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editingPackage, setEditingPackage] = useState(null);
-  const [search, setSearch] = useState(safeFilters.search);
-  const [category, setCategory] = useState(safeFilters.category);
-  const [sortBy, setSortBy] = useState(safeFilters.sort);
+  const [search, setSearch] = useState(safeFilters.search || "");
+  const [category, setCategory] = useState(safeFilters.category || "");
+  const [sortBy, setSortBy] = useState(safeFilters.sort_by || "created_at");
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
   const form = useForm({
     name: "",
@@ -141,10 +144,19 @@ export default function Index({ packages, filters, categories, muas }) {
     router.patch(`/admin/packages/${id}/toggle-status`);
   };
 
-  const handleDelete = (id) => {
-    if (confirm("Apakah Anda yakin ingin menghapus paket foto ini?")) {
-      router.delete(`/admin/packages/${id}`);
-    }
+  const handleDeleteClick = (pkg) => {
+    setDeleteTarget(pkg);
+    setDeleteOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (!deleteTarget) return;
+    router.delete(`/admin/packages/${deleteTarget.id}`, {
+      onSuccess: () => {
+        setDeleteOpen(false);
+        setDeleteTarget(null);
+      },
+    });
   };
 
   // Dynamic profit calculation in modal
@@ -328,7 +340,7 @@ export default function Index({ packages, filters, categories, muas }) {
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem
-                            onClick={() => handleDelete(pkg.id)}
+                            onClick={() => handleDeleteClick(pkg)}
                             className="cursor-pointer text-xs text-red-600 focus:text-red-600 focus:bg-red-50"
                           >
                             <Trash2 className="mr-2 h-3.5 w-3.5 text-red-600" />
@@ -540,6 +552,17 @@ export default function Index({ packages, filters, categories, muas }) {
             </form>
           </DialogContent>
         </Dialog>
+        {/* Confirm Delete Dialog */}
+        <ConfirmDialog
+          open={deleteOpen}
+          onOpenChange={setDeleteOpen}
+          title="Hapus Paket Foto"
+          description={`Apakah Anda yakin ingin menghapus paket "${deleteTarget?.name}"? Tindakan ini tidak dapat dibatalkan.`}
+          confirmText="Hapus Paket"
+          cancelText="Batal"
+          variant="destructive"
+          onConfirm={handleConfirmDelete}
+        />
       </div>
     </>
   );

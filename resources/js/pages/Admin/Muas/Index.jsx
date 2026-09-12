@@ -21,6 +21,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import {
   Select,
   SelectContent,
@@ -36,6 +37,8 @@ export default function Index({ muas, filters }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingMua, setEditingMua] = useState(null);
   const [search, setSearch] = useState(safeFilters.search || "");
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
   const form = useForm({
     name: "",
@@ -86,10 +89,19 @@ export default function Index({ muas, filters }) {
     router.get("/admin/muas", { search }, { preserveState: true });
   };
 
-  const handleDelete = (id) => {
-    if (confirm("Apakah Anda yakin ingin menghapus data MUA ini?")) {
-      router.delete(`/admin/muas/${id}`);
-    }
+  const handleDeleteClick = (mua) => {
+    setDeleteTarget(mua);
+    setDeleteOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (!deleteTarget) return;
+    router.delete(`/admin/muas/${deleteTarget.id}`, {
+      onSuccess: () => {
+        setDeleteOpen(false);
+        setDeleteTarget(null);
+      },
+    });
   };
 
   return (
@@ -199,7 +211,7 @@ export default function Index({ muas, filters }) {
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
-                          onClick={() => handleDelete(mua.id)}
+                          onClick={() => handleDeleteClick(mua)}
                           className="cursor-pointer text-xs text-red-600 focus:text-red-600 focus:bg-red-50"
                         >
                           <Trash2 className="mr-2 h-3.5 w-3.5 text-red-600" />
@@ -311,6 +323,17 @@ export default function Index({ muas, filters }) {
             </form>
           </DialogContent>
         </Dialog>
+        {/* Confirm Delete Dialog */}
+        <ConfirmDialog
+          open={deleteOpen}
+          onOpenChange={setDeleteOpen}
+          title="Hapus Data MUA"
+          description={`Apakah Anda yakin ingin menghapus MUA "${deleteTarget?.name}"? Seluruh riwayat fee yang terkait akan terhapus.`}
+          confirmText="Hapus MUA"
+          cancelText="Batal"
+          variant="destructive"
+          onConfirm={handleConfirmDelete}
+        />
       </div>
     </>
   );

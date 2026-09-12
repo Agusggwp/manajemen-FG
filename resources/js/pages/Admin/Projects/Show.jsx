@@ -39,6 +39,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 export default function Show({ project, allPhotographers = [], allMuas = [] }) {
   const safeProject = project || {};
@@ -48,6 +49,13 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
   const [expenseModalOpen, setExpenseModalOpen] = useState(false);
   const [photographerModalOpen, setPhotographerModalOpen] = useState(false);
   const [muaModalOpen, setMuaModalOpen] = useState(false);
+  const [confirmConfig, setConfirmConfig] = useState({
+    open: false,
+    title: "",
+    description: "",
+    confirmText: "Hapus",
+    action: null,
+  });
 
   const statusForm = useForm({
     status: safeProject.status || "PENDING",
@@ -108,22 +116,46 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
     });
   };
 
-  const handleRemovePhotographer = (id) => {
-    if (confirm("Hapus photographer dari project ini?")) {
-      router.delete(`/admin/projects/${safeProject.id}/photographers/${id}`);
-    }
+  const handleRemovePhotographer = (salary) => {
+    setConfirmConfig({
+      open: true,
+      title: "Hapus Photographer dari Project",
+      description: `Apakah Anda yakin ingin menghapus photographer "${salary.photographer?.name}" dari penugasan project ini?`,
+      confirmText: "Hapus Penugasan",
+      action: () => {
+        router.delete(`/admin/projects/${safeProject.id}/photographers/${salary.photographer_id}`, {
+          onSuccess: () => setConfirmConfig((prev) => ({ ...prev, open: false })),
+        });
+      },
+    });
   };
 
-  const handleRemoveMua = (id) => {
-    if (confirm("Hapus MUA dari project ini?")) {
-      router.delete(`/admin/projects/${safeProject.id}/muas/${id}`);
-    }
+  const handleRemoveMua = (fee) => {
+    setConfirmConfig({
+      open: true,
+      title: "Hapus MUA dari Project",
+      description: `Apakah Anda yakin ingin menghapus MUA "${fee.mua?.name}" dari penugasan project ini?`,
+      confirmText: "Hapus Penugasan",
+      action: () => {
+        router.delete(`/admin/projects/${safeProject.id}/muas/${fee.mua_id}`, {
+          onSuccess: () => setConfirmConfig((prev) => ({ ...prev, open: false })),
+        });
+      },
+    });
   };
 
-  const handleDeleteExpense = (id) => {
-    if (confirm("Hapus pengeluaran ini?")) {
-      router.delete(`/admin/expenses/${id}`);
-    }
+  const handleDeleteExpense = (exp) => {
+    setConfirmConfig({
+      open: true,
+      title: "Hapus Biaya Operasional",
+      description: `Apakah Anda yakin ingin menghapus pengeluaran "${exp.name}" sebesar ${formatRupiah(exp.amount)}?`,
+      confirmText: "Hapus Biaya",
+      action: () => {
+        router.delete(`/admin/expenses/${exp.id}`, {
+          onSuccess: () => setConfirmConfig((prev) => ({ ...prev, open: false })),
+        });
+      },
+    });
   };
 
   const startProof = safeProject.proofs?.find((p) => p.type === "START");
@@ -294,7 +326,7 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
                           variant="ghost"
                           size="icon"
                           className="h-7 w-7 text-red-600"
-                          onClick={() => handleRemovePhotographer(salary.photographer_id)}
+                          onClick={() => handleRemovePhotographer(salary)}
                         >
                           <Trash2 className="h-3.5 w-3.5" />
                         </Button>
@@ -341,7 +373,7 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
                           variant="ghost"
                           size="icon"
                           className="h-7 w-7 text-red-600"
-                          onClick={() => handleRemoveMua(fee.mua_id)}
+                          onClick={() => handleRemoveMua(fee)}
                         >
                           <Trash2 className="h-3.5 w-3.5" />
                         </Button>
@@ -530,7 +562,7 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
                           variant="ghost"
                           size="icon"
                           className="h-6 w-6 text-red-400 hover:text-red-300"
-                          onClick={() => handleDeleteExpense(exp.id)}
+                          onClick={() => handleDeleteExpense(exp)}
                         >
                           <Trash2 className="h-3.5 w-3.5" />
                         </Button>
@@ -689,6 +721,17 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
             </form>
           </DialogContent>
         </Dialog>
+        {/* Universal Confirm Dialog */}
+        <ConfirmDialog
+          open={confirmConfig.open}
+          onOpenChange={(open) => setConfirmConfig((prev) => ({ ...prev, open }))}
+          title={confirmConfig.title}
+          description={confirmConfig.description}
+          confirmText={confirmConfig.confirmText}
+          cancelText="Batal"
+          variant="destructive"
+          onConfirm={() => confirmConfig.action?.()}
+        />
       </div>
     </>
   );

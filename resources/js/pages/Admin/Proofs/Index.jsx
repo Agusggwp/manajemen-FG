@@ -23,6 +23,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 export default function Index({ proofs, counts, activeTab = "pending" }) {
   const safeProofs = proofs?.data ? proofs : { data: [] };
@@ -31,17 +32,28 @@ export default function Index({ proofs, counts, activeTab = "pending" }) {
   const [selectedProof, setSelectedProof] = useState(null);
   const [rejectModalOpen, setRejectModalOpen] = useState(false);
   const [adminNote, setAdminNote] = useState("");
+  const [approveTarget, setApproveTarget] = useState(null);
+  const [approveOpen, setApproveOpen] = useState(false);
 
   const handleTabChange = (tab) => {
     router.get("/admin/proofs", { tab }, { preserveState: true });
   };
 
-  const handleApprove = (proof) => {
-    if (confirm(`Setujui foto bukti ${proof.type} dari ${proof.photographer?.name}?`)) {
-      router.post(`/admin/proofs/${proof.id}/validate`, {
-        is_valid: true,
-      });
-    }
+  const handleApproveClick = (proof) => {
+    setApproveTarget(proof);
+    setApproveOpen(true);
+  };
+
+  const handleConfirmApprove = () => {
+    if (!approveTarget) return;
+    router.post(`/admin/proofs/${approveTarget.id}/validate`, {
+      is_valid: true,
+    }, {
+      onSuccess: () => {
+        setApproveOpen(false);
+        setApproveTarget(null);
+      },
+    });
   };
 
   const handleOpenReject = (proof) => {
@@ -192,7 +204,8 @@ export default function Index({ proofs, counts, activeTab = "pending" }) {
                     </Button>
                     <Button
                       size="sm"
-                      onClick={() => handleApprove(proof)}
+                      variant="success"
+                      onClick={() => handleApproveClick(proof)}
                     >
                       <CheckCircle2 /> VALID
                     </Button>
@@ -237,6 +250,18 @@ export default function Index({ proofs, counts, activeTab = "pending" }) {
             </form>
           </DialogContent>
         </Dialog>
+        {/* Confirm Approve Dialog */}
+        <ConfirmDialog
+          open={approveOpen}
+          onOpenChange={setApproveOpen}
+          title="Setujui Bukti Foto"
+          description={`Apakah Anda yakin ingin menyetujui foto bukti ${approveTarget?.type} dari ${approveTarget?.photographer?.name}? Status presensi pemotretan akan ditandai valid.`}
+          confirmText="Setujui Valid"
+          cancelText="Batal"
+          variant="default"
+          icon={CheckCircle2}
+          onConfirm={handleConfirmApprove}
+        />
       </div>
     </>
   );

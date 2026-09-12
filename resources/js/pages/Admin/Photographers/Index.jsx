@@ -20,6 +20,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import {
   Select,
   SelectContent,
@@ -35,6 +36,8 @@ export default function Index({ photographers, filters }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingPhotographer, setEditingPhotographer] = useState(null);
   const [search, setSearch] = useState(safeFilters.search || "");
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
   const form = useForm({
     name: "",
@@ -85,10 +88,19 @@ export default function Index({ photographers, filters }) {
     router.get("/admin/photographers", { search }, { preserveState: true });
   };
 
-  const handleDelete = (id) => {
-    if (confirm("Apakah Anda yakin ingin menghapus photographer ini?")) {
-      router.delete(`/admin/photographers/${id}`);
-    }
+  const handleDeleteClick = (photographer) => {
+    setDeleteTarget(photographer);
+    setDeleteOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (!deleteTarget) return;
+    router.delete(`/admin/photographers/${deleteTarget.id}`, {
+      onSuccess: () => {
+        setDeleteOpen(false);
+        setDeleteTarget(null);
+      },
+    });
   };
 
   return (
@@ -191,7 +203,7 @@ export default function Index({ photographers, filters }) {
                           <span>Edit Data</span>
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          onClick={() => handleDelete(p.id)}
+                          onClick={() => handleDeleteClick(p)}
                           className="cursor-pointer text-xs text-red-600 focus:text-red-600 focus:bg-red-50"
                         >
                           <Trash2 className="mr-2 h-3.5 w-3.5 text-red-600" />
@@ -298,6 +310,17 @@ export default function Index({ photographers, filters }) {
             </form>
           </DialogContent>
         </Dialog>
+        {/* Confirm Delete Dialog */}
+        <ConfirmDialog
+          open={deleteOpen}
+          onOpenChange={setDeleteOpen}
+          title="Hapus Data Photographer"
+          description={`Apakah Anda yakin ingin menghapus photographer "${deleteTarget?.name}"? Akun dan akses penugasan akan dihapus.`}
+          confirmText="Hapus Photographer"
+          cancelText="Batal"
+          variant="destructive"
+          onConfirm={handleConfirmDelete}
+        />
       </div>
     </>
   );
