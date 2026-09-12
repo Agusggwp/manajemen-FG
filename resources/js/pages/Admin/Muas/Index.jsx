@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import AdminLayout from "@/layouts/AdminLayout";
-import { useForm, router, Link } from "@inertiajs/react";
+import { Head, useForm, router, Link } from "@inertiajs/react";
 import { Plus, Search, Sparkles, Edit3, Trash2, Eye, Phone, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -80,7 +79,8 @@ export default function Index({ muas, filters }) {
   };
 
   return (
-    <AdminLayout title="Manajemen MUA">
+    <>
+      <Head title="Manajemen MUA" />
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
@@ -271,6 +271,6 @@ export default function Index({ muas, filters }) {
           </DialogContent>
         </Dialog>
       </div>
-    </AdminLayout>
+    </>
   );
 }

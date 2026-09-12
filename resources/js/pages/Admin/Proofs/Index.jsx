@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import AdminLayout from "@/layouts/AdminLayout";
 import { formatDate } from "@/lib/utils";
-import { router } from "@inertiajs/react";
+import { Head, router } from "@inertiajs/react";
 import {
   ShieldCheck,
   CheckCircle2,
@@ -62,7 +61,8 @@ export default function Index({ proofs, counts, activeTab = "pending" }) {
   };
 
   return (
-    <AdminLayout title="Validasi Pemotretan">
+    <>
+      <Head title="Validasi Pemotretan" />
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
@@ -239,6 +239,6 @@ export default function Index({ proofs, counts, activeTab = "pending" }) {
           </DialogContent>
         </Dialog>
       </div>
-    </AdminLayout>
+    </>
   );
 }

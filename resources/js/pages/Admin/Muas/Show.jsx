@@ -1,7 +1,6 @@
 import React from "react";
-import AdminLayout from "@/layouts/AdminLayout";
 import { formatDate, formatRupiah } from "@/lib/utils";
-import { Link } from "@inertiajs/react";
+import { Head, Link } from "@inertiajs/react";
 import { ArrowLeft, Sparkles, Phone, Mail, MapPin, Calendar, CheckCircle2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -9,7 +8,8 @@ import { Button } from "@/components/ui/button";
 
 export default function Show({ mua }) {
   return (
-    <AdminLayout title={`Detail MUA - ${mua.name}`}>
+    <>
+      <Head title={`Detail MUA - ${mua.name}`} />
       <div className="space-y-6">
         <div className="flex items-center space-x-3">
           <Link href="/admin/muas">
@@ -125,6 +125,6 @@ export default function Show({ mua }) {
           </Card>
         </div>
       </div>
-    </AdminLayout>
+    </>
   );
 }

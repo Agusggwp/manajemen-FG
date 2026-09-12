@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import AdminLayout from "@/layouts/AdminLayout";
 import { formatRupiah } from "@/lib/utils";
-import { useForm, router } from "@inertiajs/react";
+import { Head, useForm, router } from "@inertiajs/react";
 import {
   Package,
   Plus,
@@ -134,7 +133,8 @@ export default function Index({ packages, filters, categories, muas }) {
     form.data.price > 0 ? ((estProfit / form.data.price) * 100).toFixed(2) : 0;
 
   return (
-    <AdminLayout title="Master Paket Foto">
+    <>
+      <Head title="Master Paket Foto" />
       <div className="space-y-6">
         {/* Header Title & Create Button */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -497,6 +497,6 @@ export default function Index({ packages, filters, categories, muas }) {
           </DialogContent>
         </Dialog>
       </div>
-    </AdminLayout>
+    </>
   );
 }

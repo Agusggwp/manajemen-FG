@@ -1,7 +1,6 @@
 import React from "react";
-import AdminLayout from "@/layouts/AdminLayout";
 import { formatRupiah, formatDate } from "@/lib/utils";
-import { Link } from "@inertiajs/react";
+import { Head, Link } from "@inertiajs/react";
 import {
   Calendar,
   Clock,
@@ -24,7 +23,8 @@ export default function Dashboard({ stats = {}, recentSchedules = [], pendingPro
   const safeSchedules = Array.isArray(recentSchedules) ? recentSchedules : (recentSchedules?.data || []);
   const safeProofs = Array.isArray(pendingProofs) ? pendingProofs : (pendingProofs?.data || []);
   return (
-    <AdminLayout title="Dashboard Admin">
+    <>
+      <Head title="Dashboard Admin" />
       <div className="space-y-8">
         {/* Header Title */}
         <div>
@@ -262,6 +262,6 @@ export default function Dashboard({ stats = {}, recentSchedules = [], pendingPro
           </CardContent>
         </Card>
       </div>
-    </AdminLayout>
+    </>
   );
 }

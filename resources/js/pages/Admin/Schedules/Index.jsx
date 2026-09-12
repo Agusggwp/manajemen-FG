@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import AdminLayout from "@/layouts/AdminLayout";
 import { formatDate, formatRupiah } from "@/lib/utils";
-import { useForm, router, Link } from "@inertiajs/react";
+import { Head, useForm, router, Link } from "@inertiajs/react";
 import {
   Calendar,
   Plus,
@@ -119,7 +118,8 @@ export default function Index({ schedules, existingAssignments, filters, custome
   };
 
   return (
-    <AdminLayout title="Manajemen Jadwal">
+    <>
+      <Head title="Manajemen Jadwal" />
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
@@ -580,6 +580,6 @@ export default function Index({ schedules, existingAssignments, filters, custome
           </DialogContent>
         </Dialog>
       </div>
-    </AdminLayout>
+    </>
   );
 }

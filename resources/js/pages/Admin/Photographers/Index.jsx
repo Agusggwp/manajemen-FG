@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import AdminLayout from "@/layouts/AdminLayout";
-import { useForm, router } from "@inertiajs/react";
+import { Head, useForm, router } from "@inertiajs/react";
 import { Plus, Search, Camera, Edit3, Trash2, Phone, Mail, UserCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -80,7 +79,8 @@ export default function Index({ photographers, filters }) {
   };
 
   return (
-    <AdminLayout title="Manajemen Photographer">
+    <>
+      <Head title="Manajemen Photographer" />
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
@@ -261,6 +261,6 @@ export default function Index({ photographers, filters }) {
           </DialogContent>
         </Dialog>
       </div>
-    </AdminLayout>
+    </>
   );
 }

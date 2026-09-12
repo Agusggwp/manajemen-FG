@@ -1,6 +1,5 @@
 import React from "react";
-import AdminLayout from "@/layouts/AdminLayout";
-import { useForm } from "@inertiajs/react";
+import { Head, useForm } from "@inertiajs/react";
 import { Settings, Save, Globe, Palette, Sparkles, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -33,7 +32,8 @@ export default function Index({ settings }) {
   };
 
   return (
-    <AdminLayout title="Pengaturan Sistem & Web Publik">
+    <>
+      <Head title="Pengaturan Sistem & Web Publik" />
       <form onSubmit={handleSubmit} className="space-y-6 max-w-4xl">
         <div className="flex items-center justify-between">
           <div>
@@ -262,6 +262,6 @@ export default function Index({ settings }) {
           </Button>
         </div>
       </form>
-    </AdminLayout>
+    </>
   );
 }

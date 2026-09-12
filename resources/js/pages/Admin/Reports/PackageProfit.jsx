@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import AdminLayout from "@/layouts/AdminLayout";
 import { formatRupiah } from "@/lib/utils";
-import { router } from "@inertiajs/react";
+import { Head, router } from "@inertiajs/react";
 import { TrendingUp, Filter, DollarSign, PieChart, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,7 +26,8 @@ export default function PackageProfit({ reportData, summary, filters, categories
   };
 
   return (
-    <AdminLayout title="Laporan Profit Per Paket">
+    <>
+      <Head title="Laporan Profit Per Paket" />
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
@@ -208,6 +208,6 @@ export default function PackageProfit({ reportData, summary, filters, categories
           </table>
         </div>
       </div>
-    </AdminLayout>
+    </>
   );
 }

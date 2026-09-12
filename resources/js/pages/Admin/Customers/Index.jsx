@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import AdminLayout from "@/layouts/AdminLayout";
-import { useForm, router } from "@inertiajs/react";
+import { Head, useForm, router } from "@inertiajs/react";
 import { Plus, Search, Users, Edit3, Trash2, Phone, Mail, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -73,7 +72,8 @@ export default function Index({ customers, filters }) {
   };
 
   return (
-    <AdminLayout title="Manajemen Pelanggan">
+    <>
+      <Head title="Manajemen Pelanggan" />
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
@@ -84,12 +84,12 @@ export default function Index({ customers, filters }) {
               Database pelanggan ARTDEVATA beserta kontak dan alamat pemotretan.
             </p>
           </div>
-          <Button onClick={handleOpenCreate} className="bg-slate-900 text-white shadow-sm">
-            <Plus className="h-4 w-4 mr-2" />
-            Tambah Pelanggan Baru
+          <Button onClick={handleOpenCreate} className="bg-slate-900 text-white">
+            <Plus className="h-4 w-4 mr-2" /> Tambah Pelanggan
           </Button>
         </div>
 
+        {/* Search */}
         <Card className="border-slate-200">
           <CardContent className="pt-6">
             <div className="flex gap-2">
@@ -99,6 +99,7 @@ export default function Index({ customers, filters }) {
                   placeholder="Cari nama, nomor HP, atau email pelanggan..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                   className="pl-9"
                 />
               </div>
@@ -109,7 +110,7 @@ export default function Index({ customers, filters }) {
           </CardContent>
         </Card>
 
-        {/* Table View */}
+        {/* Customers Table */}
         <div className="overflow-x-auto bg-white rounded-xl border border-slate-200 shadow-2xs">
           <table className="w-full text-sm text-left text-slate-600">
             <thead className="text-xs uppercase bg-slate-50 text-slate-500 border-b border-slate-200">
@@ -117,52 +118,69 @@ export default function Index({ customers, filters }) {
                 <th className="px-4 py-3">Nama Pelanggan</th>
                 <th className="px-4 py-3">Kontak</th>
                 <th className="px-4 py-3">Alamat</th>
-                <th className="px-4 py-3 text-center">Total Project</th>
-                <th className="px-4 py-3 text-center">Aksi</th>
+                <th className="px-4 py-3">Catatan</th>
+                <th className="px-4 py-3 text-right">Aksi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {safeCustomers.data.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="text-center py-8 text-slate-400">
+                  <td colSpan={5} className="text-center py-8 text-slate-400 font-sans">
                     Belum ada data pelanggan.
                   </td>
                 </tr>
               ) : (
                 safeCustomers.data.map((c) => (
                   <tr key={c.id} className="hover:bg-slate-50/50">
-                    <td className="px-4 py-3">
-                      <div className="font-bold text-slate-900">{c.name}</div>
+                    <td className="px-4 py-3 font-semibold text-slate-900">
+                      {c.name}
                     </td>
+
                     <td className="px-4 py-3">
-                      <div className="text-xs space-y-0.5">
-                        <div className="flex items-center space-x-1 text-slate-800">
-                          <Phone className="h-3 w-3 text-slate-400" />
-                          <span>{c.phone}</span>
-                        </div>
+                      <div className="flex flex-col gap-0.5 text-xs">
+                        <span className="flex items-center text-slate-700">
+                          <Phone className="h-3 w-3 mr-1 text-slate-400" /> {c.phone}
+                        </span>
                         {c.email && (
-                          <div className="flex items-center space-x-1 text-slate-500">
-                            <Mail className="h-3 w-3 text-slate-400" />
-                            <span>{c.email}</span>
-                          </div>
+                          <span className="flex items-center text-slate-500">
+                            <Mail className="h-3 w-3 mr-1 text-slate-400" /> {c.email}
+                          </span>
                         )}
                       </div>
                     </td>
-                    <td className="px-4 py-3 max-w-xs truncate" title={c.address}>
-                      {c.address || "-"}
+
+                    <td className="px-4 py-3 text-xs text-slate-600 max-w-xs truncate">
+                      {c.address ? (
+                        <span className="flex items-center">
+                          <MapPin className="h-3 w-3 mr-1 text-slate-400 shrink-0" />
+                          <span className="truncate">{c.address}</span>
+                        </span>
+                      ) : (
+                        "-"
+                      )}
                     </td>
-                    <td className="px-4 py-3 text-center font-semibold text-slate-900">
-                      {c.projects_count || 0}
+
+                    <td className="px-4 py-3 text-xs text-slate-500 max-w-xs truncate">
+                      {c.notes || "-"}
                     </td>
-                    <td className="px-4 py-3 text-center">
-                      <div className="flex items-center justify-center space-x-1">
-                        <Button variant="ghost" size="icon" onClick={() => handleOpenEdit(c)} title="Edit">
-                          <Edit3 className="h-4 w-4 text-slate-600" />
-                        </Button>
-                        <Button variant="ghost" size="icon" onClick={() => handleDelete(c.id)} title="Hapus">
-                          <Trash2 className="h-4 w-4 text-red-600" />
-                        </Button>
-                      </div>
+
+                    <td className="px-4 py-3 text-right space-x-1 whitespace-nowrap">
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="h-8 w-8 text-slate-600 hover:text-slate-900"
+                        onClick={() => handleOpenEdit(c)}
+                      >
+                        <Edit3 className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="h-8 w-8 text-red-600 hover:bg-red-50"
+                        onClick={() => handleDelete(c.id)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                     </td>
                   </tr>
                 ))
@@ -171,57 +189,71 @@ export default function Index({ customers, filters }) {
           </table>
         </div>
 
-        {/* Modal Form */}
+        {/* Modal Create/Edit Customer */}
         <Dialog open={modalOpen} onOpenChange={setModalOpen}>
-          <DialogContent>
+          <DialogContent className="max-w-md">
             <DialogHeader>
               <DialogTitle>
-                {editingCustomer ? "Edit Pelanggan" : "Tambah Pelanggan Baru"}
+                {editingCustomer ? "Edit Data Pelanggan" : "Tambah Pelanggan Baru"}
               </DialogTitle>
             </DialogHeader>
 
             <form onSubmit={handleSubmit} className="space-y-4 py-2">
-              <div className="space-y-2">
-                <Label>Nama Lengkap Pelanggan</Label>
+              <div className="space-y-1.5">
+                <Label htmlFor="name">Nama Lengkap *</Label>
                 <Input
+                  id="name"
                   required
-                  placeholder="misal: Wayan Putu"
                   value={form.data.name}
                   onChange={(e) => form.setData("name", e.target.value)}
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Nomor HP / WhatsApp</Label>
-                  <Input
-                    required
-                    placeholder="0819xxxx"
-                    value={form.data.phone}
-                    onChange={(e) => form.setData("phone", e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>Email (Opsional)</Label>
-                  <Input
-                    type="email"
-                    placeholder="pelanggan@email.com"
-                    value={form.data.email}
-                    onChange={(e) => form.setData("email", e.target.value)}
-                  />
-                </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="phone">Nomor Telepon / WhatsApp *</Label>
+                <Input
+                  id="phone"
+                  required
+                  placeholder="08123456789"
+                  value={form.data.phone}
+                  onChange={(e) => form.setData("phone", e.target.value)}
+                />
               </div>
 
-              <div className="space-y-2">
-                <Label>Alamat Lengkap</Label>
+              <div className="space-y-1.5">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="nama@email.com"
+                  value={form.data.email}
+                  onChange={(e) => form.setData("email", e.target.value)}
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <Label htmlFor="address">Alamat Pemotretan / Domisili</Label>
                 <Textarea
-                  placeholder="Jl. Danau Tamblingan No. 12, Sanur, Denpasar"
+                  id="address"
+                  rows={2}
+                  placeholder="Alamat lengkap..."
                   value={form.data.address}
                   onChange={(e) => form.setData("address", e.target.value)}
                 />
               </div>
 
-              <DialogFooter>
+              <div className="space-y-1.5">
+                <Label htmlFor="notes">Catatan Tambahan</Label>
+                <Textarea
+                  id="notes"
+                  rows={2}
+                  placeholder="Preferensi pelanggan, catatan khusus..."
+                  value={form.data.notes}
+                  onChange={(e) => form.setData("notes", e.target.value)}
+                />
+              </div>
+
+              <DialogFooter className="pt-2">
                 <Button type="button" variant="outline" onClick={() => setModalOpen(false)}>
                   Batal
                 </Button>
@@ -233,6 +265,6 @@ export default function Index({ customers, filters }) {
           </DialogContent>
         </Dialog>
       </div>
-    </AdminLayout>
+    </>
   );
 }

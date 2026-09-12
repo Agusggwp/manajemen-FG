@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import AdminLayout from "@/layouts/AdminLayout";
 import { formatDate, formatRupiah } from "@/lib/utils";
-import { useForm, router } from "@inertiajs/react";
+import { Head, useForm, router } from "@inertiajs/react";
 import { CreditCard, CheckCircle2, DollarSign, Clock, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -47,7 +46,8 @@ export default function Salaries({ salaries, filters, unpaidTotal = 0, paidTotal
   };
 
   return (
-    <AdminLayout title="Pembayaran Gaji Photographer">
+    <>
+      <Head title="Pembayaran Gaji Photographer" />
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
@@ -201,6 +201,6 @@ export default function Salaries({ salaries, filters, unpaidTotal = 0, paidTotal
           </DialogContent>
         </Dialog>
       </div>
-    </AdminLayout>
+    </>
   );
 }

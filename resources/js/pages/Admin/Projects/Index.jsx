@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import AdminLayout from "@/layouts/AdminLayout";
 import { formatDate, formatRupiah } from "@/lib/utils";
-import { Link, router } from "@inertiajs/react";
+import { Head, Link, router } from "@inertiajs/react";
 import { FolderKanban, Search, Eye, Clock, TrendingUp, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,7 +29,8 @@ export default function Index({ projects, filters, statuses }) {
   };
 
   return (
-    <AdminLayout title="Manajemen Project">
+    <>
+      <Head title="Manajemen Project" />
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
@@ -149,6 +149,6 @@ export default function Index({ projects, filters, statuses }) {
           </table>
         </div>
       </div>
-    </AdminLayout>
+    </>
   );
 }

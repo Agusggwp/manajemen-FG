@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import AdminLayout from "@/layouts/AdminLayout";
 import { formatDate, formatRupiah } from "@/lib/utils";
-import { Link, useForm, router } from "@inertiajs/react";
+import { Head, Link, useForm, router } from "@inertiajs/react";
 import {
   ArrowLeft,
   Calendar,
@@ -120,7 +119,8 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
   const endProof = safeProject.proofs?.find((p) => p.type === "END");
 
   return (
-    <AdminLayout title={`Detail Project - ${project.project_name}`}>
+    <>
+      <Head title={`Detail Project - ${project.project_name}`} />
       <div className="space-y-8 pb-12">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -672,6 +672,6 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
           </DialogContent>
         </Dialog>
       </div>
-    </AdminLayout>
+    </>
   );
 }

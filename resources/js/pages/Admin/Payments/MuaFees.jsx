@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import AdminLayout from "@/layouts/AdminLayout";
 import { formatDate, formatRupiah } from "@/lib/utils";
-import { useForm, router } from "@inertiajs/react";
+import { Head, useForm, router } from "@inertiajs/react";
 import { Sparkles, CheckCircle2, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -39,7 +38,8 @@ export default function MuaFees({ fees = { data: [] }, filters = {}, unpaidTotal
   };
 
   return (
-    <AdminLayout title="Pembayaran Fee MUA">
+    <>
+      <Head title="Pembayaran Fee MUA" />
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
@@ -190,6 +190,6 @@ export default function MuaFees({ fees = { data: [] }, filters = {}, unpaidTotal
           </DialogContent>
         </Dialog>
       </div>
-    </AdminLayout>
+    </>
   );
 }
