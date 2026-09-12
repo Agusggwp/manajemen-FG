@@ -49,6 +49,40 @@ class DashboardController extends Controller
             ->where('payment_status', 'PAID')
             ->sum('amount');
 
+        // Monthly Earnings Trend (Last 6 Months)
+        $earningsTrend = [];
+        for ($i = 5; $i >= 0; $i--) {
+            $monthStart = Carbon::now()->subMonths($i)->startOfMonth();
+            $monthEnd = Carbon::now()->subMonths($i)->endOfMonth();
+            $monthLabel = $monthStart->translatedFormat('M Y');
+
+            $mPaid = (float) PhotographerProjectSalary::where('photographer_id', $photographerId)
+                ->where('payment_status', 'PAID')
+                ->whereBetween('created_at', [$monthStart, $monthEnd])
+                ->sum('amount');
+
+            $mUnpaid = (float) PhotographerProjectSalary::where('photographer_id', $photographerId)
+                ->where('payment_status', 'UNPAID')
+                ->whereBetween('created_at', [$monthStart, $monthEnd])
+                ->sum('amount');
+
+            $earningsTrend[] = [
+                'month' => $monthLabel,
+                'paid' => $mPaid,
+                'unpaid' => $mUnpaid,
+                'total' => $mPaid + $mUnpaid,
+            ];
+        }
+
+        // Project Status Breakdown for this photographer
+        $projectStatusBreakdown = Project::whereHas('photographers', function ($q) use ($photographerId) {
+            $q->where('users.id', $photographerId);
+        })
+            ->selectRaw('status, count(*) as count')
+            ->groupBy('status')
+            ->pluck('count', 'status')
+            ->toArray();
+
         $myRecentSchedules = Schedule::with(['customer', 'photoPackage'])
             ->whereHas('project.photographers', function ($q) use ($photographerId) {
                 $q->where('users.id', $photographerId);
@@ -73,6 +107,8 @@ class DashboardController extends Controller
                 'unpaidSalary' => $unpaidSalary,
                 'paidSalary' => $paidSalary,
             ],
+            'earningsTrend' => $earningsTrend,
+            'statusBreakdown' => $projectStatusBreakdown,
             'recentSchedules' => $myRecentSchedules,
             'recentProofs' => $myProofs,
         ]);
