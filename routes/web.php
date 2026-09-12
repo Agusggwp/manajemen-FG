@@ -17,21 +17,15 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Photographer\DashboardController as PhotographerDashboardController;
 use App\Http\Controllers\Photographer\GalleryController as PhotographerGalleryController;
 use App\Http\Controllers\Photographer\ProjectController as PhotographerProjectController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Photographer\ProofController as PhotographerProofController;
 use App\Http\Controllers\Photographer\SalaryController as PhotographerSalaryController;
 use App\Http\Controllers\Photographer\ScheduleController as PhotographerScheduleController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-// Root Route Redirect
-Route::get('/', function () {
-    if (Auth::check()) {
-        return Auth::user()->role === 'ADMIN'
-            ? redirect()->route('admin.dashboard')
-            : redirect()->route('photographer.dashboard');
-    }
-    return redirect()->route('login');
-});
+// Public Root Route (Photo Packages Catalog)
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Authentication Routes
 Route::redirect('/admin/login', '/login');

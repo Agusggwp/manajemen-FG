@@ -26,17 +26,26 @@ class SettingsController extends Controller
             'company_phone' => 'nullable|string',
             'company_address' => 'nullable|string',
             'default_location_radius' => 'nullable|integer|min:10',
+            // Public Web Settings
+            'public_theme_mode' => 'nullable|in:light,dark',
+            'public_hero_badge' => 'nullable|string',
+            'public_hero_title' => 'nullable|string',
+            'public_hero_subtitle' => 'nullable|string',
+            'public_whatsapp_number' => 'nullable|string',
+            'public_cta_title' => 'nullable|string',
+            'public_show_search' => 'nullable|string',
+            'public_show_categories' => 'nullable|string',
         ]);
 
         foreach ($validated as $key => $value) {
             SystemSetting::updateOrCreate(
                 ['key' => $key],
-                ['value' => (string) $value]
+                ['value' => (string) ($value ?? '')]
             );
         }
 
-        ActivityLogger::log('UPDATED', 'SETTINGS', 'Pengaturan sistem ARTDEVATA diperbarui.');
+        ActivityLogger::log('UPDATED', 'SETTINGS', 'Pengaturan sistem & tampilan web publik ARTDEVATA diperbarui.');
 
-        return back()->with('success', 'Pengaturan sistem berhasil disimpan.');
+        return back()->with('success', 'Pengaturan sistem & tampilan web publik berhasil disimpan.');
     }
 }
