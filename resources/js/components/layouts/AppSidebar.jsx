@@ -20,6 +20,8 @@ import {
   DollarSign,
 } from "lucide-react";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 export default function AppSidebar({
   sidebarOpen,
@@ -29,6 +31,16 @@ export default function AppSidebar({
   user,
 }) {
   const [logoutOpen, setLogoutOpen] = useState(false);
+
+  const getInitials = (name) => {
+    if (!name) return "U";
+    const parts = name.trim().split(" ");
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+    return name.substring(0, 2).toUpperCase();
+  };
+
   const currentRoute = window.location.pathname;
   const isActive = (path) => currentRoute.startsWith(path);
 
@@ -114,8 +126,8 @@ export default function AppSidebar({
         <div className="flex flex-col h-full overflow-hidden">
           {/* Logo Brand */}
           <div
-            className={`border-b-2 p-4 border-slate-100 flex items-center shrink-0 ${
-              sidebarCollapsed ? "lg:justify-center lg:px-2" : "px-4"
+            className={`h-16 border-b border-slate-200 flex items-center shrink-0 ${
+              sidebarCollapsed ? "lg:justify-center lg:px-2 px-4" : "px-4"
             }`}
           >
             <div className="flex items-center space-x-3 overflow-hidden">
@@ -223,53 +235,61 @@ export default function AppSidebar({
 
           {/* User Profile & Logout in Sidebar Footer */}
           <div
-            className={`border-t border-slate-100 bg-slate-50/50 shrink-0 ${
-              sidebarCollapsed ? "p-2 lg:py-3 lg:px-1" : "p-4"
+            className={`border-t border-slate-200 bg-slate-50/70 shrink-0 ${
+              sidebarCollapsed ? "p-2 lg:py-3 lg:px-1" : "p-3"
             }`}
           >
             {/* Compact Profile for Desktop Collapsed State */}
             {sidebarCollapsed && (
               <div className="hidden lg:flex flex-col items-center space-y-2.5">
-                <div
-                  className="w-9 h-9 rounded-full bg-slate-900 text-white flex items-center justify-center text-xs font-bold ring-2 ring-slate-100 shadow-2xs"
+                <Avatar
+                  className="h-9 w-9 ring-2 ring-white shadow-2xs cursor-pointer"
                   title={`${user?.name} (${user?.email})`}
                 >
-                  {user?.name?.charAt(0) || "U"}
-                </div>
-                <button
-                  type="button"
+                  <AvatarImage src={user?.avatar_url || user?.avatar} alt={user?.name || "User"} />
+                  <AvatarFallback className="bg-slate-900 text-white text-xs font-bold">
+                    {getInitials(user?.name)}
+                  </AvatarFallback>
+                </Avatar>
+                <Button
+                  variant="destructive"
+                  size="icon"
                   onClick={() => setLogoutOpen(true)}
-                  className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
                   title="Logout"
                 >
                   <LogOut className="h-4 w-4" />
-                </button>
+                </Button>
               </div>
             )}
 
             {/* Full Profile on Mobile or Expanded Desktop */}
             <div
-              className={`flex items-center justify-between ${
+              className={`flex flex-col gap-2 ${
                 sidebarCollapsed ? "lg:hidden flex" : "flex"
               }`}
             >
-              <div className="flex items-center space-x-3 overflow-hidden">
-                <div className="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center text-xs font-bold shrink-0">
-                  {user?.name?.charAt(0) || "U"}
-                </div>
-                <div className="truncate">
-                  <p className="text-xs font-semibold text-slate-900 truncate">{user?.name}</p>
-                  <p className="text-[10px] text-slate-500 truncate">{user?.email || user?.specialty}</p>
+              <div className="flex items-center space-x-3 overflow-hidden min-w-0">
+                <Avatar className="h-9 w-9 shrink-0 ring-2 ring-white shadow-2xs">
+                  <AvatarImage src={user?.avatar_url || user?.avatar} alt={user?.name || "User"} />
+                  <AvatarFallback className="bg-slate-900 text-white text-xs font-bold">
+                    {getInitials(user?.name)}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="truncate min-w-0">
+                  <p className="text-xs font-semibold text-slate-900 truncate">{user?.name || "User"}</p>
+                  <p className="text-[10px] text-slate-500 truncate">{user?.email || user?.specialty || "-"}</p>
                 </div>
               </div>
-              <button
-                type="button"
+              <Button
+                variant="destructive"
+                size="icon"
                 onClick={() => setLogoutOpen(true)}
-                className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors cursor-pointer"
                 title="Logout"
+                className="w-full"
               >
                 <LogOut className="h-4 w-4" />
-              </button>
+                Keluar
+              </Button>
             </div>
           </div>
         </div>

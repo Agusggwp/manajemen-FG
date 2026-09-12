@@ -10,6 +10,10 @@ import {
   Home,
   ChevronDown,
   User as UserIcon,
+  Settings,
+  History,
+  Camera,
+  DollarSign,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -29,6 +33,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 const ROUTE_LABELS = {
   // Common & Admin
@@ -70,6 +75,15 @@ export default function AppHeader({
 
   const userBadge = isPhotographer ? "PHOTOGRAPHER" : "ADMIN";
   const [logoutOpen, setLogoutOpen] = useState(false);
+
+  const getInitials = (name) => {
+    if (!name) return "U";
+    const parts = name.trim().split(" ");
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+    return name.substring(0, 2).toUpperCase();
+  };
 
   const breadcrumbs = useMemo(() => {
     const segments = currentRoute.split("/").filter(Boolean);
@@ -116,7 +130,7 @@ export default function AppHeader({
   }, [currentRoute, title, isPhotographer]);
 
   return (
-    <header className="sticky top-0 z-20 bg-white border-b border-slate-200 p-4 flex items-center justify-between shadow-2xs shrink-0">
+    <header className="sticky top-0 z-20 bg-white border-b border-slate-200 h-16 px-4 flex items-center justify-between shadow-2xs shrink-0">
       <div className="flex items-center space-x-3 min-w-0">
         <Button
           variant="ghost"
@@ -187,9 +201,12 @@ export default function AppHeader({
               variant="ghost"
               className="flex items-center space-x-2.5 p-1 sm:px-2 sm:py-1.5 h-auto rounded-lg hover:bg-slate-100 transition-colors focus-visible:ring-1 focus-visible:ring-slate-300"
             >
-              <div className="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center text-xs font-bold ring-2 ring-slate-100 shrink-0">
-                {user?.name?.charAt(0) || "U"}
-              </div>
+              <Avatar className="h-8 w-8 ring-2 ring-slate-100 shrink-0">
+                <AvatarImage src={user?.avatar_url || user?.avatar} alt={user?.name || "User"} />
+                <AvatarFallback className="bg-slate-900 text-white text-xs font-bold">
+                  {getInitials(user?.name)}
+                </AvatarFallback>
+              </Avatar>
               <div className="hidden md:block text-left">
                 <p className="text-xs font-semibold text-slate-900 leading-tight truncate max-w-[130px]">
                   {user?.name}
@@ -201,32 +218,79 @@ export default function AppHeader({
               <ChevronDown className="h-3.5 w-3.5 text-slate-400 hidden sm:block" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56 mt-1 shadow-lg">
-            <DropdownMenuLabel className="font-normal py-2">
-              <div className="flex flex-col space-y-1">
-                <p className="text-sm font-semibold text-slate-900 leading-none">{user?.name}</p>
-                <p className="text-xs text-slate-500 leading-none">{user?.email || (isPhotographer ? "Portal Photographer" : "Administrator")}</p>
+          <DropdownMenuContent align="end" className="w-56 mt-1 shadow-lg p-1.5">
+            <DropdownMenuLabel className="font-normal py-2 px-2">
+              <div className="flex items-center space-x-2.5">
+                <Avatar className="h-8 w-8 shrink-0">
+                  <AvatarImage src={user?.avatar_url || user?.avatar} alt={user?.name || "User"} />
+                  <AvatarFallback className="bg-slate-900 text-white text-xs font-bold">
+                    {getInitials(user?.name)}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex flex-col space-y-0.5 overflow-hidden min-w-0">
+                  <p className="text-sm font-semibold text-slate-900 leading-none truncate">{user?.name}</p>
+                  <p className="text-xs text-slate-500 leading-none truncate">{user?.email || (isPhotographer ? "Portal Photographer" : "Administrator")}</p>
+                </div>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <a
-                href="/"
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center cursor-pointer text-xs font-medium text-slate-700"
-              >
-                <Globe className="mr-2 h-4 w-4 text-slate-500" />
-                <span>Lihat Web Publik</span>
-              </a>
-            </DropdownMenuItem>
+
+            {/* Quick Navigation Items */}
+            {isPhotographer ? (
+              <>
+                <DropdownMenuItem asChild>
+                  <Link
+                    href="/photographer/gallery"
+                    className="flex items-center cursor-pointer text-xs font-medium text-slate-700 py-1.5"
+                  >
+                    <Camera className="mr-2 h-4 w-4 text-slate-500" />
+                    <span>Galeri Portofolio</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link
+                    href="/photographer/salary"
+                    className="flex items-center cursor-pointer text-xs font-medium text-slate-700 py-1.5"
+                  >
+                    <DollarSign className="mr-2 h-4 w-4 text-slate-500" />
+                    <span>Riwayat Gaji</span>
+                  </Link>
+                </DropdownMenuItem>
+              </>
+            ) : (
+              <>
+                <DropdownMenuItem asChild>
+                  <Link
+                    href="/admin/settings"
+                    className="flex items-center cursor-pointer text-xs font-medium text-slate-700 py-1.5"
+                  >
+                    <Settings className="mr-2 h-4 w-4 text-slate-500" />
+                    <span>Pengaturan Sistem</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link
+                    href="/admin/activity-logs"
+                    className="flex items-center cursor-pointer text-xs font-medium text-slate-700 py-1.5"
+                  >
+                    <History className="mr-2 h-4 w-4 text-slate-500" />
+                    <span>Log Aktivitas</span>
+                  </Link>
+                </DropdownMenuItem>
+              </>
+            )}
             <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => setLogoutOpen(true)}
-              className="text-red-600 focus:text-red-600 focus:bg-red-50 cursor-pointer text-xs font-medium flex items-center gap-2"
-            >
-              <LogOut className="h-4 w-4 text-red-600" />
-              <span>Keluar (Logout)</span>
+
+            <DropdownMenuItem asChild className="p-0 focus:bg-transparent">
+              <Button
+                onClick={() => setLogoutOpen(true)}
+                variant="destructive"
+                size="sm"
+                className="w-full justify-center mt-0.5"
+              >
+                <LogOut className="h-4 w-4" />
+                <span>Keluar</span>
+              </Button>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
