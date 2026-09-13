@@ -90,7 +90,12 @@ class ScheduleController extends Controller
             'mua_ids.*' => 'exists:muas,id',
             'photographer_salary' => 'nullable|numeric|min:0',
             'mua_fee' => 'nullable|numeric|min:0',
+            'overtime_hours' => 'nullable|integer|min:0|max:24',
+            'overtime_fee' => 'nullable|numeric|min:0',
         ]);
+
+        $overtimeHours = (int) ($validated['overtime_hours'] ?? 0);
+        $overtimeFee = (float) ($validated['overtime_fee'] ?? 0);
 
         // Validate Photographer availability (check for overlapping schedules)
         foreach ($validated['photographer_ids'] as $photographerId) {
@@ -116,7 +121,7 @@ class ScheduleController extends Controller
         $package = PhotoPackage::findOrFail($validated['photo_package_id']);
         $customer = Customer::findOrFail($validated['customer_id']);
 
-        // Create Booking with Package Snapshot
+        // Create Booking with Package Snapshot & Overtime
         $booking = Booking::create([
             'booking_code' => 'BOOK-' . strtoupper(substr(md5(uniqid()), 0, 6)),
             'customer_id' => $customer->id,
@@ -128,6 +133,8 @@ class ScheduleController extends Controller
             'package_price' => $package->price,
             'package_duration' => $package->duration_minutes,
             'package_includes_mua' => $package->includes_mua,
+            'overtime_hours' => $overtimeHours,
+            'overtime_fee' => $overtimeFee,
         ]);
 
         // Create Schedule
@@ -138,6 +145,8 @@ class ScheduleController extends Controller
             'date' => $validated['date'],
             'start_time' => $validated['start_time'],
             'end_time' => $validated['end_time'],
+            'overtime_hours' => $overtimeHours,
+            'overtime_fee' => $overtimeFee,
             'location_name' => $validated['location_name'],
             'location_address' => $validated['location_address'],
             'latitude' => $validated['latitude'],
@@ -160,6 +169,8 @@ class ScheduleController extends Controller
             'package_price' => $package->price,
             'package_duration' => $package->duration_minutes,
             'package_includes_mua' => $package->includes_mua,
+            'overtime_hours' => $overtimeHours,
+            'overtime_fee' => $overtimeFee,
             'date' => $validated['date'],
             'location_name' => $validated['location_name'],
             'location_address' => $validated['location_address'],
@@ -229,6 +240,8 @@ class ScheduleController extends Controller
             'date' => 'required|date',
             'start_time' => 'required',
             'end_time' => 'required',
+            'overtime_hours' => 'nullable|integer|min:0|max:24',
+            'overtime_fee' => 'nullable|numeric|min:0',
             'location_name' => 'required|string|max:255',
             'location_address' => 'required|string',
             'latitude' => 'required|numeric',
@@ -241,6 +254,13 @@ class ScheduleController extends Controller
 
         $schedule->update($validated);
 
+        if ($schedule->booking) {
+            $schedule->booking->update([
+                'overtime_hours' => $validated['overtime_hours'] ?? 0,
+                'overtime_fee' => $validated['overtime_fee'] ?? 0,
+            ]);
+        }
+
         if ($schedule->project) {
             $schedule->project->update([
                 'date' => $validated['date'],
@@ -251,6 +271,8 @@ class ScheduleController extends Controller
                 'location_radius' => $validated['location_radius'],
                 'work_start_time' => $validated['start_time'],
                 'work_end_time' => $validated['end_time'],
+                'overtime_hours' => $validated['overtime_hours'] ?? 0,
+                'overtime_fee' => $validated['overtime_fee'] ?? 0,
             ]);
         }
 

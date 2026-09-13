@@ -17,6 +17,8 @@ class Schedule extends Model
         'date',
         'start_time',
         'end_time',
+        'overtime_hours',
+        'overtime_fee',
         'location_name',
         'location_address',
         'latitude',
@@ -30,6 +32,8 @@ class Schedule extends Model
 
     protected $casts = [
         'date' => 'date',
+        'overtime_hours' => 'integer',
+        'overtime_fee' => 'float',
         'latitude' => 'float',
         'longitude' => 'float',
         'location_radius' => 'integer',

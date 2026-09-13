@@ -21,11 +21,15 @@ class Booking extends Model
         'package_price',
         'package_duration',
         'package_includes_mua',
+        'overtime_hours',
+        'overtime_fee',
     ];
 
     protected $casts = [
         'package_price' => 'float',
         'package_includes_mua' => 'boolean',
+        'overtime_hours' => 'integer',
+        'overtime_fee' => 'float',
         'booking_date' => 'date',
     ];
 

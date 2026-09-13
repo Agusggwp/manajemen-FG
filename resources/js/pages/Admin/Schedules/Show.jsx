@@ -84,8 +84,30 @@ export default function Show({ schedule }) {
                   <p className="font-semibold text-slate-900">
                     {schedule.start_time?.substring(0, 5)} - {schedule.end_time?.substring(0, 5)}
                   </p>
+                  {Number(schedule.overtime_hours) > 0 && (
+                    <p className="text-xs text-amber-700 font-medium mt-0.5">
+                      (Termasuk +{schedule.overtime_hours} Jam Overtime)
+                    </p>
+                  )}
                 </div>
               </div>
+
+              {(Number(schedule.overtime_hours) > 0 || Number(schedule.overtime_fee) > 0) && (
+                <div className="p-3 bg-amber-50/80 border border-amber-200 rounded-lg text-xs space-y-1">
+                  <div className="font-bold text-amber-900 flex items-center justify-between">
+                    <span>Informasi Overtime</span>
+                    <span>+{formatRupiah(schedule.overtime_fee)}</span>
+                  </div>
+                  <p className="text-amber-800">
+                    Tambahan durasi: <strong>{schedule.overtime_hours} Jam</strong>. Total tagihan (Paket + Overtime):{" "}
+                    <strong>
+                      {formatRupiah(
+                        Number(schedule.photo_package?.price || 0) + Number(schedule.overtime_fee || 0)
+                      )}
+                    </strong>
+                  </p>
+                </div>
+              )}
 
               {/* Location Detail Section */}
               <div className="p-4 bg-slate-50 border border-slate-200 rounded-lg space-y-2">

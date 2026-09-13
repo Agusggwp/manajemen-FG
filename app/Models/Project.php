@@ -22,6 +22,8 @@ class Project extends Model
         'package_price',
         'package_duration',
         'package_includes_mua',
+        'overtime_hours',
+        'overtime_fee',
         'date',
         'location_name',
         'location_address',
@@ -39,6 +41,8 @@ class Project extends Model
     protected $casts = [
         'package_price' => 'float',
         'package_includes_mua' => 'boolean',
+        'overtime_hours' => 'integer',
+        'overtime_fee' => 'float',
         'date' => 'date',
         'deadline' => 'date',
         'latitude' => 'float',
@@ -108,18 +112,25 @@ class Project extends Model
             $this->actual_operational_cost);
     }
 
+    public function getTotalRevenueAttribute(): float
+    {
+        $overtimeTotal = (float) ($this->overtime_fee ?: 0);
+        return (float) ($this->package_price + $overtimeTotal);
+    }
+
     public function getActualProfitAttribute(): float
     {
-        return (float) ($this->package_price - $this->actual_total_cost);
+        return (float) ($this->total_revenue - $this->actual_total_cost);
     }
 
     public function getActualMarginAttribute(): float
     {
-        if ($this->package_price <= 0) {
+        $revenue = $this->total_revenue;
+        if ($revenue <= 0) {
             return 0.0;
         }
 
-        return round(($this->actual_profit / $this->package_price) * 100, 2);
+        return round(($this->actual_profit / $revenue) * 100, 2);
     }
 
     public function getFormattedWorkDurationAttribute(): string

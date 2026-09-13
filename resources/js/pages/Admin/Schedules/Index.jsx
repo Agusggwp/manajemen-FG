@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import { formatDate, formatRupiah, getStatusLabel } from "@/lib/utils";
 import { Head, useForm, router, Link } from "@inertiajs/react";
+import LocationPickerMap from "@/components/ui/LocationPickerMap";
 import {
   Calendar,
   Plus,
@@ -68,7 +69,9 @@ export default function Index({ schedules, existingAssignments, filters, custome
     photo_package_id: "",
     date: new Date().toISOString().split("T")[0],
     start_time: "09:00",
-    end_time: "11:00",
+    end_time: "10:00",
+    overtime_hours: 0,
+    overtime_fee: 0,
     // Mandatory location fields
     location_name: "",
     location_address: "",
@@ -82,6 +85,19 @@ export default function Index({ schedules, existingAssignments, filters, custome
     photographer_salary: "",
     mua_fee: "",
   });
+
+  const calculateEndTime = (startTime, durationMinutes = 60, overtimeHours = 0) => {
+    if (!startTime) return "";
+    const [hours, minutes] = startTime.split(":").map(Number);
+    if (isNaN(hours) || isNaN(minutes)) return startTime;
+    const totalMinutes = (parseInt(durationMinutes) || 0) + (parseFloat(overtimeHours) || 0) * 60;
+    const date = new Date();
+    date.setHours(hours, minutes, 0, 0);
+    date.setMinutes(date.getMinutes() + totalMinutes);
+    const resHours = String(date.getHours()).padStart(2, "0");
+    const resMinutes = String(date.getMinutes()).padStart(2, "0");
+    return `${resHours}:${resMinutes}`;
+  };
 
   const checkPhotographerBusy = (photographerId) => {
     if (!form.data.date || !form.data.start_time || !form.data.end_time) {
@@ -116,11 +132,47 @@ export default function Index({ schedules, existingAssignments, filters, custome
       }
     }
 
+    const computedEnd = pkg
+      ? calculateEndTime(form.data.start_time, pkg.duration_minutes, form.data.overtime_hours)
+      : form.data.end_time;
+
     form.setData({
       ...form.data,
       photo_package_id: packageId,
       mua_ids: selectedMuaIds,
       mua_fee: defaultMuaFee,
+      end_time: computedEnd,
+    });
+  };
+
+  const handleStartTimeChange = (val) => {
+    const duration = selectedPackage ? selectedPackage.duration_minutes : 60;
+    const computedEnd = calculateEndTime(val, duration, form.data.overtime_hours);
+    form.setData({
+      ...form.data,
+      start_time: val,
+      end_time: computedEnd,
+    });
+  };
+
+  const handleOvertimeHoursChange = (val) => {
+    const hours = parseFloat(val) || 0;
+    const duration = selectedPackage ? selectedPackage.duration_minutes : 60;
+    const computedEnd = calculateEndTime(form.data.start_time, duration, hours);
+    form.setData({
+      ...form.data,
+      overtime_hours: val,
+      end_time: computedEnd,
+    });
+  };
+
+  const handleLocationSelect = ({ lat, lng, address, name }) => {
+    form.setData({
+      ...form.data,
+      latitude: lat,
+      longitude: lng,
+      location_address: address ? address : form.data.location_address,
+      location_name: form.data.location_name ? form.data.location_name : (name || form.data.location_name),
     });
   };
 
@@ -262,7 +314,14 @@ export default function Index({ schedules, existingAssignments, filters, custome
 
                     <div>
                       <h3 className="font-bold text-slate-900 text-base">{s.customer?.name}</h3>
-                      <p className="text-xs text-slate-500 font-medium">{s.photo_package?.name || s.project?.package_name || "Paket Standard"}</p>
+                      <div className="flex items-center gap-2 mt-0.5">
+                        <p className="text-xs text-slate-500 font-medium">{s.photo_package?.name || s.project?.package_name || "Paket Standard"}</p>
+                        {Number(s.overtime_hours) > 0 && (
+                          <Badge variant="outline" className="text-[10px] bg-amber-50 text-amber-800 border-amber-300 font-medium">
+                            +{s.overtime_hours} Jam Overtime
+                          </Badge>
+                        )}
+                      </div>
                     </div>
 
                     <div className="text-xs text-slate-600 space-y-1 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
@@ -317,6 +376,11 @@ export default function Index({ schedules, existingAssignments, filters, custome
                         <span className="text-xs text-slate-400 flex items-center gap-1 mt-0.5">
                           <Clock className="h-3 w-3" /> {s.start_time?.substring(0, 5)} - {s.end_time?.substring(0, 5)}
                         </span>
+                        {Number(s.overtime_hours) > 0 && (
+                          <Badge variant="outline" className="text-[10px] bg-amber-50 text-amber-800 border-amber-300 font-medium block w-max mt-1">
+                            +{s.overtime_hours} Jam Overtime
+                          </Badge>
+                        )}
                       </TableCell>
 
                       <TableCell className="font-semibold text-slate-900">
@@ -324,7 +388,12 @@ export default function Index({ schedules, existingAssignments, filters, custome
                       </TableCell>
 
                       <TableCell className="font-medium text-slate-800">
-                        {s.photo_package?.name || s.project?.package_name || "-"}
+                        <div>{s.photo_package?.name || s.project?.package_name || "-"}</div>
+                        {Number(s.overtime_fee) > 0 && (
+                          <div className="text-[11px] text-amber-700 font-medium">
+                            Overtime: +{formatRupiah(s.overtime_fee)}
+                          </div>
+                        )}
                       </TableCell>
 
                       <TableCell className="max-w-xs">
@@ -448,13 +517,25 @@ export default function Index({ schedules, existingAssignments, filters, custome
 
               {/* Package Detail Preview Banner */}
               {selectedPackage && (
-                <div className="p-3 bg-slate-100/70 border border-slate-200 rounded-lg text-xs space-y-1">
+                <div className="p-3 bg-[slate-100/70] border border-slate-200 rounded-lg text-xs space-y-1.5">
                   <div className="flex items-center justify-between font-bold text-slate-900">
                     <span>{selectedPackage.name}</span>
-                    <span>Harga: {formatRupiah(selectedPackage.price)}</span>
+                    <span className="text-emerald-700">
+                      Harga Paket: {formatRupiah(selectedPackage.price)}
+                      {Number(form.data.overtime_fee) > 0 && (
+                        <span className="text-amber-700 font-semibold ml-1">
+                          (+ Overtime {formatRupiah(form.data.overtime_fee)}) = {formatRupiah(Number(selectedPackage.price) + Number(form.data.overtime_fee))}
+                        </span>
+                      )}
+                    </span>
                   </div>
                   <div className="flex items-center space-x-4 text-slate-600">
-                    <span>Durasi: {selectedPackage.duration_minutes} Menit</span>
+                    <span>Durasi Paket: {selectedPackage.duration_minutes} Menit</span>
+                    {Number(form.data.overtime_hours) > 0 && (
+                      <span className="text-amber-700 font-medium">
+                        + Overtime {form.data.overtime_hours} Jam ({form.data.overtime_hours * 60} Menit)
+                      </span>
+                    )}
                     <span>•</span>
                     <span className="flex items-center gap-1 font-medium text-amber-800">
                       <Sparkles className="h-3 w-3 text-amber-600" />
@@ -468,8 +549,8 @@ export default function Index({ schedules, existingAssignments, filters, custome
                 </div>
               )}
 
-              {/* Date & Time */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {/* Date & Time & Overtime */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="space-y-2">
                   <Label>Tanggal Pemotretan</Label>
                   <Input
@@ -485,11 +566,14 @@ export default function Index({ schedules, existingAssignments, filters, custome
                     type="time"
                     required
                     value={form.data.start_time}
-                    onChange={(e) => form.setData("start_time", e.target.value)}
+                    onChange={(e) => handleStartTimeChange(e.target.value)}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Jam Selesai</Label>
+                  <Label className="flex items-center justify-between">
+                    <span>Jam Selesai</span>
+                    <span className="text-[10px] text-emerald-600 font-semibold">(Otomatis)</span>
+                  </Label>
                   <Input
                     type="time"
                     required
@@ -497,13 +581,51 @@ export default function Index({ schedules, existingAssignments, filters, custome
                     onChange={(e) => form.setData("end_time", e.target.value)}
                   />
                 </div>
+                <div className="space-y-2">
+                  <Label>Overtime (Jam)</Label>
+                  <Input
+                    type="number"
+                    step="0.5"
+                    min="0"
+                    placeholder="0"
+                    value={form.data.overtime_hours}
+                    onChange={(e) => handleOvertimeHoursChange(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              {/* Overtime Fee */}
+              <div className="space-y-2">
+                <Label>Tambahan Biaya Overtime (Rp)</Label>
+                <Input
+                  type="number"
+                  placeholder="0 (misal: 150000)"
+                  value={form.data.overtime_fee}
+                  onChange={(e) => form.setData("overtime_fee", e.target.value)}
+                />
+                <p className="text-[11px] text-slate-500">
+                  Biaya overtime akan terakumulasi ke total tagihan project pelanggan.
+                </p>
               </div>
 
               {/* MANDATORY LOCATION SECTION */}
               <div className="border-t border-slate-200 pt-3 space-y-3">
-                <p className="text-xs font-bold uppercase text-slate-700 tracking-wider flex items-center gap-1.5">
-                  <MapPin className="h-4 w-4 text-rose-600" /> Information Lokasi (WAJIB DIIISI)
-                </p>
+                <div className="flex items-center justify-between">
+                  <p className="text-xs font-bold uppercase text-slate-700 tracking-wider flex items-center gap-1.5">
+                    <MapPin className="h-4 w-4 text-rose-600" /> Informasi Lokasi (Pilih di Peta atau Isi Manual)
+                  </p>
+                </div>
+
+                {/* Interactive Leaflet Map Picker */}
+                <div className="space-y-1">
+                  <Label className="text-xs font-semibold text-slate-700">Peta Pemilihan Lokasi</Label>
+                  <LocationPickerMap
+                    latitude={form.data.latitude}
+                    longitude={form.data.longitude}
+                    radius={form.data.location_radius}
+                    onLocationSelect={handleLocationSelect}
+                  />
+                </div>
 
                 <div>
                   <Label>Nama Lokasi</Label>
