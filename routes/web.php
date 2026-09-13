@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\ProjectExpenseController;
 use App\Http\Controllers\Admin\ProofValidationController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\ScheduleController as AdminScheduleController;
+use App\Http\Controllers\Admin\DevToolController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Photographer\DashboardController as PhotographerDashboardController;
@@ -84,6 +85,10 @@ Route::middleware(['auth', 'role.admin'])->prefix('admin')->as('admin.')->group(
     Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
     Route::post('/settings', [SettingsController::class, 'update'])->name('settings.update');
+
+    // Dev Tools (Web Migration & System Maintenance)
+    Route::get('/dev-tools', [DevToolController::class, 'index'])->name('dev-tools.index');
+    Route::post('/dev-tools/execute', [DevToolController::class, 'execute'])->name('dev-tools.execute');
 });
 
 // PHOTOGRAPHER ROUTES

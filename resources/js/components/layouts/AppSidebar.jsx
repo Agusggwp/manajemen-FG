@@ -18,6 +18,7 @@ import {
   CheckCircle2,
   Image,
   DollarSign,
+  Terminal,
 } from "lucide-react";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { Button } from "@/components/ui/button";
@@ -83,6 +84,7 @@ export default function AppSidebar({
       group: "SISTEM",
       items: [
         { name: "Activity Logs", href: "/admin/activity-logs", icon: History },
+        { name: "Dev Tools", href: "/admin/dev-tools", icon: Terminal },
         { name: "Settings", href: "/admin/settings", icon: Settings },
       ],
     },
