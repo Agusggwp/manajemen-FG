@@ -75,33 +75,30 @@ export function RevenueTrendChart({ data = [] }) {
           <button
             type="button"
             onClick={() => setActiveTab("all")}
-            className={`px-2.5 py-1 text-xs font-semibold rounded-md transition-all ${
-              activeTab === "all"
+            className={`px-2.5 py-1 text-xs font-semibold rounded-md transition-all ${activeTab === "all"
                 ? "bg-white text-slate-900 shadow-xs"
                 : "text-slate-600 hover:text-slate-900"
-            }`}
+              }`}
           >
             Semua
           </button>
           <button
             type="button"
             onClick={() => setActiveTab("revenue")}
-            className={`px-2.5 py-1 text-xs font-semibold rounded-md transition-all ${
-              activeTab === "revenue"
+            className={`px-2.5 py-1 text-xs font-semibold rounded-md transition-all ${activeTab === "revenue"
                 ? "bg-emerald-600 text-white shadow-xs"
                 : "text-slate-600 hover:text-slate-900"
-            }`}
+              }`}
           >
             Revenue
           </button>
           <button
             type="button"
             onClick={() => setActiveTab("profit")}
-            className={`px-2.5 py-1 text-xs font-semibold rounded-md transition-all ${
-              activeTab === "profit"
+            className={`px-2.5 py-1 text-xs font-semibold rounded-md transition-all ${activeTab === "profit"
                 ? "bg-indigo-600 text-white shadow-xs"
                 : "text-slate-600 hover:text-slate-900"
-            }`}
+              }`}
           >
             Profit
           </button>
@@ -308,13 +305,13 @@ export function ProjectStatusDonutChart({ statusCounts = {}, title = "Distribusi
   const counts = statusCounts || {};
 
   const statusConfig = {
-    SCHEDULED: { label: "Terjadwal",   color: "#3b82f6" },
-    COMPLETED: { label: "Selesai",     color: "#10b981" },
-    SHOOTING:  { label: "Pemotretan",  color: "#f59e0b" },
-    EDITING:   { label: "Pengeditan",  color: "#8b5cf6" },
-    REVIEW:    { label: "Peninjauan",  color: "#a855f7" },
-    BOOKED:    { label: "Dipesan",     color: "#64748b" },
-    CANCELLED: { label: "Dibatalkan",  color: "#ef4444" },
+    SCHEDULED: { label: "Terjadwal", color: "#3b82f6" },
+    COMPLETED: { label: "Selesai", color: "#10b981" },
+    SHOOTING: { label: "Pemotretan", color: "#f59e0b" },
+    EDITING: { label: "Pengeditan", color: "#8b5cf6" },
+    REVIEW: { label: "Peninjauan", color: "#a855f7" },
+    BOOKED: { label: "Dipesan", color: "#64748b" },
+    CANCELLED: { label: "Dibatalkan", color: "#ef4444" },
   };
 
   const chartData = Object.entries(counts)
@@ -444,7 +441,7 @@ export function PhotographerEarningsChart({ data = [] }) {
             </CardTitle>
           </div>
           <CardDescription className="text-xs text-slate-500 mt-0.5">
-            Perbandingan honor yang sudah dibayar vs menunggu pencairan
+            Perbandingan gaji yang sudah dibayar vs menunggu pencairan
           </CardDescription>
         </div>
 
