@@ -56,23 +56,23 @@ export function ConfirmDialog({
         }
       }}
     >
-      <AlertDialogContent className="max-w-[92vw] sm:max-w-md p-6 rounded-2xl border-slate-200">
+      <AlertDialogContent className="max-w-[92vw] sm:max-w-md p-6 rounded-2xl border-slate-200 dark:border-slate-800 bg-card dark:bg-slate-900 text-card-foreground">
         <div className="flex flex-col items-center text-center">
           <div
             className={cn(
               "w-12 h-12 rounded-full shrink-0 flex items-center justify-center mb-3.5",
               variant === "destructive"
-                ? "bg-red-50 text-red-600 border border-red-100"
-                : "bg-amber-50 text-amber-600 border border-amber-100"
+                ? "bg-red-50 dark:bg-red-950/50 text-red-600 dark:text-red-400 border border-red-100 dark:border-red-900/50"
+                : "bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 border border-amber-100 dark:border-amber-900/50"
             )}
           >
             {getHeaderIcon()}
           </div>
           <AlertDialogHeader className="space-y-2 text-center sm:text-center items-center">
-            <AlertDialogTitle className="text-base sm:text-lg font-bold text-slate-900 tracking-tight text-center">
+            <AlertDialogTitle className="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-100 tracking-tight text-center">
               {title}
             </AlertDialogTitle>
-            <AlertDialogDescription className="text-xs sm:text-sm text-slate-500 leading-relaxed text-center max-w-xs sm:max-w-sm">
+            <AlertDialogDescription className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed text-center max-w-xs sm:max-w-sm">
               {description}
             </AlertDialogDescription>
           </AlertDialogHeader>
