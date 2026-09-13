@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Head, Link, useForm, usePage } from "@inertiajs/react";
-import { Lock, Mail, ArrowRight, Eye, EyeOff, ShieldCheck, CheckCircle2 } from "lucide-react";
+import { Lock, Mail, ArrowRight, Eye, EyeOff, ShieldCheck, CheckCircle2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -139,9 +139,22 @@ export default function ResetPassword({ token, email: initialEmail }) {
               )}
             </div>
 
-            <Button type="submit" className="w-full bg-slate-900 hover:bg-slate-800" disabled={processing}>
-              {processing ? "Menyimpan Password..." : "Simpan Password Baru"}
-              <ArrowRight className="ml-1 h-4 w-4" />
+            <Button
+              type="submit"
+              className="w-full gap-2 font-semibold h-10 shadow-xs flex items-center justify-center bg-slate-900 hover:bg-slate-800"
+              disabled={processing}
+            >
+              {processing ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin shrink-0" />
+                  <span>Menyimpan Password...</span>
+                </>
+              ) : (
+                <>
+                  <span>Simpan Password Baru</span>
+                  <ArrowRight className="h-4 w-4 shrink-0" />
+                </>
+              )}
             </Button>
           </form>
 

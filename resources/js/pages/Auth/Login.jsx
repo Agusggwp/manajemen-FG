@@ -12,6 +12,7 @@ import {
   Clock,
   Sparkles,
   PieChart as PieChartIcon,
+  Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -96,6 +97,7 @@ export default function Login() {
                   type="button"
                   variant="outline"
                   size="sm"
+                  disabled={processing}
                   onClick={() => handleQuickRole("admin@artdevata.com", "password", "Admin")}
                   className="w-full gap-1.5 font-semibold text-xs"
                 >
@@ -106,6 +108,7 @@ export default function Login() {
                   type="button"
                   variant="outline"
                   size="sm"
+                  disabled={processing}
                   onClick={() => handleQuickRole("agus@artdevata.com", "password", "Fotografer")}
                   className="w-full gap-1.5 font-semibold text-xs"
                 >
@@ -126,6 +129,7 @@ export default function Login() {
                     type="email"
                     placeholder="nama@artdevata.com"
                     value={data.email}
+                    disabled={processing}
                     onChange={(e) => setData("email", e.target.value)}
                     className="pl-9"
                     required
@@ -153,6 +157,7 @@ export default function Login() {
                     type={showPassword ? "text" : "password"}
                     placeholder="••••••••"
                     value={data.password}
+                    disabled={processing}
                     onChange={(e) => setData("password", e.target.value)}
                     className="pl-9 pr-9"
                     required
@@ -161,6 +166,7 @@ export default function Login() {
                     type="button"
                     variant="ghost"
                     size="icon"
+                    disabled={processing}
                     className="absolute right-0 top-0 h-full px-3 text-muted-foreground hover:text-foreground"
                     onClick={() => setShowPassword(!showPassword)}
                   >
@@ -172,9 +178,22 @@ export default function Login() {
                 )}
               </div>
 
-              <Button type="submit" className="w-full gap-2 font-semibold" disabled={processing}>
-                <span>{processing ? "Memproses..." : "Masuk"}</span>
-                <ArrowRight className="h-4 w-4" />
+              <Button
+                type="submit"
+                className="w-full gap-2 font-semibold h-10 shadow-xs flex items-center justify-center"
+                disabled={processing}
+              >
+                {processing ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin shrink-0" />
+                    <span>Memproses...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Masuk</span>
+                    <ArrowRight className="h-4 w-4 shrink-0" />
+                  </>
+                )}
               </Button>
             </form>
           </div>
