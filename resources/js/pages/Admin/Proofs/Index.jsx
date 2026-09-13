@@ -88,23 +88,23 @@ export default function Index({ proofs, counts, activeTab = "pending" }) {
       <Head title="Validasi Pemotretan" />
       <div className="space-y-4 sm:space-y-6">
         <div className="min-w-0">
-          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
             Validasi Pemotretan
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1">
+          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
             Verifikasi bukti foto awal (START) dan selesai (END) beserta koordinat GPS dari fotografer.
           </p>
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex items-center border-b border-slate-200 gap-2 sm:gap-6 overflow-x-auto no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0">
+        <div className="flex items-center border-b border-slate-200 dark:border-slate-800 gap-2 sm:gap-6 overflow-x-auto no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0">
           <button
             type="button"
             onClick={() => handleTabChange("pending")}
             className={`pb-3 px-2 sm:px-1 text-xs sm:text-sm font-semibold border-b-2 flex items-center gap-1.5 sm:gap-2 shrink-0 whitespace-nowrap transition-colors ${
               activeTab === "pending"
-                ? "border-slate-900 text-slate-900"
-                : "border-transparent text-slate-400 hover:text-slate-700"
+                ? "border-slate-900 dark:border-white text-slate-900 dark:text-white"
+                : "border-transparent text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
             }`}
           >
             <Clock className="h-4 w-4 shrink-0" />
@@ -119,11 +119,11 @@ export default function Index({ proofs, counts, activeTab = "pending" }) {
             onClick={() => handleTabChange("approved")}
             className={`pb-3 px-2 sm:px-1 text-xs sm:text-sm font-semibold border-b-2 flex items-center gap-1.5 sm:gap-2 shrink-0 whitespace-nowrap transition-colors ${
               activeTab === "approved"
-                ? "border-emerald-600 text-emerald-600"
-                : "border-transparent text-slate-400 hover:text-slate-700"
+                ? "border-emerald-600 text-emerald-600 dark:text-emerald-400 dark:border-emerald-400"
+                : "border-transparent text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
             }`}
           >
-            <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+            <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
             <span>Disetujui</span>
             <Badge variant="success" className="text-[10px] sm:text-xs px-1.5 py-0">
               {safeCounts.approved || 0}
@@ -135,11 +135,11 @@ export default function Index({ proofs, counts, activeTab = "pending" }) {
             onClick={() => handleTabChange("rejected")}
             className={`pb-3 px-2 sm:px-1 text-xs sm:text-sm font-semibold border-b-2 flex items-center gap-1.5 sm:gap-2 shrink-0 whitespace-nowrap transition-colors ${
               activeTab === "rejected"
-                ? "border-red-600 text-red-600"
-                : "border-transparent text-slate-400 hover:text-slate-700"
+                ? "border-red-600 text-red-600 dark:text-red-400 dark:border-red-400"
+                : "border-transparent text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
             }`}
           >
-            <XCircle className="h-4 w-4 text-red-600 shrink-0" />
+            <XCircle className="h-4 w-4 text-red-600 dark:text-red-400 shrink-0" />
             <span>Ditolak</span>
             <Badge variant="destructive" className="text-[10px] sm:text-xs px-1.5 py-0">
               {safeCounts.rejected || 0}
@@ -151,15 +151,15 @@ export default function Index({ proofs, counts, activeTab = "pending" }) {
         {isNavigating ? (
           <CardGridSkeleton count={6} />
         ) : safeProofs.data.length === 0 ? (
-          <div className="col-span-full text-center py-12 bg-white rounded-xl border border-slate-200 text-slate-400">
+          <div className="col-span-full text-center py-12 bg-card dark:bg-slate-900 rounded-xl border border-border dark:border-slate-800 text-muted-foreground">
             Tidak ada data bukti foto pemotretan pada tab ini.
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {safeProofs.data.map((proof) => (
-              <Card key={proof.id} className="border-slate-200 overflow-hidden shadow-xs flex flex-col justify-between">
+              <Card key={proof.id} className="border-border dark:border-slate-800 bg-card dark:bg-slate-900 overflow-hidden shadow-xs flex flex-col justify-between">
                 <div>
-                  <div className="relative aspect-video w-full bg-slate-100 overflow-hidden border-b border-slate-200">
+                  <div className="relative aspect-video w-full bg-slate-100 dark:bg-slate-800 overflow-hidden border-b border-border dark:border-slate-800">
                     <ImageWithFallback
                       src={proof.photo_path ? `/storage/${proof.photo_path}` : null}
                       alt={`Bukti Foto ${proof.type}`}
@@ -179,32 +179,32 @@ export default function Index({ proofs, counts, activeTab = "pending" }) {
 
                   <CardContent className="p-4 space-y-3">
                     <div className="flex items-center justify-between">
-                      <span className="font-bold text-slate-900 text-sm">
+                      <span className="font-bold text-slate-900 dark:text-white text-sm">
                         {proof.photographer?.name}
                       </span>
-                      <span className="text-xs text-slate-500">
+                      <span className="text-xs text-slate-500 dark:text-slate-400">
                         {formatDate(proof.captured_at)}
                       </span>
                     </div>
 
-                    <div className="p-3 bg-slate-50 rounded-lg border border-slate-200 text-xs space-y-1">
-                      <div className="flex items-center space-x-1 font-semibold text-slate-800">
-                        <MapPin className="h-3.5 w-3.5 text-rose-600 shrink-0" />
+                    <div className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-lg border border-slate-200 dark:border-slate-700/60 text-xs space-y-1">
+                      <div className="flex items-center space-x-1 font-semibold text-slate-800 dark:text-slate-200">
+                        <MapPin className="h-3.5 w-3.5 text-rose-600 dark:text-rose-400 shrink-0" />
                         <span className="truncate">{proof.schedule?.location_name || proof.project?.location_name || "-"}</span>
                       </div>
-                      <div className="flex items-center justify-between text-slate-600 pt-1 border-t border-slate-100 font-mono text-[11px]">
+                      <div className="flex items-center justify-between text-slate-600 dark:text-slate-400 pt-1 border-t border-slate-200/60 dark:border-slate-700/60 font-mono text-[11px]">
                         <span>Jarak dari Lokasi:</span>
-                        <strong className={proof.distance_from_location <= (proof.schedule?.location_radius || 100) ? "text-emerald-700 font-bold" : "text-amber-700 font-bold"}>
+                        <strong className={proof.distance_from_location <= (proof.schedule?.location_radius || 100) ? "text-emerald-700 dark:text-emerald-400 font-bold" : "text-amber-700 dark:text-amber-400 font-bold"}>
                           {proof.distance_from_location} Meter
                         </strong>
                       </div>
-                      <div className="text-[10px] text-slate-400 font-mono">
+                      <div className="text-[10px] text-slate-400 dark:text-slate-500 font-mono">
                         Akurasi GPS: {proof.accuracy}m
                       </div>
                     </div>
 
                     {proof.admin_note && (
-                      <p className="text-xs text-red-600 bg-red-50 p-2.5 rounded border border-red-200">
+                      <p className="text-xs text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/40 p-2.5 rounded border border-red-200 dark:border-red-900/60">
                         <strong>Catatan Penolakan:</strong> {proof.admin_note}
                       </p>
                     )}

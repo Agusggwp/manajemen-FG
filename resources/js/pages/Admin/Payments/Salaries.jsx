@@ -67,31 +67,31 @@ export default function Salaries({ salaries, filters, unpaidTotal = 0, paidTotal
       <Head title="Pembayaran Gaji Fotografer" />
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
             Pembayaran Gaji Fotografer (Per Project)
           </h1>
-          <p className="text-sm text-slate-500 mt-1">
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
             Kelola dan tandai status pembayaran gaji per project untuk fotografer.
           </p>
         </div>
 
         {/* Totals Banner */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Card className="bg-amber-50 border-amber-200 shadow-2xs">
+          <Card className="bg-amber-50/60 dark:bg-amber-950/20 border-amber-200 dark:border-amber-900/50 shadow-2xs">
             <CardContent className="p-4 flex items-center justify-between">
               <div>
-                <p className="text-xs font-semibold text-amber-800 uppercase">Belum Dibayar (UNPAID)</p>
-                <p className="text-2xl font-bold text-amber-950 mt-1">{formatRupiah(unpaidTotal)}</p>
+                <p className="text-xs font-semibold text-amber-800 dark:text-amber-300 uppercase">Belum Dibayar (UNPAID)</p>
+                <p className="text-2xl font-bold text-amber-950 dark:text-amber-100 mt-1">{formatRupiah(unpaidTotal)}</p>
               </div>
               <Clock className="h-8 w-8 text-amber-500 opacity-60" />
             </CardContent>
           </Card>
 
-          <Card className="bg-emerald-50 border-emerald-200 shadow-2xs">
+          <Card className="bg-emerald-50/60 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-900/50 shadow-2xs">
             <CardContent className="p-4 flex items-center justify-between">
               <div>
-                <p className="text-xs font-semibold text-emerald-800 uppercase">Sudah Dibayar (PAID)</p>
-                <p className="text-2xl font-bold text-emerald-950 mt-1">{formatRupiah(paidTotal)}</p>
+                <p className="text-xs font-semibold text-emerald-800 dark:text-emerald-300 uppercase">Sudah Dibayar (PAID)</p>
+                <p className="text-2xl font-bold text-emerald-950 dark:text-emerald-100 mt-1">{formatRupiah(paidTotal)}</p>
               </div>
               <CheckCircle2 className="h-8 w-8 text-emerald-500 opacity-60" />
             </CardContent>
@@ -102,41 +102,41 @@ export default function Salaries({ salaries, filters, unpaidTotal = 0, paidTotal
         {isNavigating ? (
           <TableSkeleton rows={6} cols={5} />
         ) : (
-          <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
+          <div className="bg-card dark:bg-slate-900 rounded-xl border border-border dark:border-slate-800 shadow-2xs overflow-hidden">
           <Table>
-            <TableHeader className="bg-slate-50">
-              <TableRow>
-                <TableHead className="font-semibold text-slate-700">Fotografer</TableHead>
-                <TableHead className="font-semibold text-slate-700">Project / Pelanggan</TableHead>
-                <TableHead className="font-semibold text-slate-700 text-right">Nominal Gaji</TableHead>
-                <TableHead className="font-semibold text-slate-700 text-center">Status</TableHead>
-                <TableHead className="font-semibold text-slate-700 text-center">Aksi</TableHead>
+            <TableHeader className="bg-slate-50 dark:bg-slate-800/60">
+              <TableRow className="border-border dark:border-slate-800">
+                <TableHead className="font-semibold text-slate-700 dark:text-slate-300">Fotografer</TableHead>
+                <TableHead className="font-semibold text-slate-700 dark:text-slate-300">Project / Pelanggan</TableHead>
+                <TableHead className="font-semibold text-slate-700 dark:text-slate-300 text-right">Nominal Gaji</TableHead>
+                <TableHead className="font-semibold text-slate-700 dark:text-slate-300 text-center">Status</TableHead>
+                <TableHead className="font-semibold text-slate-700 dark:text-slate-300 text-center">Aksi</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {safeSalaries.data.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center py-8 text-slate-400">
+                  <TableCell colSpan={5} className="text-center py-8 text-slate-400 dark:text-slate-500">
                     Belum ada data rekaman gaji.
                   </TableCell>
                 </TableRow>
               ) : (
                 safeSalaries.data.map((sal) => (
-                  <TableRow key={sal.id}>
-                    <TableCell className="font-bold text-slate-900">
+                  <TableRow key={sal.id} className="border-border dark:border-slate-800">
+                    <TableCell className="font-bold text-slate-900 dark:text-white">
                       {sal.photographer?.name}
                     </TableCell>
 
                     <TableCell>
-                      <span className="font-semibold text-slate-900 block">
+                      <span className="font-semibold text-slate-900 dark:text-white block">
                         {sal.project?.project_name}
                       </span>
-                      <span className="text-xs text-slate-500">
+                      <span className="text-xs text-slate-500 dark:text-slate-400">
                         {sal.project?.customer?.name}
                       </span>
                     </TableCell>
 
-                    <TableCell className="text-right font-bold text-slate-900">
+                    <TableCell className="text-right font-bold text-slate-900 dark:text-white">
                       {formatRupiah(sal.amount)}
                     </TableCell>
 
@@ -145,7 +145,7 @@ export default function Salaries({ salaries, filters, unpaidTotal = 0, paidTotal
                         {sal.payment_status}
                       </Badge>
                       {sal.paid_at && (
-                        <span className="text-[10px] text-slate-400 block mt-0.5">
+                        <span className="text-[10px] text-slate-400 dark:text-slate-500 block mt-0.5">
                           {formatDate(sal.paid_at)}
                         </span>
                       )}
@@ -162,7 +162,7 @@ export default function Salaries({ salaries, filters, unpaidTotal = 0, paidTotal
                           <span>Bayar Gaji</span>
                         </Button>
                       ) : (
-                        <span className="text-xs text-emerald-600 font-medium flex items-center justify-center gap-1">
+                        <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium flex items-center justify-center gap-1">
                           <CheckCircle2 className="h-3.5 w-3.5" />
                           <span>Lunas</span>
                         </span>
@@ -180,25 +180,25 @@ export default function Salaries({ salaries, filters, unpaidTotal = 0, paidTotal
         <Dialog open={payModalOpen} onOpenChange={(val) => { if (!payForm.processing) setPayModalOpen(val); }}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Konfirmasi Pembayaran Gaji Fotografer</DialogTitle>
+              <DialogTitle className="text-slate-900 dark:text-white">Konfirmasi Pembayaran Gaji Fotografer</DialogTitle>
             </DialogHeader>
 
             <form onSubmit={handleConfirmPay} className="space-y-4 py-2">
-              <div className="p-3 bg-slate-50 rounded-lg border border-slate-200 text-xs space-y-1">
-                <p>Fotografer: <strong className="text-slate-900">{selectedSalary?.photographer?.name}</strong></p>
-                <p>Project: <strong className="text-slate-900">{selectedSalary?.project?.project_name}</strong></p>
-                <p className="text-sm font-bold text-emerald-700 pt-1">
+              <div className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-lg border border-border dark:border-slate-700/60 text-xs space-y-1">
+                <p className="text-slate-700 dark:text-slate-300">Fotografer: <strong className="text-slate-900 dark:text-white">{selectedSalary?.photographer?.name}</strong></p>
+                <p className="text-slate-700 dark:text-slate-300">Project: <strong className="text-slate-900 dark:text-white">{selectedSalary?.project?.project_name}</strong></p>
+                <p className="text-sm font-bold text-emerald-700 dark:text-emerald-400 pt-1">
                   Nominal: {formatRupiah(selectedSalary?.amount)}
                 </p>
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-semibold text-slate-700">Metode Pembayaran</label>
+                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">Metode Pembayaran</label>
                 <Select
                   value={payForm.data.payment_method || "TRANSFER"}
                   onValueChange={(val) => payForm.setData("payment_method", val)}
                 >
-                  <SelectTrigger className="w-full bg-white">
+                  <SelectTrigger className="w-full">
                     <SelectValue placeholder="Pilih Metode Pembayaran" />
                   </SelectTrigger>
                   <SelectContent>
@@ -210,7 +210,7 @@ export default function Salaries({ salaries, filters, unpaidTotal = 0, paidTotal
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-semibold text-slate-700">Catatan Bukti / Note (Opsional)</label>
+                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">Catatan Bukti / Note (Opsional)</label>
                 <Input
                   placeholder="misal: Transfer BCA Ref: 123456"
                   value={payForm.data.payment_note}

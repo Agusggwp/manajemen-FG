@@ -238,21 +238,21 @@ export default function Index({ schedules, existingAssignments, filters, custome
       <div className="space-y-4 sm:space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 w-full">
           <div className="min-w-0">
-            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
               Manajemen Jadwal Pemotretan
             </h1>
-            <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
               Buat jadwal baru, tentukan penugasan tim, dan tetapkan koordinat lokasi pemotretan.
             </p>
           </div>
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 w-full sm:w-auto">
             <Tabs value={viewMode} onValueChange={setViewMode} className="w-full sm:w-auto">
-              <TabsList className="grid grid-cols-2 sm:flex bg-slate-100 border border-slate-200 h-10 p-1 w-full sm:w-auto">
-                <TabsTrigger value="table" className="flex items-center justify-center gap-1.5 text-xs font-semibold data-[state=active]:bg-white data-[state=active]:shadow-xs data-[state=active]:text-slate-900">
+              <TabsList className="grid grid-cols-2 sm:flex bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 h-10 p-1 w-full sm:w-auto">
+                <TabsTrigger value="table" className="flex items-center justify-center gap-1.5 text-xs font-semibold data-[state=active]:bg-white dark:data-[state=active]:bg-slate-900 data-[state=active]:shadow-xs data-[state=active]:text-slate-900 dark:data-[state=active]:text-white">
                   <LayoutList className="h-4 w-4" />
                   <span>Tabel</span>
                 </TabsTrigger>
-                <TabsTrigger value="calendar" className="flex items-center justify-center gap-1.5 text-xs font-semibold data-[state=active]:bg-white data-[state=active]:shadow-xs data-[state=active]:text-slate-900">
+                <TabsTrigger value="calendar" className="flex items-center justify-center gap-1.5 text-xs font-semibold data-[state=active]:bg-white dark:data-[state=active]:bg-slate-900 data-[state=active]:shadow-xs data-[state=active]:text-slate-900 dark:data-[state=active]:text-white">
                   <Calendar className="h-4 w-4" />
                   <span>Kalender</span>
                 </TabsTrigger>
@@ -267,15 +267,15 @@ export default function Index({ schedules, existingAssignments, filters, custome
         </div>
 
         {/* Search */}
-        <Card className="border-slate-200 shadow-2xs">
+        <Card className="border-slate-200 dark:border-slate-800 bg-card text-card-foreground shadow-2xs">
           <CardContent className="p-3 sm:p-4">
             <div className="relative w-full">
-              <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
+              <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400 dark:text-slate-500" />
               <Input
                 placeholder="Cari pelanggan, nama lokasi, atau alamat..."
                 value={search}
                 onChange={handleSearchChange}
-                className="pl-9 bg-white text-xs sm:text-sm"
+                className="pl-9 bg-white dark:bg-slate-950 text-xs sm:text-sm border-slate-200 dark:border-slate-800 text-foreground"
               />
             </div>
           </CardContent>
@@ -290,12 +290,12 @@ export default function Index({ schedules, existingAssignments, filters, custome
         ) : viewMode === "calendar" ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {safeSchedules.data.length === 0 ? (
-              <div className="col-span-full bg-white p-8 text-center rounded-xl border border-slate-200 text-slate-400">
+              <div className="col-span-full bg-card dark:bg-slate-900 p-8 text-center rounded-xl border border-slate-200 dark:border-slate-800 text-slate-400 dark:text-slate-500">
                 Belum ada jadwal pemotretan pada sistem.
               </div>
             ) : (
               safeSchedules.data.map((s) => (
-                <Card key={s.id} className="border-slate-200 hover:shadow-md transition-shadow">
+                <Card key={s.id} className="border-slate-200 dark:border-slate-800 bg-card text-card-foreground hover:shadow-md transition-shadow">
                   <CardContent className="p-4 space-y-3">
                     <div className="flex items-center justify-between">
                       <Badge variant={
@@ -310,28 +310,28 @@ export default function Index({ schedules, existingAssignments, filters, custome
                     </div>
 
                     <div>
-                      <h3 className="font-bold text-slate-900 text-base">{s.customer?.name}</h3>
+                      <h3 className="font-bold text-slate-900 dark:text-white text-base">{s.customer?.name}</h3>
                       <div className="flex items-center gap-2 mt-0.5">
-                        <p className="text-xs text-slate-500 font-medium">{s.photo_package?.name || s.project?.package_name || "Paket Standard"}</p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">{s.photo_package?.name || s.project?.package_name || "Paket Standard"}</p>
                         {Number(s.overtime_hours) > 0 && (
-                          <Badge variant="outline" className="text-[10px] bg-amber-50 text-amber-800 border-amber-300 font-medium">
+                          <Badge variant="outline" className="text-[10px] bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border-amber-300 dark:border-amber-800 font-medium">
                             +{s.overtime_hours} Jam Overtime
                           </Badge>
                         )}
                       </div>
                     </div>
 
-                    <div className="text-xs text-slate-600 space-y-1 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
-                      <div className="flex items-center gap-1 text-slate-800 font-medium truncate">
+                    <div className="text-xs text-slate-600 dark:text-slate-300 space-y-1 bg-slate-50 dark:bg-slate-950/60 p-2.5 rounded-lg border border-slate-100 dark:border-slate-800">
+                      <div className="flex items-center gap-1 text-slate-800 dark:text-slate-200 font-medium truncate">
                         <MapPin className="h-3.5 w-3.5 text-rose-500 shrink-0" />
                         <span className="truncate">{s.location_name}</span>
                       </div>
-                      <p className="text-[11px] text-slate-500 line-clamp-1">{s.location_address}</p>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1">{s.location_address}</p>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-2 border-t pt-2">
-                      <span className="text-xs font-mono text-slate-500 flex items-center gap-1"><Calendar className="h-3 w-3" />{formatDate(s.date)}</span>
-                      <span className="text-xs font-mono text-slate-500 flex items-center gap-1">
+                    <div className="grid grid-cols-2 gap-2 border-t border-slate-100 dark:border-slate-800 pt-2">
+                      <span className="text-xs font-mono text-slate-500 dark:text-slate-400 flex items-center gap-1"><Calendar className="h-3 w-3" />{formatDate(s.date)}</span>
+                      <span className="text-xs font-mono text-slate-500 dark:text-slate-400 flex items-center gap-1">
                         <Clock className="h-3 w-3" /> {s.start_time?.substring(0, 5)} - {s.end_time?.substring(0, 5)}
                       </span>
                       <Button
@@ -341,15 +341,15 @@ export default function Index({ schedules, existingAssignments, filters, custome
                           setSelectedScheduleId(s.id);
                           setReminderOpen(true);
                         }}
-                        className={`${s.reminder_sent_at ? "text-emerald-700 border-emerald-300 bg-emerald-50/50 hover:bg-emerald-100" : "text-slate-700 hover:text-slate-900"
+                        className={`${s.reminder_sent_at ? "text-emerald-700 dark:text-emerald-400 border-emerald-300 dark:border-emerald-800 bg-emerald-50/50 dark:bg-emerald-950/30 hover:bg-emerald-100 dark:hover:bg-emerald-950/50" : "text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
                           }`}
                         title={s.reminder_sent_at ? `Email Peringatan Terkirim (${formatDate(s.reminder_sent_at)}) - Klik untuk kirim ulang` : "Kirim Email Peringatan H-1"}
                       >
-                        <Mail className={`h-3.5 w-3.5 ${s.reminder_sent_at ? "text-emerald-600" : ""}`} />
+                        <Mail className={`h-3.5 w-3.5 ${s.reminder_sent_at ? "text-emerald-600 dark:text-emerald-400" : ""}`} />
                         <span className="hidden sm:inline">{s.reminder_sent_at ? "Email Terkirim" : "Kirim Email"}</span>
                         <span className="sm:hidden">{s.reminder_sent_at ? "Terkirim" : "Email"}</span>
                       </Button>
-                      <Button size="sm" variant="outline" asChild>
+                      <Button size="sm" variant="outline" asChild className="dark:border-slate-800 dark:hover:bg-slate-800">
                         <Link href={`/admin/schedules/${s.id}`}>
                           <span>Detail</span>
                           <Eye className="h-3.5 w-3.5" />
@@ -364,62 +364,62 @@ export default function Index({ schedules, existingAssignments, filters, custome
         ) : null}
 
         {viewMode === "table" && (
-          <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden w-full">
+          <div className="bg-card dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-2xs overflow-hidden w-full text-card-foreground">
             <div className="overflow-x-auto w-full">
               <Table className="min-w-[800px]">
-                <TableHeader className="bg-slate-50">
-                  <TableRow>
-                    <TableHead className="font-semibold text-slate-700">Tanggal & Waktu</TableHead>
-                    <TableHead className="font-semibold text-slate-700">Pelanggan</TableHead>
-                    <TableHead className="font-semibold text-slate-700">Paket Foto</TableHead>
-                    <TableHead className="font-semibold text-slate-700">Lokasi Pemotretan (Wajib)</TableHead>
-                    <TableHead className="font-semibold text-slate-700">Tim Bertugas</TableHead>
-                    <TableHead className="font-semibold text-slate-700 text-center">Status</TableHead>
-                    <TableHead className="font-semibold text-slate-700 text-center">Aksi</TableHead>
+                <TableHeader className="bg-slate-50 dark:bg-slate-900/80">
+                  <TableRow className="border-b border-slate-200 dark:border-slate-800">
+                    <TableHead className="font-semibold text-slate-700 dark:text-slate-300">Tanggal & Waktu</TableHead>
+                    <TableHead className="font-semibold text-slate-700 dark:text-slate-300">Pelanggan</TableHead>
+                    <TableHead className="font-semibold text-slate-700 dark:text-slate-300">Paket Foto</TableHead>
+                    <TableHead className="font-semibold text-slate-700 dark:text-slate-300">Lokasi Pemotretan (Wajib)</TableHead>
+                    <TableHead className="font-semibold text-slate-700 dark:text-slate-300">Tim Bertugas</TableHead>
+                    <TableHead className="font-semibold text-slate-700 dark:text-slate-300 text-center">Status</TableHead>
+                    <TableHead className="font-semibold text-slate-700 dark:text-slate-300 text-center">Aksi</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {safeSchedules.data.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={7} className="text-center py-8 text-slate-400">
+                      <TableCell colSpan={7} className="text-center py-8 text-slate-400 dark:text-slate-500">
                         Tidak ada jadwal pemotretan ditemukan.
                       </TableCell>
                     </TableRow>
                   ) : (
                     safeSchedules.data.map((s) => (
-                      <TableRow key={s.id}>
-                        <TableCell className="font-medium text-slate-900 whitespace-nowrap">
+                      <TableRow key={s.id} className="border-b border-slate-100 dark:border-slate-800/60 hover:bg-slate-50/50 dark:hover:bg-slate-800/40">
+                        <TableCell className="font-medium text-slate-900 dark:text-white whitespace-nowrap">
                           {formatDate(s.date)} <br />
-                          <span className="text-xs text-slate-400 flex items-center gap-1 mt-0.5">
+                          <span className="text-xs text-slate-400 dark:text-slate-500 flex items-center gap-1 mt-0.5">
                             <Clock className="h-3 w-3" /> {s.start_time?.substring(0, 5)} - {s.end_time?.substring(0, 5)}
                           </span>
                           {Number(s.overtime_hours) > 0 && (
-                            <Badge variant="outline" className="text-[10px] bg-amber-50 text-amber-800 border-amber-300 font-medium block w-max mt-1">
+                            <Badge variant="outline" className="text-[10px] bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border-amber-300 dark:border-amber-800 font-medium block w-max mt-1">
                               +{s.overtime_hours} Jam Overtime
                             </Badge>
                           )}
                         </TableCell>
 
-                        <TableCell className="font-semibold text-slate-900">
+                        <TableCell className="font-semibold text-slate-900 dark:text-white">
                           {s.customer?.name}
                         </TableCell>
 
-                        <TableCell className="font-medium text-slate-800">
+                        <TableCell className="font-medium text-slate-800 dark:text-slate-200">
                           <div>{s.photo_package?.name || s.project?.package_name || "-"}</div>
                           {Number(s.overtime_fee) > 0 && (
-                            <div className="text-[11px] text-amber-700 font-medium">
+                            <div className="text-[11px] text-amber-700 dark:text-amber-400 font-medium">
                               Overtime: +{formatRupiah(s.overtime_fee)}
                             </div>
                           )}
                         </TableCell>
 
                         <TableCell className="max-w-xs">
-                          <div className="font-semibold text-slate-900 flex items-center gap-1">
+                          <div className="font-semibold text-slate-900 dark:text-white flex items-center gap-1">
                             <MapPin className="h-3.5 w-3.5 text-rose-500 shrink-0" />
                             <span className="truncate">{s.location_name}</span>
                           </div>
-                          <span className="text-xs text-slate-400 truncate block">{s.location_address}</span>
-                          <span className="text-[10px] text-slate-500 font-mono">
+                          <span className="text-xs text-slate-400 dark:text-slate-500 truncate block">{s.location_address}</span>
+                          <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">
                             Radius GPS: {s.location_radius}m
                           </span>
                         </TableCell>
@@ -427,14 +427,14 @@ export default function Index({ schedules, existingAssignments, filters, custome
                         <TableCell className="text-xs">
                           <div className="space-y-1">
                             {s.project?.photographers?.map((p) => (
-                              <div key={p.id} className="flex items-center space-x-1 text-slate-800 font-medium">
-                                <Camera className="h-3 w-3 text-slate-400" />
+                              <div key={p.id} className="flex items-center space-x-1 text-slate-800 dark:text-slate-200 font-medium">
+                                <Camera className="h-3 w-3 text-slate-400 dark:text-slate-500" />
                                 <span>{p.name}</span>
                               </div>
                             ))}
                             {s.project?.muas?.map((m) => (
-                              <div key={m.id} className="flex items-center space-x-1 text-amber-700 font-medium">
-                                <Sparkles className="h-3 w-3 text-amber-500" />
+                              <div key={m.id} className="flex items-center space-x-1 text-amber-700 dark:text-amber-400 font-medium">
+                                <Sparkles className="h-3 w-3 text-amber-500 dark:text-amber-400" />
                                 <span>{m.name}</span>
                               </div>
                             ))}
@@ -502,7 +502,7 @@ export default function Index({ schedules, existingAssignments, filters, custome
                     value={form.data.customer_id ? String(form.data.customer_id) : ""}
                     onValueChange={(val) => form.setData("customer_id", val)}
                   >
-                    <SelectTrigger className="w-full bg-white">
+                    <SelectTrigger className="w-full bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-foreground">
                       <SelectValue placeholder="-- Pilih Pelanggan --" />
                     </SelectTrigger>
                     <SelectContent>
@@ -521,7 +521,7 @@ export default function Index({ schedules, existingAssignments, filters, custome
                     value={form.data.photo_package_id ? String(form.data.photo_package_id) : ""}
                     onValueChange={(val) => handlePackageChange(val)}
                   >
-                    <SelectTrigger className="w-full bg-white">
+                    <SelectTrigger className="w-full bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-foreground">
                       <SelectValue placeholder="-- Pilih Paket Foto --" />
                     </SelectTrigger>
                     <SelectContent>
@@ -726,10 +726,10 @@ export default function Index({ schedules, existingAssignments, filters, custome
                               : ""
                           }
                           className={`p-2.5 rounded-lg border text-xs flex flex-col justify-between transition-colors ${isBusy
-                            ? "bg-rose-50/80 border-rose-200 text-rose-500 cursor-not-allowed opacity-80"
+                            ? "bg-rose-50/80 dark:bg-rose-950/30 border-rose-200 dark:border-rose-900/50 text-rose-500 dark:text-rose-400 cursor-not-allowed opacity-80"
                             : isSelected
-                              ? "bg-slate-900 text-white border-slate-900 cursor-pointer"
-                              : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50 cursor-pointer"
+                              ? "bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 border-slate-900 dark:border-slate-100 cursor-pointer"
+                              : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/60 cursor-pointer"
                             }`}
                         >
                           <div className="flex items-center space-x-2">

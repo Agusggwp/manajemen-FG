@@ -129,10 +129,10 @@ export default function Index({ photographers, filters }) {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 w-full">
           <div className="min-w-0">
-            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
               Manajemen Fotografer
             </h1>
-            <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
               Kelola tim fotografer internal ARTDEVATA dan kredensial login portal.
             </p>
           </div>
@@ -142,15 +142,15 @@ export default function Index({ photographers, filters }) {
           </Button>
         </div>
 
-        <Card className="border-slate-200 shadow-2xs">
+        <Card className="border-border dark:border-slate-800 bg-card dark:bg-slate-900 shadow-2xs">
           <CardContent className="p-3 sm:p-4">
             <div className="relative w-full">
-              <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
+              <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400 dark:text-slate-500" />
               <Input
                 placeholder="Cari nama, email, atau spesialisasi fotografer..."
                 value={search}
                 onChange={handleSearchChange}
-                className="pl-9 bg-white text-xs sm:text-sm"
+                className="pl-9 text-xs sm:text-sm"
               />
             </div>
           </CardContent>
@@ -160,22 +160,22 @@ export default function Index({ photographers, filters }) {
         {isLoading ? (
           <CardGridSkeleton count={6} />
         ) : safePhotographers.data.length === 0 ? (
-          <div className="col-span-full text-center py-12 bg-white rounded-xl border border-slate-200 text-slate-400">
+          <div className="col-span-full text-center py-12 bg-card dark:bg-slate-900 rounded-xl border border-border dark:border-slate-800 text-muted-foreground">
             Belum ada data Fotografer.
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {safePhotographers.data.map((p) => (
-              <Card key={p.id} className="border-slate-200 hover:shadow-md transition-shadow">
+              <Card key={p.id} className="border-border dark:border-slate-800 bg-card dark:bg-slate-900 hover:shadow-md transition-shadow">
                 <CardContent className="p-5 space-y-3">
                   <div className="flex items-start justify-between">
                     <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold">
+                      <div className="w-10 h-10 rounded-full bg-slate-900 dark:bg-slate-800 text-white flex items-center justify-center font-bold">
                         <Camera className="h-5 w-5" />
                       </div>
                       <div>
-                        <h3 className="font-bold text-slate-900 text-base">{p.name}</h3>
-                        <p className="text-xs text-slate-500">{p.specialty || "Fotografer Umum"}</p>
+                        <h3 className="font-bold text-slate-900 dark:text-white text-base">{p.name}</h3>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">{p.specialty || "Fotografer Umum"}</p>
                       </div>
                     </div>
                     <Badge variant={p.status === "ACTIVE" ? "success" : "secondary"}>
@@ -183,29 +183,29 @@ export default function Index({ photographers, filters }) {
                     </Badge>
                   </div>
 
-                  <div className="space-y-1 text-xs text-slate-600 border-t border-slate-100 pt-3">
+                  <div className="space-y-1 text-xs text-slate-600 dark:text-slate-300 border-t border-border dark:border-slate-800 pt-3">
                     <div className="flex items-center space-x-2">
-                      <Mail className="h-3.5 w-3.5 text-slate-400" />
+                      <Mail className="h-3.5 w-3.5 text-slate-400 dark:text-slate-500" />
                       <span>{p.email}</span>
                     </div>
                     {p.phone && (
                       <div className="flex items-center space-x-2">
-                        <Phone className="h-3.5 w-3.5 text-slate-400" />
+                        <Phone className="h-3.5 w-3.5 text-slate-400 dark:text-slate-500" />
                         <span>{p.phone}</span>
                       </div>
                     )}
                   </div>
 
-                  <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-xs">
-                    <span className="text-slate-500">
-                      Project Ditugaskan: <strong className="text-slate-900">{p.projects_count || 0}</strong>
+                  <div className="flex items-center justify-between pt-2 border-t border-border dark:border-slate-800 text-xs">
+                    <span className="text-slate-500 dark:text-slate-400">
+                      Project Ditugaskan: <strong className="text-slate-900 dark:text-white">{p.projects_count || 0}</strong>
                     </span>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button
                           size="icon"
                           variant="ghost"
-                          className="h-8 w-8 text-slate-600 hover:text-slate-900 focus-visible:ring-1"
+                          className="h-8 w-8 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white focus-visible:ring-1"
                           title="Aksi Fotografer"
                         >
                           <MoreVertical className="h-4 w-4" />
@@ -216,14 +216,14 @@ export default function Index({ photographers, filters }) {
                           onClick={() => handleOpenEdit(p)}
                           className="cursor-pointer text-xs flex items-center gap-2"
                         >
-                          <Edit3 className="h-3.5 w-3.5 text-slate-600" />
+                          <Edit3 className="h-3.5 w-3.5 text-slate-600 dark:text-slate-400" />
                           <span>Edit Data</span>
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => handleDeleteClick(p)}
-                          className="cursor-pointer text-xs text-red-600 focus:text-red-600 focus:bg-red-50 flex items-center gap-2"
+                          className="cursor-pointer text-xs text-red-600 dark:text-red-400 focus:text-red-600 focus:bg-red-50 dark:focus:bg-red-950/40 flex items-center gap-2"
                         >
-                          <Trash2 className="h-3.5 w-3.5 text-red-600" />
+                          <Trash2 className="h-3.5 w-3.5 text-red-600 dark:text-red-400" />
                           <span>Hapus</span>
                         </DropdownMenuItem>
                       </DropdownMenuContent>
@@ -239,14 +239,14 @@ export default function Index({ photographers, filters }) {
         <Dialog open={modalOpen} onOpenChange={(val) => { if (!form.processing) setModalOpen(val); }}>
           <DialogContent className="max-w-[95vw] sm:max-w-lg max-h-[90vh] overflow-y-auto p-5 sm:p-6 rounded-2xl">
             <DialogHeader>
-              <DialogTitle className="text-base sm:text-lg font-bold text-slate-900">
+              <DialogTitle className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
                 {editingPhotographer ? "Edit Fotografer" : "Tambah Fotografer Baru"}
               </DialogTitle>
             </DialogHeader>
 
             <form onSubmit={handleSubmit} className="space-y-3.5 sm:space-y-4 py-2">
               <div className="space-y-1.5 sm:space-y-2">
-                <Label className="text-xs sm:text-sm font-semibold text-slate-700">Nama Lengkap</Label>
+                <Label className="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">Nama Lengkap</Label>
                 <Input
                   required
                   placeholder="misal: Agus Fotografer"
@@ -258,7 +258,7 @@ export default function Index({ photographers, filters }) {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div className="space-y-1.5 sm:space-y-2">
-                  <Label className="text-xs sm:text-sm font-semibold text-slate-700">Email Akun Login</Label>
+                  <Label className="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">Email Akun Login</Label>
                   <Input
                     required
                     type="email"
@@ -269,7 +269,7 @@ export default function Index({ photographers, filters }) {
                   />
                 </div>
                 <div className="space-y-1.5 sm:space-y-2">
-                  <Label className="text-xs sm:text-sm font-semibold text-slate-700">Nomor WhatsApp</Label>
+                  <Label className="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">Nomor WhatsApp</Label>
                   <Input
                     placeholder="0812xxxx"
                     value={form.data.phone}
@@ -281,7 +281,7 @@ export default function Index({ photographers, filters }) {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div className="space-y-1.5 sm:space-y-2">
-                  <Label className="text-xs sm:text-sm font-semibold text-slate-700">Password {editingPhotographer ? "(Kosongkan jika tidak ubah)" : ""}</Label>
+                  <Label className="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">Password {editingPhotographer ? "(Kosongkan jika tidak ubah)" : ""}</Label>
                   <Input
                     type="password"
                     placeholder="••••••••"
@@ -292,7 +292,7 @@ export default function Index({ photographers, filters }) {
                   />
                 </div>
                 <div className="space-y-1.5 sm:space-y-2">
-                  <Label className="text-xs sm:text-sm font-semibold text-slate-700">Spesialisasi</Label>
+                  <Label className="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">Spesialisasi</Label>
                   <Input
                     placeholder="misal: Wedding, Prewedding"
                     value={form.data.specialty}
@@ -303,12 +303,12 @@ export default function Index({ photographers, filters }) {
               </div>
 
               <div className="space-y-1.5 sm:space-y-2">
-                <Label className="text-xs sm:text-sm font-semibold text-slate-700">Status</Label>
+                <Label className="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">Status</Label>
                 <Select
                   value={form.data.status || "ACTIVE"}
                   onValueChange={(val) => form.setData("status", val)}
                 >
-                  <SelectTrigger className="w-full bg-white text-xs sm:text-sm h-9 sm:h-10">
+                  <SelectTrigger className="w-full text-xs sm:text-sm h-9 sm:h-10">
                     <SelectValue placeholder="Pilih Status" />
                   </SelectTrigger>
                   <SelectContent>

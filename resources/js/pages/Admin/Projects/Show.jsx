@@ -196,7 +196,7 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
               value={statusForm.data.status}
               onValueChange={(val) => statusForm.setData("status", val)}
             >
-              <SelectTrigger className="w-36 h-9 text-xs font-semibold bg-white">
+              <SelectTrigger className="w-36 h-9 text-xs font-semibold bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-foreground">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent>
@@ -212,9 +212,9 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
         </div>
 
         {/* SECTION 1: INFORMASI PROJECT */}
-        <Card className="border-slate-200 shadow-sm">
-          <CardHeader className="border-b border-slate-100 bg-slate-50/50">
-            <CardTitle className="text-base font-semibold flex items-center justify-between">
+        <Card className="border-border dark:border-slate-800 bg-card dark:bg-slate-900 shadow-sm">
+          <CardHeader className="border-b border-border dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40">
+            <CardTitle className="text-base font-semibold flex items-center justify-between text-slate-900 dark:text-white">
               <span>SECTION 1 — INFORMASI PROJECT</span>
               <Badge variant={
                 project.status === "COMPLETED"  ? "success"     :
@@ -230,36 +230,36 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
           <CardContent className="pt-6 space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
               <div>
-                <p className="text-xs text-slate-400 font-medium uppercase">Pelanggan (Customer)</p>
-                <p className="font-bold text-slate-900">{project.customer?.name}</p>
-                <p className="text-xs text-slate-500">{project.customer?.phone}</p>
+                <p className="text-xs text-slate-400 dark:text-slate-500 font-medium uppercase">Pelanggan (Customer)</p>
+                <p className="font-bold text-slate-900 dark:text-white">{project.customer?.name}</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">{project.customer?.phone}</p>
               </div>
 
               <div>
-                <p className="text-xs text-slate-400 font-medium uppercase">Paket Foto (Snapshot)</p>
-                <p className="font-bold text-slate-900">{project.package_name}</p>
-                <p className="text-xs font-semibold text-emerald-700">
+                <p className="text-xs text-slate-400 dark:text-slate-500 font-medium uppercase">Paket Foto (Snapshot)</p>
+                <p className="font-bold text-slate-900 dark:text-white">{project.package_name}</p>
+                <p className="text-xs font-semibold text-emerald-700 dark:text-emerald-400">
                   {formatRupiah(project.package_price)} • {project.package_duration} Menit
                 </p>
               </div>
 
               <div>
-                <p className="text-xs text-slate-400 font-medium uppercase">Tanggal Pemotretan</p>
-                <p className="font-bold text-slate-900">{formatDate(project.date)}</p>
+                <p className="text-xs text-slate-400 dark:text-slate-500 font-medium uppercase">Tanggal Pemotretan</p>
+                <p className="font-bold text-slate-900 dark:text-white">{formatDate(project.date)}</p>
               </div>
             </div>
 
             {/* Durasi Kerja Project */}
-            <div className="p-4 bg-slate-50 rounded-lg border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="p-4 bg-slate-50 dark:bg-slate-800/60 rounded-lg border border-border dark:border-slate-700/60 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <p className="text-xs font-bold uppercase text-slate-500">Durasi Kerja Aktual Project</p>
+                <p className="text-xs font-bold uppercase text-slate-500 dark:text-slate-400">Durasi Kerja Aktual Project</p>
                 <div className="flex items-center space-x-2 mt-1">
-                  <Clock className="h-5 w-5 text-slate-700" />
-                  <span className="text-lg font-bold text-slate-900">
+                  <Clock className="h-5 w-5 text-slate-700 dark:text-slate-300" />
+                  <span className="text-lg font-bold text-slate-900 dark:text-white">
                     {project.formatted_work_duration}
                   </span>
                   {project.work_start_time && project.work_end_time && (
-                    <span className="text-xs text-slate-500 font-mono">
+                    <span className="text-xs text-slate-500 dark:text-slate-400 font-mono">
                       ({project.work_start_time?.substring(0, 5)} - {project.work_end_time?.substring(0, 5)})
                     </span>
                   )}
@@ -270,14 +270,14 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
               <form onSubmit={handleDurationSubmit} className="flex items-center space-x-2">
                 <Input
                   type="time"
-                  className="h-8 text-xs w-28 bg-white"
+                  className="h-8 text-xs w-28"
                   value={durationForm.data.work_start_time}
                   onChange={(e) => durationForm.setData("work_start_time", e.target.value)}
                 />
-                <span className="text-xs text-slate-400">-</span>
+                <span className="text-xs text-slate-400 dark:text-slate-500">-</span>
                 <Input
                   type="time"
-                  className="h-8 text-xs w-28 bg-white"
+                  className="h-8 text-xs w-28"
                   value={durationForm.data.work_end_time}
                   onChange={(e) => durationForm.setData("work_end_time", e.target.value)}
                 />
@@ -288,13 +288,13 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
             </div>
 
             {/* Location Banner */}
-            <div className="p-4 bg-rose-50/50 border border-rose-200 rounded-lg space-y-1">
-              <div className="flex items-center space-x-2 font-bold text-slate-900 text-sm">
-                <MapPin className="h-4 w-4 text-rose-600 shrink-0" />
+            <div className="p-4 bg-rose-50/50 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-900/50 rounded-lg space-y-1">
+              <div className="flex items-center space-x-2 font-bold text-slate-900 dark:text-white text-sm">
+                <MapPin className="h-4 w-4 text-rose-600 dark:text-rose-400 shrink-0" />
                 <span>{project.location_name}</span>
               </div>
-              <p className="text-xs text-slate-600 pl-6">{project.location_address}</p>
-              <div className="pl-6 text-[10px] font-mono text-slate-500">
+              <p className="text-xs text-slate-600 dark:text-slate-300 pl-6">{project.location_address}</p>
+              <div className="pl-6 text-[10px] font-mono text-slate-500 dark:text-slate-400">
                 Radius Validasi GPS: {project.location_radius} Meter
               </div>
             </div>
@@ -304,10 +304,10 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
         {/* SECTION 2: PHOTOGRAPHER & SECTION 3: MUA */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* SECTION 2: PHOTOGRAPHER */}
-          <Card className="border-slate-200">
-            <CardHeader className="flex flex-row items-center justify-between border-b border-slate-100 bg-slate-50/50 py-3">
-              <CardTitle className="text-sm font-semibold flex items-center gap-2">
-                <Camera className="h-4 w-4 text-slate-700" /> SECTION 2 — PHOTOGRAPHER
+          <Card className="border-border dark:border-slate-800 bg-card dark:bg-slate-900">
+            <CardHeader className="flex flex-row items-center justify-between border-b border-border dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 py-3">
+              <CardTitle className="text-sm font-semibold flex items-center gap-2 text-slate-900 dark:text-white">
+                <Camera className="h-4 w-4 text-slate-700 dark:text-slate-300" /> SECTION 2 — PHOTOGRAPHER
               </CardTitle>
 
               {/* Add Photographer Trigger */}
@@ -318,19 +318,19 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
             <CardContent className="pt-4">
               <div className="space-y-3">
                 {project.photographer_salaries?.length === 0 ? (
-                  <p className="text-xs text-slate-400 italic">Belum ada photographer assigned.</p>
+                  <p className="text-xs text-slate-400 dark:text-slate-500 italic">Belum ada photographer assigned.</p>
                 ) : (
                   project.photographer_salaries?.map((salary) => (
                     <div
                       key={salary.id}
-                      className="p-3 bg-slate-50 rounded-lg border border-slate-200 flex items-center justify-between text-xs"
+                      className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-lg border border-border dark:border-slate-700/60 flex items-center justify-between text-xs"
                     >
                       <div>
-                        <p className="font-bold text-slate-900 text-sm">
+                        <p className="font-bold text-slate-900 dark:text-white text-sm">
                           {salary.photographer?.name}
                         </p>
-                        <p className="text-slate-500">
-                          Gaji Project: <strong className="text-slate-900">{formatRupiah(salary.amount)}</strong>
+                        <p className="text-slate-500 dark:text-slate-400">
+                          Gaji Project: <strong className="text-slate-900 dark:text-white">{formatRupiah(salary.amount)}</strong>
                         </p>
                       </div>
                       <div className="flex items-center space-x-2">
@@ -340,7 +340,7 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-7 w-7 text-red-600"
+                          className="h-7 w-7 text-red-600 dark:text-red-400"
                           onClick={() => handleRemovePhotographer(salary)}
                         >
                           <Trash2 className="h-3.5 w-3.5" />
@@ -354,9 +354,9 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
           </Card>
 
           {/* SECTION 3: MUA */}
-          <Card className="border-slate-200">
-            <CardHeader className="flex flex-row items-center justify-between border-b border-slate-100 bg-slate-50/50 py-3">
-              <CardTitle className="text-sm font-semibold flex items-center gap-2">
+          <Card className="border-border dark:border-slate-800 bg-card dark:bg-slate-900">
+            <CardHeader className="flex flex-row items-center justify-between border-b border-border dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 py-3">
+              <CardTitle className="text-sm font-semibold flex items-center gap-2 text-slate-900 dark:text-white">
                 <Sparkles className="h-4 w-4 text-amber-500" /> SECTION 3 — MAKE UP ARTIST (MUA)
               </CardTitle>
 
@@ -367,17 +367,17 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
             <CardContent className="pt-4">
               <div className="space-y-3">
                 {project.mua_fees?.length === 0 ? (
-                  <p className="text-xs text-slate-400 italic">— Tidak menggunakan MUA pada project ini.</p>
+                  <p className="text-xs text-slate-400 dark:text-slate-500 italic">— Tidak menggunakan MUA pada project ini.</p>
                 ) : (
                   project.mua_fees?.map((fee) => (
                     <div
                       key={fee.id}
-                      className="p-3 bg-amber-50/50 rounded-lg border border-amber-200 flex items-center justify-between text-xs"
+                      className="p-3 bg-amber-50/50 dark:bg-amber-950/20 rounded-lg border border-amber-200 dark:border-amber-900/50 flex items-center justify-between text-xs"
                     >
                       <div>
-                        <p className="font-bold text-amber-950 text-sm">{fee.mua?.name}</p>
-                        <p className="text-amber-800">
-                          Fee MUA: <strong className="text-amber-950">{formatRupiah(fee.amount)}</strong>
+                        <p className="font-bold text-amber-950 dark:text-amber-200 text-sm">{fee.mua?.name}</p>
+                        <p className="text-amber-800 dark:text-amber-300">
+                          Fee MUA: <strong className="text-amber-950 dark:text-amber-100">{formatRupiah(fee.amount)}</strong>
                         </p>
                       </div>
                       <div className="flex items-center space-x-2">
@@ -387,7 +387,7 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-7 w-7 text-red-600"
+                          className="h-7 w-7 text-red-600 dark:text-red-400"
                           onClick={() => handleRemoveMua(fee)}
                         >
                           <Trash2 className="h-3.5 w-3.5" />
@@ -402,18 +402,18 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
         </div>
 
         {/* SECTION 4: PHOTO PROOF (START & END) */}
-        <Card className="border-slate-200">
-          <CardHeader className="border-b border-slate-100 bg-slate-50/50">
-            <CardTitle className="text-base font-semibold flex items-center gap-2">
-              <ShieldCheck className="h-5 w-5 text-indigo-600" /> SECTION 4 — VALIDASI PHOTO PROOF & GPS
+        <Card className="border-border dark:border-slate-800 bg-card dark:bg-slate-900">
+          <CardHeader className="border-b border-border dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40">
+            <CardTitle className="text-base font-semibold flex items-center gap-2 text-slate-900 dark:text-white">
+              <ShieldCheck className="h-5 w-5 text-indigo-600 dark:text-indigo-400" /> SECTION 4 — VALIDASI PHOTO PROOF & GPS
             </CardTitle>
           </CardHeader>
           <CardContent className="pt-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* START PROOF */}
-              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 space-y-3">
+              <div className="p-4 rounded-xl border border-border dark:border-slate-700/60 bg-slate-50 dark:bg-slate-800/60 space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-xs uppercase tracking-wider text-slate-700">
+                  <span className="font-bold text-xs uppercase tracking-wider text-slate-700 dark:text-slate-300">
                     [ START ] PROOF PEMOTRETAN
                   </span>
                   {startProof ? (
@@ -427,7 +427,7 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
 
                 {startProof ? (
                   <div className="space-y-2 text-xs">
-                    <div className="aspect-video w-full rounded-lg overflow-hidden border border-slate-200 bg-slate-100">
+                    <div className="aspect-video w-full rounded-lg overflow-hidden border border-border dark:border-slate-700 bg-slate-100 dark:bg-slate-800">
                       <ImageWithFallback
                         src={startProof.photo_path ? `/storage/${startProof.photo_path}` : null}
                         alt="Start Proof"
@@ -436,33 +436,33 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <div className="grid grid-cols-2 gap-2 text-slate-700 pt-1">
+                    <div className="grid grid-cols-2 gap-2 text-slate-700 dark:text-slate-300 pt-1">
                       <div>
-                        <span className="text-slate-400 block text-[10px]">Photographer:</span>
-                        <strong className="text-slate-900">{startProof.photographer?.name}</strong>
+                        <span className="text-slate-400 dark:text-slate-500 block text-[10px]">Photographer:</span>
+                        <strong className="text-slate-900 dark:text-white">{startProof.photographer?.name}</strong>
                       </div>
                       <div>
-                        <span className="text-slate-400 block text-[10px]">Jarak GPS:</span>
-                        <strong className="text-slate-900">{startProof.distance_from_location} Meter</strong>
+                        <span className="text-slate-400 dark:text-slate-500 block text-[10px]">Jarak GPS:</span>
+                        <strong className="text-slate-900 dark:text-white">{startProof.distance_from_location} Meter</strong>
                       </div>
                     </div>
                     {startProof.admin_note && (
-                      <p className="text-[11px] text-slate-500 italic bg-white p-2 rounded border">
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 italic bg-card dark:bg-slate-900 p-2 rounded border border-border dark:border-slate-800">
                         Catatan Admin: {startProof.admin_note}
                       </p>
                     )}
                   </div>
                 ) : (
-                  <p className="text-xs text-slate-400 italic py-6 text-center">
+                  <p className="text-xs text-slate-400 dark:text-slate-500 italic py-6 text-center">
                     Photographer belum mengirimkan foto bukti awal pemotretan.
                   </p>
                 )}
               </div>
 
               {/* END PROOF */}
-              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 space-y-3">
+              <div className="p-4 rounded-xl border border-border dark:border-slate-700/60 bg-slate-50 dark:bg-slate-800/60 space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-xs uppercase tracking-wider text-slate-700">
+                  <span className="font-bold text-xs uppercase tracking-wider text-slate-700 dark:text-slate-300">
                     [ END ] PROOF PEMOTRETAN
                   </span>
                   {endProof ? (
@@ -476,7 +476,7 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
 
                 {endProof ? (
                   <div className="space-y-2 text-xs">
-                    <div className="aspect-video w-full rounded-lg overflow-hidden border border-slate-200 bg-slate-100">
+                    <div className="aspect-video w-full rounded-lg overflow-hidden border border-border dark:border-slate-700 bg-slate-100 dark:bg-slate-800">
                       <ImageWithFallback
                         src={endProof.photo_path ? `/storage/${endProof.photo_path}` : null}
                         alt="End Proof"
@@ -485,19 +485,19 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <div className="grid grid-cols-2 gap-2 text-slate-700 pt-1">
+                    <div className="grid grid-cols-2 gap-2 text-slate-700 dark:text-slate-300 pt-1">
                       <div>
-                        <span className="text-slate-400 block text-[10px]">Photographer:</span>
-                        <strong className="text-slate-900">{endProof.photographer?.name}</strong>
+                        <span className="text-slate-400 dark:text-slate-500 block text-[10px]">Photographer:</span>
+                        <strong className="text-slate-900 dark:text-white">{endProof.photographer?.name}</strong>
                       </div>
                       <div>
-                        <span className="text-slate-400 block text-[10px]">Jarak GPS:</span>
-                        <strong className="text-slate-900">{endProof.distance_from_location} Meter</strong>
+                        <span className="text-slate-400 dark:text-slate-500 block text-[10px]">Jarak GPS:</span>
+                        <strong className="text-slate-900 dark:text-white">{endProof.distance_from_location} Meter</strong>
                       </div>
                     </div>
                   </div>
                 ) : (
-                  <p className="text-xs text-slate-400 italic py-6 text-center">
+                  <p className="text-xs text-slate-400 dark:text-slate-500 italic py-6 text-center">
                     Photographer belum mengirimkan foto bukti selesai pemotretan.
                   </p>
                 )}
@@ -659,7 +659,7 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
                   value={photographerForm.data.photographer_id ? String(photographerForm.data.photographer_id) : ""}
                   onValueChange={(val) => photographerForm.setData("photographer_id", val)}
                 >
-                  <SelectTrigger className="w-full bg-white">
+                  <SelectTrigger className="w-full bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-foreground">
                     <SelectValue placeholder="-- Pilih Fotografer --" />
                   </SelectTrigger>
                   <SelectContent>
@@ -715,7 +715,7 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
                     });
                   }}
                 >
-                  <SelectTrigger className="w-full bg-white">
+                  <SelectTrigger className="w-full bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-foreground">
                     <SelectValue placeholder="-- Pilih MUA --" />
                   </SelectTrigger>
                   <SelectContent>

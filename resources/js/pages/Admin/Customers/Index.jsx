@@ -122,10 +122,10 @@ export default function Index({ customers, filters }) {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
               Manajemen Pelanggan
             </h1>
-            <p className="text-sm text-slate-500 mt-1">
+            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
               Database pelanggan ARTDEVATA beserta kontak dan alamat pemotretan.
             </p>
           </div>
@@ -136,11 +136,11 @@ export default function Index({ customers, filters }) {
         </div>
 
         {/* Search */}
-        <Card className="border-slate-200">
+        <Card className="border-border dark:border-slate-800 bg-card dark:bg-slate-900">
           <CardContent className="pt-6">
             <div className="flex gap-2">
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
+                <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400 dark:text-slate-500" />
                 <Input
                   placeholder="Cari nama, nomor HP, atau email pelanggan..."
                   value={search}
@@ -156,48 +156,48 @@ export default function Index({ customers, filters }) {
         {isLoading ? (
           <TableSkeleton rows={6} cols={4} />
         ) : (
-          <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
+          <div className="bg-card dark:bg-slate-900 rounded-xl border border-border dark:border-slate-800 shadow-2xs overflow-hidden">
             <Table>
-              <TableHeader className="bg-slate-50">
-                <TableRow>
-                  <TableHead className="font-semibold text-slate-700">Nama Pelanggan</TableHead>
-                  <TableHead className="font-semibold text-slate-700">Kontak</TableHead>
-                  <TableHead className="font-semibold text-slate-700">Alamat</TableHead>
-                  <TableHead className="font-semibold text-slate-700">Catatan</TableHead>
-                  <TableHead className="font-semibold text-slate-700 text-right">Aksi</TableHead>
+              <TableHeader className="bg-slate-50 dark:bg-slate-800/60">
+                <TableRow className="border-border dark:border-slate-800">
+                  <TableHead className="font-semibold text-slate-700 dark:text-slate-300">Nama Pelanggan</TableHead>
+                  <TableHead className="font-semibold text-slate-700 dark:text-slate-300">Kontak</TableHead>
+                  <TableHead className="font-semibold text-slate-700 dark:text-slate-300">Alamat</TableHead>
+                  <TableHead className="font-semibold text-slate-700 dark:text-slate-300">Catatan</TableHead>
+                  <TableHead className="font-semibold text-slate-700 dark:text-slate-300 text-right">Aksi</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {safeCustomers.data.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center py-8 text-slate-400 font-sans">
+                    <TableCell colSpan={5} className="text-center py-8 text-slate-400 dark:text-slate-500 font-sans">
                       Belum ada data pelanggan.
                     </TableCell>
                   </TableRow>
                 ) : (
                   safeCustomers.data.map((c) => (
-                    <TableRow key={c.id}>
-                      <TableCell className="font-semibold text-slate-900">
+                    <TableRow key={c.id} className="border-border dark:border-slate-800">
+                      <TableCell className="font-semibold text-slate-900 dark:text-white">
                         {c.name}
                       </TableCell>
 
                       <TableCell>
                         <div className="flex flex-col gap-0.5 text-xs">
-                          <span className="flex items-center text-slate-700">
-                            <Phone className="h-3 w-3 mr-1 text-slate-400" /> {c.phone}
+                          <span className="flex items-center text-slate-700 dark:text-slate-300">
+                            <Phone className="h-3 w-3 mr-1 text-slate-400 dark:text-slate-500" /> {c.phone}
                           </span>
                           {c.email && (
-                            <span className="flex items-center text-slate-500">
-                              <Mail className="h-3 w-3 mr-1 text-slate-400" /> {c.email}
+                            <span className="flex items-center text-slate-500 dark:text-slate-400">
+                              <Mail className="h-3 w-3 mr-1 text-slate-400 dark:text-slate-500" /> {c.email}
                             </span>
                           )}
                         </div>
                       </TableCell>
 
-                      <TableCell className="text-xs text-slate-600 max-w-xs truncate">
+                      <TableCell className="text-xs text-slate-600 dark:text-slate-300 max-w-xs truncate">
                         {c.address ? (
                           <span className="flex items-center">
-                            <MapPin className="h-3 w-3 mr-1 text-slate-400 shrink-0" />
+                            <MapPin className="h-3 w-3 mr-1 text-slate-400 dark:text-slate-500 shrink-0" />
                             <span className="truncate">{c.address}</span>
                           </span>
                         ) : (
@@ -205,7 +205,7 @@ export default function Index({ customers, filters }) {
                         )}
                       </TableCell>
 
-                      <TableCell className="text-xs text-slate-500 max-w-xs truncate">
+                      <TableCell className="text-xs text-slate-500 dark:text-slate-400 max-w-xs truncate">
                         {c.notes || "-"}
                       </TableCell>
 
@@ -215,7 +215,7 @@ export default function Index({ customers, filters }) {
                             <Button
                               size="icon"
                               variant="ghost"
-                              className="h-8 w-8 text-slate-600 hover:text-slate-900 focus-visible:ring-1"
+                              className="h-8 w-8 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white focus-visible:ring-1"
                               title="Aksi Pelanggan"
                             >
                               <MoreVertical className="h-4 w-4" />
@@ -226,14 +226,14 @@ export default function Index({ customers, filters }) {
                               onClick={() => handleOpenEdit(c)}
                               className="cursor-pointer text-xs flex items-center gap-2"
                             >
-                              <Edit3 className="h-3.5 w-3.5 text-slate-600" />
+                              <Edit3 className="h-3.5 w-3.5 text-slate-600 dark:text-slate-400" />
                               <span>Edit Data</span>
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               onClick={() => handleDeleteClick(c)}
-                              className="cursor-pointer text-xs text-red-600 focus:text-red-600 focus:bg-red-50 flex items-center gap-2"
+                              className="cursor-pointer text-xs text-red-600 dark:text-red-400 focus:text-red-600 focus:bg-red-50 dark:focus:bg-red-950/40 flex items-center gap-2"
                             >
-                              <Trash2 className="h-3.5 w-3.5 text-red-600" />
+                              <Trash2 className="h-3.5 w-3.5 text-red-600 dark:text-red-400" />
                               <span>Hapus</span>
                             </DropdownMenuItem>
                           </DropdownMenuContent>
@@ -251,14 +251,14 @@ export default function Index({ customers, filters }) {
         <Dialog open={modalOpen} onOpenChange={(val) => { if (!form.processing) setModalOpen(val); }}>
           <DialogContent className="max-w-[95vw] sm:max-w-md max-h-[90vh] overflow-y-auto p-4 sm:p-6 rounded-2xl">
             <DialogHeader>
-              <DialogTitle className="text-base sm:text-lg font-bold text-slate-900">
+              <DialogTitle className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
                 {editingCustomer ? "Edit Data Pelanggan" : "Tambah Pelanggan Baru"}
               </DialogTitle>
             </DialogHeader>
 
             <form onSubmit={handleSubmit} className="space-y-3.5 sm:space-y-4 py-2">
               <div className="space-y-1.5">
-                <Label htmlFor="name" className="text-xs sm:text-sm font-semibold text-slate-700">Nama Lengkap *</Label>
+                <Label htmlFor="name" className="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">Nama Lengkap *</Label>
                 <Input
                   id="name"
                   required
@@ -269,7 +269,7 @@ export default function Index({ customers, filters }) {
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="phone" className="text-xs sm:text-sm font-semibold text-slate-700">Nomor Telepon / WhatsApp *</Label>
+                <Label htmlFor="phone" className="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">Nomor Telepon / WhatsApp *</Label>
                 <Input
                   id="phone"
                   required
@@ -281,7 +281,7 @@ export default function Index({ customers, filters }) {
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="email" className="text-xs sm:text-sm font-semibold text-slate-700">Email</Label>
+                <Label htmlFor="email" className="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">Email</Label>
                 <Input
                   id="email"
                   type="email"
@@ -293,7 +293,7 @@ export default function Index({ customers, filters }) {
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="address" className="text-xs sm:text-sm font-semibold text-slate-700">Alamat Pemotretan / Domisili</Label>
+                <Label htmlFor="address" className="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">Alamat Pemotretan / Domisili</Label>
                 <Textarea
                   id="address"
                   rows={2}
@@ -305,7 +305,7 @@ export default function Index({ customers, filters }) {
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="notes" className="text-xs sm:text-sm font-semibold text-slate-700">Catatan Tambahan</Label>
+                <Label htmlFor="notes" className="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">Catatan Tambahan</Label>
                 <Textarea
                   id="notes"
                   rows={2}

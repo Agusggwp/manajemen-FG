@@ -59,15 +59,15 @@ export default function Dashboard({
       <div className="space-y-8">
         {/* Header Title */}
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Dashboard Overview</h1>
-          <p className="text-sm text-slate-500 mt-1">
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Dashboard Overview</h1>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
             Ringkasan operasional dan keuangan Photography Management System ARTDEVATA.
           </p>
         </div>
 
         {/* Financial Highlights */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card className="bg-slate-900 text-white shadow-sm border-slate-800">
+          <Card className="bg-slate-900 dark:bg-slate-900 text-white shadow-sm border-slate-800">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-xs font-semibold uppercase tracking-wider text-slate-400">
                 Total Revenue
@@ -80,22 +80,22 @@ export default function Dashboard({
             </CardContent>
           </Card>
 
-          <Card className="bg-white border-slate-200 shadow-sm">
+          <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-sm text-card-foreground">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+              <CardTitle className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                 Total Biaya (Cost)
               </CardTitle>
               <DollarSign className="h-4 w-4 text-amber-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-slate-900">{formatRupiah(safeStats.totalCost || 0)}</div>
-              <p className="text-xs text-slate-500 mt-1">Gaji + Fee MUA + Operasional</p>
+              <div className="text-2xl font-bold text-slate-900 dark:text-white">{formatRupiah(safeStats.totalCost || 0)}</div>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Gaji + Fee MUA + Operasional</p>
             </CardContent>
           </Card>
 
-          <Card className="bg-white border-slate-200 shadow-sm">
+          <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-sm text-card-foreground">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+              <CardTitle className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                 Profit Bersih
               </CardTitle>
               <Badge variant={(safeStats.totalProfit || 0) >= 0 ? "success" : "destructive"}>
@@ -103,27 +103,27 @@ export default function Dashboard({
               </Badge>
             </CardHeader>
             <CardContent>
-              <div className={`text-2xl font-bold ${(safeStats.totalProfit || 0) >= 0 ? "text-emerald-600" : "text-red-600"}`}>
+              <div className={`text-2xl font-bold ${(safeStats.totalProfit || 0) >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"}`}>
                 {formatRupiah(safeStats.totalProfit || 0)}
               </div>
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                 {(safeStats.totalProfit || 0) >= 0 ? "Keuntungan Aktual" : "Status Rugi Operational"}
               </p>
             </CardContent>
           </Card>
 
-          <Card className="bg-white border-slate-200 shadow-sm">
+          <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-sm text-card-foreground">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+              <CardTitle className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                 Belum Dibayar
               </CardTitle>
               <AlertCircle className="h-4 w-4 text-rose-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-rose-600">
+              <div className="text-2xl font-bold text-rose-600 dark:text-rose-400">
                 {formatRupiah((safeStats.unpaidPhotographerSalaries || 0) + (safeStats.unpaidMuaFees || 0))}
               </div>
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                 Gaji: {formatRupiah(safeStats.unpaidPhotographerSalaries || 0)} | MUA: {formatRupiah(safeStats.unpaidMuaFees || 0)}
               </p>
             </CardContent>
@@ -132,40 +132,40 @@ export default function Dashboard({
 
         {/* Operational Metrics Cards */}
         <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
-          <div className="bg-white p-4 rounded-xl border border-slate-200 text-center">
-            <Calendar className="h-5 w-5 text-slate-700 mx-auto mb-1" />
-            <p className="text-xs font-medium text-slate-500">Jadwal Hari Ini</p>
-            <p className="text-xl font-bold text-slate-900 mt-0.5">{safeStats.todaysScheduleCount || 0}</p>
+          <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 text-center">
+            <Calendar className="h-5 w-5 text-slate-700 dark:text-slate-300 mx-auto mb-1" />
+            <p className="text-xs font-medium text-slate-500 dark:text-slate-400">Jadwal Hari Ini</p>
+            <p className="text-xl font-bold text-slate-900 dark:text-white mt-0.5">{safeStats.todaysScheduleCount || 0}</p>
           </div>
-          <div className="bg-white p-4 rounded-xl border border-slate-200 text-center">
-            <Clock className="h-5 w-5 text-amber-600 mx-auto mb-1" />
-            <p className="text-xs font-medium text-slate-500">Berlangsung</p>
-            <p className="text-xl font-bold text-slate-900 mt-0.5">{safeStats.ongoingProjectsCount || 0}</p>
+          <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 text-center">
+            <Clock className="h-5 w-5 text-amber-600 dark:text-amber-400 mx-auto mb-1" />
+            <p className="text-xs font-medium text-slate-500 dark:text-slate-400">Berlangsung</p>
+            <p className="text-xl font-bold text-slate-900 dark:text-white mt-0.5">{safeStats.ongoingProjectsCount || 0}</p>
           </div>
-          <div className="bg-white p-4 rounded-xl border border-slate-200 text-center">
-            <ShieldCheck className="h-5 w-5 text-indigo-600 mx-auto mb-1" />
-            <p className="text-xs font-medium text-slate-500">Butuh Validasi</p>
-            <p className="text-xl font-bold text-indigo-600 mt-0.5">{safeStats.waitingValidationCount || 0}</p>
+          <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 text-center">
+            <ShieldCheck className="h-5 w-5 text-indigo-600 dark:text-indigo-400 mx-auto mb-1" />
+            <p className="text-xs font-medium text-slate-500 dark:text-slate-400">Butuh Validasi</p>
+            <p className="text-xl font-bold text-indigo-600 dark:text-indigo-400 mt-0.5">{safeStats.waitingValidationCount || 0}</p>
           </div>
-          <div className="bg-white p-4 rounded-xl border border-slate-200 text-center">
-            <CheckCircle2 className="h-5 w-5 text-emerald-600 mx-auto mb-1" />
-            <p className="text-xs font-medium text-slate-500">Selesai</p>
-            <p className="text-xl font-bold text-slate-900 mt-0.5">{safeStats.completedProjectsCount || 0}</p>
+          <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 text-center">
+            <CheckCircle2 className="h-5 w-5 text-emerald-600 dark:text-emerald-400 mx-auto mb-1" />
+            <p className="text-xs font-medium text-slate-500 dark:text-slate-400">Selesai</p>
+            <p className="text-xl font-bold text-slate-900 dark:text-white mt-0.5">{safeStats.completedProjectsCount || 0}</p>
           </div>
-          <div className="bg-white p-4 rounded-xl border border-slate-200 text-center">
-            <Users className="h-5 w-5 text-slate-700 mx-auto mb-1" />
-            <p className="text-xs font-medium text-slate-500">Pelanggan</p>
-            <p className="text-xl font-bold text-slate-900 mt-0.5">{safeStats.totalCustomers || 0}</p>
+          <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 text-center">
+            <Users className="h-5 w-5 text-slate-700 dark:text-slate-300 mx-auto mb-1" />
+            <p className="text-xs font-medium text-slate-500 dark:text-slate-400">Pelanggan</p>
+            <p className="text-xl font-bold text-slate-900 dark:text-white mt-0.5">{safeStats.totalCustomers || 0}</p>
           </div>
-          <div className="bg-white p-4 rounded-xl border border-slate-200 text-center">
-            <Camera className="h-5 w-5 text-slate-700 mx-auto mb-1" />
-            <p className="text-xs font-medium text-slate-500">Photographer</p>
-            <p className="text-xl font-bold text-slate-900 mt-0.5">{safeStats.totalPhotographers || 0}</p>
+          <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 text-center">
+            <Camera className="h-5 w-5 text-slate-700 dark:text-slate-300 mx-auto mb-1" />
+            <p className="text-xs font-medium text-slate-500 dark:text-slate-400">Fotografer</p>
+            <p className="text-xl font-bold text-slate-900 dark:text-white mt-0.5">{safeStats.totalPhotographers || 0}</p>
           </div>
-          <div className="bg-white p-4 rounded-xl border border-slate-200 text-center col-span-2 sm:col-span-1">
-            <Sparkles className="h-5 w-5 text-slate-700 mx-auto mb-1" />
-            <p className="text-xs font-medium text-slate-500">MUA</p>
-            <p className="text-xl font-bold text-slate-900 mt-0.5">{safeStats.totalMuas || 0}</p>
+          <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 text-center col-span-2 sm:col-span-1">
+            <Sparkles className="h-5 w-5 text-slate-700 dark:text-slate-300 mx-auto mb-1" />
+            <p className="text-xs font-medium text-slate-500 dark:text-slate-400">MUA</p>
+            <p className="text-xl font-bold text-slate-900 dark:text-white mt-0.5">{safeStats.totalMuas || 0}</p>
           </div>
         </div>
 
@@ -187,19 +187,19 @@ export default function Dashboard({
 
         {/* Section: Actionable Pending Proof Validation */}
         {safeProofs.length > 0 && (
-          <Card className="border-amber-200 bg-amber-50/30">
+          <Card className="border-amber-200 dark:border-amber-900/40 bg-amber-50/30 dark:bg-amber-950/20 text-card-foreground">
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
-                <CardTitle className="text-base font-semibold text-amber-900 flex items-center gap-2">
-                  <ShieldCheck className="h-5 w-5 text-amber-600" />
+                <CardTitle className="text-base font-semibold text-amber-900 dark:text-amber-300 flex items-center gap-2">
+                  <ShieldCheck className="h-5 w-5 text-amber-600 dark:text-amber-400" />
                   Menunggu Validasi Bukti Pemotretan ({safeProofs.length})
                 </CardTitle>
-                <p className="text-xs text-amber-700 mt-0.5">
-                  Photographer telah mengirimkan foto lokasi & GPS untuk diverifikasi.
+                <p className="text-xs text-amber-700 dark:text-amber-400 mt-0.5">
+                  Fotografer telah mengirimkan foto lokasi & GPS untuk diverifikasi.
                 </p>
               </div>
               <Link href="/admin/proofs">
-                <Button size="sm" variant="outline" className="gap-1.5 text-xs font-semibold">
+                <Button size="sm" variant="outline" className="gap-1.5 text-xs font-semibold bg-white dark:bg-slate-900 border-amber-200 dark:border-amber-900/60 text-amber-900 dark:text-amber-200 hover:bg-amber-100 dark:hover:bg-amber-950/40">
                   <span>Lihat Semua Proof</span>
                   <ArrowRight className="h-3.5 w-3.5" />
                 </Button>
@@ -208,19 +208,19 @@ export default function Dashboard({
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {safeProofs.map((proof) => (
-                  <div key={proof.id} className="bg-white p-4 rounded-lg border border-slate-200 shadow-2xs space-y-2">
+                  <div key={proof.id} className="bg-card dark:bg-slate-900 p-4 rounded-lg border border-slate-200 dark:border-slate-800 shadow-2xs space-y-2">
                     <div className="flex items-center justify-between">
                       <Badge variant="warning" className="uppercase font-bold">
                         {proof.type} PROOF
                       </Badge>
-                      <span className="text-xs text-slate-500 font-mono">
+                      <span className="text-xs text-slate-500 dark:text-slate-400 font-mono">
                         Jarak: {proof.distance_from_location}m
                       </span>
                     </div>
-                    <p className="text-sm font-semibold text-slate-900 truncate">
+                    <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">
                       {proof.photographer?.name}
                     </p>
-                    <p className="text-xs text-slate-600">
+                    <p className="text-xs text-slate-600 dark:text-slate-300">
                       Pelanggan: {proof.schedule?.customer?.name || "-"}
                     </p>
                     <div className="pt-2 flex justify-end">
@@ -239,9 +239,9 @@ export default function Dashboard({
         )}
 
         {/* Section: Recent Schedules */}
-        <Card className="border-slate-200">
+        <Card className="border-slate-200 dark:border-slate-800 bg-card text-card-foreground">
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-base font-semibold text-slate-900">
+            <CardTitle className="text-base font-semibold text-slate-900 dark:text-white">
               Jadwal Terbaru
             </CardTitle>
             <Link href="/admin/schedules">
@@ -253,41 +253,41 @@ export default function Dashboard({
           </CardHeader>
           <CardContent className="p-0">
             <Table>
-              <TableHeader className="bg-slate-50">
-                <TableRow>
-                  <TableHead className="font-semibold text-slate-700">Tanggal & Jam</TableHead>
-                  <TableHead className="font-semibold text-slate-700">Pelanggan</TableHead>
-                  <TableHead className="font-semibold text-slate-700">Paket Foto</TableHead>
-                  <TableHead className="font-semibold text-slate-700">Lokasi Pemotretan</TableHead>
-                  <TableHead className="font-semibold text-slate-700">Status</TableHead>
+              <TableHeader className="bg-slate-50 dark:bg-slate-900/80">
+                <TableRow className="border-b border-slate-200 dark:border-slate-800">
+                  <TableHead className="font-semibold text-slate-700 dark:text-slate-300">Tanggal & Jam</TableHead>
+                  <TableHead className="font-semibold text-slate-700 dark:text-slate-300">Pelanggan</TableHead>
+                  <TableHead className="font-semibold text-slate-700 dark:text-slate-300">Paket Foto</TableHead>
+                  <TableHead className="font-semibold text-slate-700 dark:text-slate-300">Lokasi Pemotretan</TableHead>
+                  <TableHead className="font-semibold text-slate-700 dark:text-slate-300">Status</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {safeSchedules.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center py-6 text-slate-400">
+                    <TableCell colSpan={5} className="text-center py-6 text-slate-400 dark:text-slate-500">
                       Belum ada data jadwal pemotretan.
                     </TableCell>
                   </TableRow>
                 ) : (
                   safeSchedules.map((schedule) => (
-                    <TableRow key={schedule.id}>
-                      <TableCell className="font-medium text-slate-900 whitespace-nowrap">
+                    <TableRow key={schedule.id} className="border-b border-slate-100 dark:border-slate-800/60 hover:bg-slate-50/50 dark:hover:bg-slate-800/40">
+                      <TableCell className="font-medium text-slate-900 dark:text-white whitespace-nowrap">
                         {formatDate(schedule.date)} <br />
-                        <span className="text-xs text-slate-400">
+                        <span className="text-xs text-slate-400 dark:text-slate-500">
                           {schedule.start_time} - {schedule.end_time}
                         </span>
                       </TableCell>
-                      <TableCell className="font-semibold text-slate-800">
+                      <TableCell className="font-semibold text-slate-800 dark:text-slate-200">
                         {schedule.customer?.name}
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="text-slate-800 dark:text-slate-200">
                         {schedule.photo_package?.name || "-"}
                       </TableCell>
                       <TableCell className="max-w-xs truncate" title={schedule.location_address}>
-                        <span className="font-medium text-slate-800">{schedule.location_name}</span>
+                        <span className="font-medium text-slate-800 dark:text-slate-200">{schedule.location_name}</span>
                         <br />
-                        <span className="text-xs text-slate-400 truncate block">{schedule.location_address}</span>
+                        <span className="text-xs text-slate-400 dark:text-slate-500 truncate block">{schedule.location_address}</span>
                       </TableCell>
                       <TableCell>
                         <Badge

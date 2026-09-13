@@ -133,10 +133,10 @@ export default function Index({ muas, filters }) {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 w-full">
           <div className="min-w-0">
-            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
               Manajemen Make Up Artist (MUA)
             </h1>
-            <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
               Kelola data partner MUA, spesialisasi, dan riwayat penugasan project.
             </p>
           </div>
@@ -146,15 +146,15 @@ export default function Index({ muas, filters }) {
           </Button>
         </div>
 
-        <Card className="border-slate-200 shadow-2xs">
+        <Card className="border-border dark:border-slate-800 bg-card dark:bg-slate-900 shadow-2xs">
           <CardContent className="p-3 sm:p-4">
             <div className="relative w-full">
-              <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
+              <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400 dark:text-slate-500" />
               <Input
                 placeholder="Cari nama, nomor HP, atau spesialisasi MUA..."
                 value={search}
                 onChange={handleSearchChange}
-                className="pl-9 bg-white text-xs sm:text-sm"
+                className="pl-9 text-xs sm:text-sm"
               />
             </div>
           </CardContent>
@@ -164,22 +164,22 @@ export default function Index({ muas, filters }) {
         {isLoading ? (
           <CardGridSkeleton count={6} />
         ) : safeMuas.data.length === 0 ? (
-          <div className="col-span-full text-center py-12 bg-white rounded-xl border border-slate-200 text-slate-400">
+          <div className="col-span-full text-center py-12 bg-card dark:bg-slate-900 rounded-xl border border-border dark:border-slate-800 text-muted-foreground">
             Belum ada data Make Up Artist (MUA).
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {safeMuas.data.map((mua) => (
-              <Card key={mua.id} className="border-slate-200 hover:shadow-md transition-shadow">
+              <Card key={mua.id} className="border-border dark:border-slate-800 bg-card dark:bg-slate-900 hover:shadow-md transition-shadow">
                 <CardContent className="p-5 space-y-3">
                   <div className="flex items-start justify-between">
                     <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-700 font-bold">
+                      <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-700 dark:text-slate-300 font-bold">
                         <Sparkles className="h-5 w-5 text-amber-500" />
                       </div>
                       <div>
-                        <h3 className="font-bold text-slate-900 text-base">{mua.name}</h3>
-                        <p className="text-xs text-slate-500">{mua.specialty || "General MUA"}</p>
+                        <h3 className="font-bold text-slate-900 dark:text-white text-base">{mua.name}</h3>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">{mua.specialty || "General MUA"}</p>
                       </div>
                     </div>
                     <Badge variant={mua.status === "ACTIVE" ? "success" : "secondary"}>
@@ -187,33 +187,33 @@ export default function Index({ muas, filters }) {
                     </Badge>
                   </div>
 
-                  <div className="space-y-1 text-xs text-slate-600 border-t border-slate-100 pt-3">
+                  <div className="space-y-1 text-xs text-slate-600 dark:text-slate-300 border-t border-border dark:border-slate-800 pt-3">
                     <div className="flex items-center space-x-2">
-                      <Phone className="h-3.5 w-3.5 text-slate-400" />
+                      <Phone className="h-3.5 w-3.5 text-slate-400 dark:text-slate-500" />
                       <span>{mua.phone}</span>
                     </div>
                     {mua.address && (
                       <div className="flex items-start space-x-2">
-                        <MapPin className="h-3.5 w-3.5 text-slate-400 shrink-0 mt-0.5" />
+                        <MapPin className="h-3.5 w-3.5 text-slate-400 dark:text-slate-500 shrink-0 mt-0.5" />
                         <span className="truncate">{mua.address}</span>
                       </div>
                     )}
                     <div className="flex items-center space-x-2">
-                      <Wallet className="h-3.5 w-3.5 text-slate-400 shrink-0" />
-                      <span>Gaji: <strong className="text-slate-900">{formatRupiah(mua.default_fee || 0)}</strong></span>
+                      <Wallet className="h-3.5 w-3.5 text-slate-400 dark:text-slate-500 shrink-0" />
+                      <span>Gaji: <strong className="text-slate-900 dark:text-white">{formatRupiah(mua.default_fee || 0)}</strong></span>
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-xs">
-                    <span className="text-slate-500">
-                      Total Project: <strong className="text-slate-900">{mua.projects_count || 0}</strong>
+                  <div className="flex items-center justify-between pt-2 border-t border-border dark:border-slate-800 text-xs">
+                    <span className="text-slate-500 dark:text-slate-400">
+                      Total Project: <strong className="text-slate-900 dark:text-white">{mua.projects_count || 0}</strong>
                     </span>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button
                           size="icon"
                           variant="ghost"
-                          className="h-8 w-8 text-slate-600 hover:text-slate-900 focus-visible:ring-1"
+                          className="h-8 w-8 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white focus-visible:ring-1"
                           title="Aksi MUA"
                         >
                           <MoreVertical className="h-4 w-4" />
@@ -222,7 +222,7 @@ export default function Index({ muas, filters }) {
                       <DropdownMenuContent align="end" className="w-36 shadow-md">
                         <DropdownMenuItem asChild>
                           <Link href={`/admin/muas/${mua.id}`} className="cursor-pointer text-xs flex items-center gap-2">
-                            <Eye className="h-3.5 w-3.5 text-slate-600" />
+                            <Eye className="h-3.5 w-3.5 text-slate-600 dark:text-slate-400" />
                             <span>Lihat Detail</span>
                           </Link>
                         </DropdownMenuItem>
@@ -230,15 +230,15 @@ export default function Index({ muas, filters }) {
                           onClick={() => handleOpenEdit(mua)}
                           className="cursor-pointer text-xs flex items-center gap-2"
                         >
-                          <Edit3 className="h-3.5 w-3.5 text-slate-600" />
+                          <Edit3 className="h-3.5 w-3.5 text-slate-600 dark:text-slate-400" />
                           <span>Edit Data</span>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
                           onClick={() => handleDeleteClick(mua)}
-                          className="cursor-pointer text-xs text-red-600 focus:text-red-600 focus:bg-red-50 flex items-center gap-2"
+                          className="cursor-pointer text-xs text-red-600 dark:text-red-400 focus:text-red-600 focus:bg-red-50 dark:focus:bg-red-950/40 flex items-center gap-2"
                         >
-                          <Trash2 className="h-3.5 w-3.5 text-red-600" />
+                          <Trash2 className="h-3.5 w-3.5 text-red-600 dark:text-red-400" />
                           <span>Hapus</span>
                         </DropdownMenuItem>
                       </DropdownMenuContent>
@@ -254,14 +254,14 @@ export default function Index({ muas, filters }) {
         <Dialog open={modalOpen} onOpenChange={(val) => { if (!form.processing) setModalOpen(val); }}>
           <DialogContent className="max-w-[95vw] sm:max-w-lg max-h-[90vh] overflow-y-auto p-5 sm:p-6 rounded-2xl">
             <DialogHeader>
-              <DialogTitle className="text-base sm:text-lg font-bold text-slate-900">
+              <DialogTitle className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
                 {editingMua ? "Edit Data MUA" : "Tambah MUA Baru"}
               </DialogTitle>
             </DialogHeader>
 
             <form onSubmit={handleSubmit} className="space-y-3.5 sm:space-y-4 py-2">
               <div className="space-y-1.5 sm:space-y-2">
-                <Label className="text-xs sm:text-sm font-semibold text-slate-700">Nama Lengkap MUA</Label>
+                <Label className="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">Nama Lengkap MUA</Label>
                 <Input
                   required
                   placeholder="misal: Sari MUA Bali"
@@ -273,7 +273,7 @@ export default function Index({ muas, filters }) {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div className="space-y-1.5 sm:space-y-2">
-                  <Label className="text-xs sm:text-sm font-semibold text-slate-700">Nomor WhatsApp / HP</Label>
+                  <Label className="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">Nomor WhatsApp / HP</Label>
                   <Input
                     required
                     placeholder="0812xxxx"
@@ -283,7 +283,7 @@ export default function Index({ muas, filters }) {
                   />
                 </div>
                 <div className="space-y-1.5 sm:space-y-2">
-                  <Label className="text-xs sm:text-sm font-semibold text-slate-700">Email (Opsional)</Label>
+                  <Label className="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">Email (Opsional)</Label>
                   <Input
                     type="email"
                     placeholder="mua@email.com"
@@ -296,7 +296,7 @@ export default function Index({ muas, filters }) {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div className="space-y-1.5 sm:space-y-2">
-                  <Label className="text-xs sm:text-sm font-semibold text-slate-700">Spesialisasi Makeup</Label>
+                  <Label className="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">Spesialisasi Makeup</Label>
                   <Input
                     placeholder="misal: Graduation, Bridal, Glam"
                     value={form.data.specialty}
@@ -305,7 +305,7 @@ export default function Index({ muas, filters }) {
                   />
                 </div>
                 <div className="space-y-1.5 sm:space-y-2">
-                  <Label className="text-xs sm:text-sm font-semibold text-slate-700">Gaji Standar / Default (Rp)</Label>
+                  <Label className="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">Gaji Standar / Default (Rp)</Label>
                   <Input
                     type="number"
                     min="0"
@@ -319,7 +319,7 @@ export default function Index({ muas, filters }) {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div className="space-y-1.5 sm:space-y-2">
-                  <Label className="text-xs sm:text-sm font-semibold text-slate-700">Alamat / Dominasi Area</Label>
+                  <Label className="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">Alamat / Dominasi Area</Label>
                   <Input
                     placeholder="misal: Denpasar, Bali"
                     value={form.data.address}
@@ -328,12 +328,12 @@ export default function Index({ muas, filters }) {
                   />
                 </div>
                 <div className="space-y-1.5 sm:space-y-2">
-                  <Label className="text-xs sm:text-sm font-semibold text-slate-700">Status</Label>
+                  <Label className="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">Status</Label>
                   <Select
                     value={form.data.status || "ACTIVE"}
                     onValueChange={(val) => form.setData("status", val)}
                   >
-                    <SelectTrigger className="w-full bg-white text-xs sm:text-sm h-9 sm:h-10">
+                    <SelectTrigger className="w-full text-xs sm:text-sm h-9 sm:h-10">
                       <SelectValue placeholder="Pilih Status" />
                     </SelectTrigger>
                     <SelectContent>
@@ -345,7 +345,7 @@ export default function Index({ muas, filters }) {
               </div>
 
               <div className="space-y-1.5 sm:space-y-2">
-                <Label className="text-xs sm:text-sm font-semibold text-slate-700">Catatan Tambahan</Label>
+                <Label className="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">Catatan Tambahan</Label>
                 <Textarea
                   placeholder="Catatan internal..."
                   value={form.data.notes}

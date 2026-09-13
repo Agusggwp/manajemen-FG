@@ -265,14 +265,14 @@ export default function Index({ systemInfo: initialSystemInfo }) {
           {/* Left Column: Command Categories */}
           <div className="w-full min-w-0 space-y-6">
             {/* Tabs Selector */}
-            <div className="flex border-b border-slate-200 bg-white rounded-xl p-1 shadow-2xs w-full">
+            <div className="flex border border-border dark:border-slate-800 bg-card dark:bg-slate-900 rounded-xl p-1 shadow-2xs w-full">
               <button
                 type="button"
                 onClick={() => setActiveTab("database")}
                 className={`flex-1 py-2.5 px-2 sm:px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
                   activeTab === "database"
-                    ? "bg-slate-900 text-white shadow-xs"
-                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                    ? "bg-slate-900 dark:bg-slate-800 text-white shadow-xs"
+                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/60"
                 }`}
               >
                 <Database className="h-4 w-4 shrink-0" />
@@ -283,8 +283,8 @@ export default function Index({ systemInfo: initialSystemInfo }) {
                 onClick={() => setActiveTab("packages")}
                 className={`flex-1 py-2.5 px-2 sm:px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
                   activeTab === "packages"
-                    ? "bg-slate-900 text-white shadow-xs"
-                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                    ? "bg-slate-900 dark:bg-slate-800 text-white shadow-xs"
+                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/60"
                 }`}
               >
                 <Box className="h-4 w-4 shrink-0" />
@@ -295,8 +295,8 @@ export default function Index({ systemInfo: initialSystemInfo }) {
                 onClick={() => setActiveTab("cache")}
                 className={`flex-1 py-2.5 px-2 sm:px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
                   activeTab === "cache"
-                    ? "bg-slate-900 text-white shadow-xs"
-                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                    ? "bg-slate-900 dark:bg-slate-800 text-white shadow-xs"
+                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/60"
                 }`}
               >
                 <Zap className="h-4 w-4 shrink-0" />
@@ -306,26 +306,26 @@ export default function Index({ systemInfo: initialSystemInfo }) {
 
             {/* TAB 1: DATABASE & MIGRATIONS */}
             {activeTab === "database" && (
-              <Card className="border-slate-200 shadow-2xs w-full min-w-0">
-                <CardHeader className="bg-slate-50/50 border-b border-slate-100 pb-3">
-                  <CardTitle className="text-base font-semibold flex items-center gap-2 text-slate-900">
-                    <Database className="h-5 w-5 text-emerald-600 shrink-0" /> Eksekusi Migrasi & Database
+              <Card className="border-border dark:border-slate-800 bg-card dark:bg-slate-900 shadow-2xs w-full min-w-0">
+                <CardHeader className="bg-slate-50/50 dark:bg-slate-800/40 border-b border-border dark:border-slate-800 pb-3">
+                  <CardTitle className="text-base font-semibold flex items-center gap-2 text-slate-900 dark:text-white">
+                    <Database className="h-5 w-5 text-emerald-600 dark:text-emerald-400 shrink-0" /> Eksekusi Migrasi & Database
                   </CardTitle>
-                  <CardDescription className="text-xs text-slate-500">
+                  <CardDescription className="text-xs text-slate-500 dark:text-slate-400">
                     Perintah Artisan untuk membuat tabel, migrasi struktur database, dan menanam data awal (seeders).
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="p-4 space-y-3">
                   {/* Migrate */}
-                  <div className="p-3 border border-slate-200 rounded-xl bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-emerald-300 transition-colors">
+                  <div className="p-3 border border-border dark:border-slate-800 rounded-xl bg-card dark:bg-slate-900/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-emerald-300 dark:hover:border-emerald-700 transition-colors">
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="font-bold text-slate-900 text-sm">Jalankan Migrasi Database</span>
-                        <code className="text-[11px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-mono">
+                        <span className="font-bold text-slate-900 dark:text-white text-sm">Jalankan Migrasi Database</span>
+                        <code className="text-[11px] bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2 py-0.5 rounded font-mono">
                           php artisan migrate
                         </code>
                       </div>
-                      <p className="text-xs text-slate-500 mt-1">
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                         Mengeksekusi semua file migrasi yang pending di folder <code className="text-xs">database/migrations</code>.
                       </p>
                     </div>
@@ -345,15 +345,15 @@ export default function Index({ systemInfo: initialSystemInfo }) {
                   </div>
 
                   {/* Migrate Status */}
-                  <div className="p-3 border border-slate-200 rounded-xl bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-slate-300 transition-colors">
+                  <div className="p-3 border border-border dark:border-slate-800 rounded-xl bg-card dark:bg-slate-900/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-slate-300 dark:hover:border-slate-700 transition-colors">
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="font-bold text-slate-900 text-sm">Cek Status Migrasi</span>
-                        <code className="text-[11px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-mono">
+                        <span className="font-bold text-slate-900 dark:text-white text-sm">Cek Status Migrasi</span>
+                        <code className="text-[11px] bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2 py-0.5 rounded font-mono">
                           php artisan migrate:status
                         </code>
                       </div>
-                      <p className="text-xs text-slate-500 mt-1">
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                         Menampilkan tabel status file migrasi mana yang sudah atau belum dijalankan.
                       </p>
                     </div>
@@ -373,15 +373,15 @@ export default function Index({ systemInfo: initialSystemInfo }) {
                   </div>
 
                   {/* DB Seed */}
-                  <div className="p-3 border border-slate-200 rounded-xl bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-indigo-300 transition-colors">
+                  <div className="p-3 border border-border dark:border-slate-800 rounded-xl bg-card dark:bg-slate-900/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-indigo-300 dark:hover:border-indigo-700 transition-colors">
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="font-bold text-slate-900 text-sm">Jalankan Seeders</span>
-                        <code className="text-[11px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-mono">
+                        <span className="font-bold text-slate-900 dark:text-white text-sm">Jalankan Seeders</span>
+                        <code className="text-[11px] bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2 py-0.5 rounded font-mono">
                           php artisan db:seed
                         </code>
                       </div>
-                      <p className="text-xs text-slate-500 mt-1">
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                         Menanamkan data default/master ke dalam database dari <code className="text-xs">DatabaseSeeder</code>.
                       </p>
                     </div>
@@ -401,15 +401,15 @@ export default function Index({ systemInfo: initialSystemInfo }) {
                   </div>
 
                   {/* Migrate Rollback */}
-                  <div className="p-3 border border-slate-200 rounded-xl bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-amber-300 transition-colors">
+                  <div className="p-3 border border-border dark:border-slate-800 rounded-xl bg-card dark:bg-slate-900/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-amber-300 dark:hover:border-amber-700 transition-colors">
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="font-bold text-slate-900 text-sm">Rollback Migrasi Terakhir</span>
-                        <code className="text-[11px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-mono">
+                        <span className="font-bold text-slate-900 dark:text-white text-sm">Rollback Migrasi Terakhir</span>
+                        <code className="text-[11px] bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2 py-0.5 rounded font-mono">
                           php artisan migrate:rollback
                         </code>
                       </div>
-                      <p className="text-xs text-slate-500 mt-1">
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                         Membatalkan batch migrasi database yang paling terakhir dijalankan.
                       </p>
                     </div>
@@ -418,7 +418,7 @@ export default function Index({ systemInfo: initialSystemInfo }) {
                       variant="outline"
                       onClick={() => handleExecute("migrate_rollback", "php artisan migrate:rollback")}
                       disabled={runningAction !== null}
-                      className="text-amber-700 border-amber-300 bg-amber-50 hover:bg-amber-100 shrink-0"
+                      className="text-amber-700 dark:text-amber-300 border-amber-300 dark:border-amber-700 bg-amber-50 dark:bg-amber-950/30 hover:bg-amber-100 dark:hover:bg-amber-950/50 shrink-0"
                     >
                       {runningAction === "migrate_rollback" ? (
                         <RefreshCw className="h-4 w-4 animate-spin" />
@@ -429,17 +429,17 @@ export default function Index({ systemInfo: initialSystemInfo }) {
                   </div>
 
                   {/* Dangerous: Migrate Fresh */}
-                  <div className="p-3 border border-red-200 rounded-xl bg-red-50/40 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="p-3 border border-red-200 dark:border-red-900/60 rounded-xl bg-red-50/40 dark:bg-red-950/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="font-bold text-red-900 text-sm flex items-center gap-1">
-                          <AlertTriangle className="h-4 w-4 text-red-600 shrink-0" /> Reset Total Database (Fresh)
+                        <span className="font-bold text-red-900 dark:text-red-300 text-sm flex items-center gap-1">
+                          <AlertTriangle className="h-4 w-4 text-red-600 dark:text-red-400 shrink-0" /> Reset Total Database (Fresh)
                         </span>
-                        <code className="text-[11px] bg-red-100 text-red-800 px-2 py-0.5 rounded font-mono">
+                        <code className="text-[11px] bg-red-100 dark:bg-red-950/60 text-red-800 dark:text-red-300 px-2 py-0.5 rounded font-mono">
                           php artisan migrate:fresh
                         </code>
                       </div>
-                      <p className="text-xs text-red-600 mt-1">
+                      <p className="text-xs text-red-600 dark:text-red-400 mt-1">
                         PERINGATAN: Menghapus SELURUH tabel dan membuat ulang struktur dari awal.
                       </p>
                     </div>
@@ -463,26 +463,26 @@ export default function Index({ systemInfo: initialSystemInfo }) {
 
             {/* TAB 2: PACKAGES & DEPENDENCIES */}
             {activeTab === "packages" && (
-              <Card className="border-slate-200 shadow-2xs w-full min-w-0">
-                <CardHeader className="bg-slate-50/50 border-b border-slate-100 pb-3">
-                  <CardTitle className="text-base font-semibold flex items-center gap-2 text-slate-900">
-                    <Box className="h-5 w-5 text-indigo-600 shrink-0" /> Instalasi & Build Dependensi
+              <Card className="border-border dark:border-slate-800 bg-card dark:bg-slate-900 shadow-2xs w-full min-w-0">
+                <CardHeader className="bg-slate-50/50 dark:bg-slate-800/40 border-b border-border dark:border-slate-800 pb-3">
+                  <CardTitle className="text-base font-semibold flex items-center gap-2 text-slate-900 dark:text-white">
+                    <Box className="h-5 w-5 text-indigo-600 dark:text-indigo-400 shrink-0" /> Instalasi & Build Dependensi
                   </CardTitle>
-                  <CardDescription className="text-xs text-slate-500">
+                  <CardDescription className="text-xs text-slate-500 dark:text-slate-400">
                     Perintah untuk menginstal package Composer (PHP) dan NPM (JavaScript/Vite).
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="p-4 space-y-3">
                   {/* Composer Install */}
-                  <div className="p-3 border border-slate-200 rounded-xl bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-indigo-300 transition-colors">
+                  <div className="p-3 border border-border dark:border-slate-800 rounded-xl bg-card dark:bg-slate-900/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-indigo-300 dark:hover:border-indigo-700 transition-colors">
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="font-bold text-slate-900 text-sm">Composer Install</span>
-                        <code className="text-[11px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-mono">
+                        <span className="font-bold text-slate-900 dark:text-white text-sm">Composer Install</span>
+                        <code className="text-[11px] bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2 py-0.5 rounded font-mono">
                           composer install
                         </code>
                       </div>
-                      <p className="text-xs text-slate-500 mt-1">
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                         Mengunduh dan memasang vendor dependensi PHP berdasarkan <code className="text-xs">composer.lock</code>.
                       </p>
                     </div>
@@ -501,15 +501,15 @@ export default function Index({ systemInfo: initialSystemInfo }) {
                   </div>
 
                   {/* Composer Dump Autoload */}
-                  <div className="p-3 border border-slate-200 rounded-xl bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-slate-300 transition-colors">
+                  <div className="p-3 border border-border dark:border-slate-800 rounded-xl bg-card dark:bg-slate-900/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-slate-300 dark:hover:border-slate-700 transition-colors">
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="font-bold text-slate-900 text-sm">Dump Autoload</span>
-                        <code className="text-[11px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-mono">
+                        <span className="font-bold text-slate-900 dark:text-white text-sm">Dump Autoload</span>
+                        <code className="text-[11px] bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2 py-0.5 rounded font-mono">
                           composer dump-autoload
                         </code>
                       </div>
-                      <p className="text-xs text-slate-500 mt-1">
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                         Memperbarui peta kelas autoloader Composer tanpa mengunduh ulang package.
                       </p>
                     </div>
@@ -529,15 +529,15 @@ export default function Index({ systemInfo: initialSystemInfo }) {
                   </div>
 
                   {/* NPM Install */}
-                  <div className="p-3 border border-slate-200 rounded-xl bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-sky-300 transition-colors">
+                  <div className="p-3 border border-border dark:border-slate-800 rounded-xl bg-card dark:bg-slate-900/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-sky-300 dark:hover:border-sky-700 transition-colors">
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="font-bold text-slate-900 text-sm">NPM Install</span>
-                        <code className="text-[11px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-mono">
+                        <span className="font-bold text-slate-900 dark:text-white text-sm">NPM Install</span>
+                        <code className="text-[11px] bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2 py-0.5 rounded font-mono">
                           npm install
                         </code>
                       </div>
-                      <p className="text-xs text-slate-500 mt-1">
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                         Mengunduh package Node.js ke <code className="text-xs">node_modules</code>.
                       </p>
                     </div>
@@ -557,15 +557,15 @@ export default function Index({ systemInfo: initialSystemInfo }) {
                   </div>
 
                   {/* NPM Build */}
-                  <div className="p-3 border border-slate-200 rounded-xl bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-emerald-300 transition-colors">
+                  <div className="p-3 border border-border dark:border-slate-800 rounded-xl bg-card dark:bg-slate-900/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-emerald-300 dark:hover:border-emerald-700 transition-colors">
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="font-bold text-slate-900 text-sm">Build Frontend Assets</span>
-                        <code className="text-[11px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-mono">
+                        <span className="font-bold text-slate-900 dark:text-white text-sm">Build Frontend Assets</span>
+                        <code className="text-[11px] bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2 py-0.5 rounded font-mono">
                           npm run build
                         </code>
                       </div>
-                      <p className="text-xs text-slate-500 mt-1">
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                         Mengomplikasi asset Vite React/JS untuk lingkungan produksi (public/build).
                       </p>
                     </div>
@@ -588,26 +588,26 @@ export default function Index({ systemInfo: initialSystemInfo }) {
 
             {/* TAB 3: MAINTENANCE & CACHE CLEAR */}
             {activeTab === "cache" && (
-              <Card className="border-slate-200 shadow-2xs w-full min-w-0">
-                <CardHeader className="bg-slate-50/50 border-b border-slate-100 pb-3">
-                  <CardTitle className="text-base font-semibold flex items-center gap-2 text-slate-900">
+              <Card className="border-border dark:border-slate-800 bg-card dark:bg-slate-900 shadow-2xs w-full min-w-0">
+                <CardHeader className="bg-slate-50/50 dark:bg-slate-800/40 border-b border-border dark:border-slate-800 pb-3">
+                  <CardTitle className="text-base font-semibold flex items-center gap-2 text-slate-900 dark:text-white">
                     <Zap className="h-5 w-5 text-amber-500 shrink-0" /> Pembersihan Cache & System Storage
                   </CardTitle>
-                  <CardDescription className="text-xs text-slate-500">
+                  <CardDescription className="text-xs text-slate-500 dark:text-slate-400">
                     Perintah untuk membersihkan cache aplikasi, konfigurasi, route, dan menghubungkan storage publik.
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="p-4 space-y-3">
                   {/* Optimize Clear */}
-                  <div className="p-3 border border-slate-200 rounded-xl bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-amber-300 transition-colors">
+                  <div className="p-3 border border-border dark:border-slate-800 rounded-xl bg-card dark:bg-slate-900/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-amber-300 dark:hover:border-amber-700 transition-colors">
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="font-bold text-slate-900 text-sm">Clear All Cache (Optimize Clear)</span>
-                        <code className="text-[11px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-mono">
+                        <span className="font-bold text-slate-900 dark:text-white text-sm">Clear All Cache (Optimize Clear)</span>
+                        <code className="text-[11px] bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2 py-0.5 rounded font-mono">
                           php artisan optimize:clear
                         </code>
                       </div>
-                      <p className="text-xs text-slate-500 mt-1">
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                         Clear cache aplikasi, konfigurasi, rute, view compiled, dan event sekaligus.
                       </p>
                     </div>
@@ -626,15 +626,15 @@ export default function Index({ systemInfo: initialSystemInfo }) {
                   </div>
 
                   {/* Storage Link */}
-                  <div className="p-3 border border-slate-200 rounded-xl bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-sky-300 transition-colors">
+                  <div className="p-3 border border-border dark:border-slate-800 rounded-xl bg-card dark:bg-slate-900/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-sky-300 dark:hover:border-sky-700 transition-colors">
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="font-bold text-slate-900 text-sm">Buat Symlink Storage</span>
-                        <code className="text-[11px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-mono">
+                        <span className="font-bold text-slate-900 dark:text-white text-sm">Buat Symlink Storage</span>
+                        <code className="text-[11px] bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2 py-0.5 rounded font-mono">
                           php artisan storage:link
                         </code>
                       </div>
-                      <p className="text-xs text-slate-500 mt-1">
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                         Membuat symbolic link dari <code className="text-xs">public/storage</code> ke <code className="text-xs">storage/app/public</code> untuk akses media publik.
                       </p>
                     </div>
@@ -663,8 +663,8 @@ export default function Index({ systemInfo: initialSystemInfo }) {
                       className="justify-start h-auto p-3 text-left w-full"
                     >
                       <div>
-                        <span className="font-bold text-xs block text-slate-900">Clear Route Cache</span>
-                        <code className="text-[10px] text-slate-500 font-mono">php artisan route:clear</code>
+                        <span className="font-bold text-xs block text-slate-900 dark:text-white">Clear Route Cache</span>
+                        <code className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">php artisan route:clear</code>
                       </div>
                     </Button>
 
@@ -676,8 +676,8 @@ export default function Index({ systemInfo: initialSystemInfo }) {
                       className="justify-start h-auto p-3 text-left w-full"
                     >
                       <div>
-                        <span className="font-bold text-xs block text-slate-900">Clear View Cache</span>
-                        <code className="text-[10px] text-slate-500 font-mono">php artisan view:clear</code>
+                        <span className="font-bold text-xs block text-slate-900 dark:text-white">Clear View Cache</span>
+                        <code className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">php artisan view:clear</code>
                       </div>
                     </Button>
                   </div>
