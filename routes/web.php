@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\MuaController;
 use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\PhotoPackageController;
 use App\Http\Controllers\Admin\PhotographerController;
+use App\Http\Controllers\Admin\PortfolioController;
 use App\Http\Controllers\Admin\ProjectController as AdminProjectController;
 use App\Http\Controllers\Admin\ProjectExpenseController;
 use App\Http\Controllers\Admin\ProofValidationController;
@@ -50,6 +51,12 @@ Route::middleware(['auth', 'role.admin'])->prefix('admin')->as('admin.')->group(
     Route::post('/packages/{package}/duplicate', [PhotoPackageController::class, 'duplicate'])->name('packages.duplicate');
     Route::patch('/packages/{package}/toggle-status', [PhotoPackageController::class, 'toggleStatus'])->name('packages.toggle-status');
     Route::resource('packages', PhotoPackageController::class)->except(['create', 'edit']);
+
+    // Galeri Portofolio & Perlengkapan Studio (Landing Page)
+    Route::patch('/portfolios/{portfolio}/toggle-status', [PortfolioController::class, 'toggleStatus'])->name('portfolios.toggle-status');
+    Route::post('/portfolios/reorder', [PortfolioController::class, 'reorder'])->name('portfolios.reorder');
+    Route::post('/portfolios/section-settings', [PortfolioController::class, 'updateSectionSettings'])->name('portfolios.section-settings');
+    Route::resource('portfolios', PortfolioController::class)->except(['create', 'edit', 'show']);
 
     // Master MUA
     Route::resource('muas', MuaController::class)->except(['create', 'edit']);

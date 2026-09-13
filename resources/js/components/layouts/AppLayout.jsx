@@ -48,6 +48,7 @@ export default function AppLayout({ children, title }) {
     "/admin/photographers": "Manajemen Fotografer",
     "/admin/muas": "Manajemen MUA",
     "/admin/packages": "Master Paket Foto",
+    "/admin/portfolios": "Kelola Galeri Portofolio",
     "/admin/payments/salaries": "Pembayaran Gaji Fotografer",
     "/admin/payments/mua-fees": "Pembayaran Gaji MUA",
     "/admin/reports/package-profit": "Laporan Keuntungan Paket Foto",

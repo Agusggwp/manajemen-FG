@@ -72,6 +72,7 @@ export default function AppSidebar({
         { name: "Fotografer", href: "/admin/photographers", icon: Camera },
         { name: "MUA", href: "/admin/muas", icon: Sparkles },
         { name: "Paket Foto", href: "/admin/packages", icon: Package },
+        { name: "Galeri Portofolio", href: "/admin/portfolios", icon: Image },
       ],
     },
     {

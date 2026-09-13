@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\PhotoPackage;
+use App\Models\Portfolio;
 use App\Models\SystemSetting;
 use App\Services\ActivityLogger;
 use Illuminate\Http\Request;
@@ -24,11 +25,14 @@ class HomeController extends Controller
             ->orderBy('price', 'asc')
             ->get();
 
+        $portfolios = Portfolio::active()->ordered()->get();
+
         $settings = SystemSetting::all()->pluck('value', 'key');
 
         return Inertia::render('Public/Packages', [
             'packages' => $packages,
             'categories' => $categories,
+            'portfolios' => $portfolios,
             'settings' => $settings,
             'auth' => [
                 'user' => auth()->user(),

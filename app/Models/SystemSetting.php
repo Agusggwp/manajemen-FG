@@ -15,4 +15,10 @@ class SystemSetting extends Model
         'group',
         'description',
     ];
+
+    public static function get($key, $default = null)
+    {
+        $setting = static::where('key', $key)->first();
+        return $setting ? $setting->value : $default;
+    }
 }

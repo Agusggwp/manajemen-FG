@@ -160,6 +160,7 @@ project_galleries              → Galeri foto hasil kerja
 photo_session_proofs   → Bukti foto kehadiran (START & END) + koordinat GPS
 activity_logs          → Log semua aktivitas admin & fotografer
 system_settings        → Pengaturan sistem
+portfolios             → Galeri slide portofolio & perlengkapan studio (Landing Page)
 ```
 
 ### Status Alur Proyek

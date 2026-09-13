@@ -16,7 +16,7 @@ import FooterSection from "./components/FooterSection";
 import FloatingActions from "./components/FloatingActions";
 import Galleries from "@/components/Galleries";
 
-export default function Packages({ packages, categories, settings, auth }) {
+export default function Packages({ packages, categories, portfolios, settings, auth }) {
   const safePackages = Array.isArray(packages) ? packages : [];
   const safeCategories = Array.isArray(categories) ? categories : [];
 
@@ -225,7 +225,14 @@ export default function Packages({ packages, categories, settings, auth }) {
       </section>
 
       {/* GALERI PORTOFOLIO & PERLENGKAPAN STUDIO */}
-      <Galleries isDarkTheme={isDarkTheme} />
+      {settings?.public_portfolio_show !== "false" && (
+        <Galleries
+          isDarkTheme={isDarkTheme}
+          portfolios={portfolios}
+          sectionTitle={settings?.public_portfolio_section_title}
+          sectionSubtitle={settings?.public_portfolio_section_subtitle}
+        />
+      )}
 
       {/* KEUNGGULAN SECTION */}
       <FeaturesSection isDarkTheme={isDarkTheme} />

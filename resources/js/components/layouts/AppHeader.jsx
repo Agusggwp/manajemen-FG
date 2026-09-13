@@ -46,6 +46,7 @@ const ROUTE_LABELS = {
   proofs: "Validasi Presensi Foto",
   customers: "Pelanggan",
   packages: "Master Paket Foto",
+  portfolios: "Galeri Portofolio",
   muas: "MUA",
   photographers: "Fotografer",
   salaries: "Gaji Fotografer",

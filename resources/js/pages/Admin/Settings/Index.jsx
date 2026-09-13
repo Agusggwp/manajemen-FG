@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Head, useForm, router } from "@inertiajs/react";
+import { Head, useForm, router, Link } from "@inertiajs/react";
 import {
   Settings,
   Save,
@@ -17,6 +17,8 @@ import {
   Laptop,
   Loader2,
   ExternalLink,
+  Image as ImageIcon,
+  ArrowRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -384,6 +386,30 @@ export default function Index({ settings }) {
                   className="rounded border-slate-300 dark:border-slate-700 text-emerald-600 focus:ring-emerald-500 h-4 w-4"
                 />
               </label>
+            </div>
+
+            {/* Separated Portfolio Settings Quick Link Banner */}
+            <div className="p-4 rounded-xl border border-emerald-200 dark:border-emerald-900/60 bg-emerald-50/50 dark:bg-emerald-950/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 rounded-lg bg-emerald-600 text-white shrink-0">
+                  <ImageIcon className="h-5 w-5" />
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold text-slate-900 dark:text-white">
+                    Kelola Galeri Portofolio & Perlengkapan Studio
+                  </h4>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                    Pengaturan slide portofolio, upload foto, urutan tampilan & teks section kini dipisahkan ke menu khusus.
+                  </p>
+                </div>
+              </div>
+              <Link
+                href="/admin/portfolios"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shrink-0 transition-colors shadow-2xs"
+              >
+                <span>Buka Kelola Portofolio</span>
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
             </div>
           </CardContent>
         </Card>
