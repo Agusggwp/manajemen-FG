@@ -121,7 +121,7 @@ export default function AppSidebar({
 
       {/* Sidebar Desktop & Mobile */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 bg-white border-r border-slate-200 flex flex-col transition-all duration-300 ease-in-out lg:static lg:h-screen lg:z-30 shrink-0 ${sidebarOpen
+        className={`fixed inset-y-0 left-0 z-50 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col transition-all duration-300 ease-in-out lg:static lg:h-screen lg:z-30 shrink-0 ${sidebarOpen
             ? "translate-x-0 w-64 shadow-2xl lg:shadow-none"
             : "-translate-x-full lg:translate-x-0"
           } ${sidebarCollapsed ? "lg:w-[72px]" : "lg:w-64"}`}
@@ -129,7 +129,7 @@ export default function AppSidebar({
         <div className="flex flex-col h-full overflow-hidden">
           {/* Logo Brand */}
           <div
-            className={`h-16 border-b border-slate-200 flex items-center shrink-0 ${sidebarCollapsed ? "lg:justify-center lg:px-2 px-4" : "px-4"
+            className={`h-16 border-b border-slate-200 dark:border-slate-800 flex items-center shrink-0 ${sidebarCollapsed ? "lg:justify-center lg:px-2 px-4" : "px-4"
               }`}
           >
             <div className="flex items-center space-x-3 overflow-hidden">
@@ -145,10 +145,10 @@ export default function AppSidebar({
 
               {/* Brand Text (hidden when collapsed on desktop) */}
               <div className={`truncate ${sidebarCollapsed ? "lg:hidden block" : "block"}`}>
-                <h1 className="font-bold text-slate-900 tracking-tight text-lg leading-tight truncate">
+                <h1 className="font-bold text-slate-900 dark:text-white tracking-tight text-lg leading-tight truncate">
                   ARTDEVATA
                 </h1>
-                <p className="text-[11px] text-slate-400 font-medium tracking-wide uppercase truncate">
+                <p className="text-[11px] text-slate-400 dark:text-slate-400 font-medium tracking-wide uppercase truncate">
                   {portalSubtitle}
                 </p>
               </div>
@@ -165,17 +165,17 @@ export default function AppSidebar({
                 {/* Group Title or subtle separator when collapsed on desktop */}
                 {sidebarCollapsed ? (
                   <div className="hidden lg:block">
-                    {idx > 0 && <div className="h-px bg-slate-100 my-2 mx-1" />}
+                    {idx > 0 && <div className="h-px bg-slate-100 dark:bg-slate-800 my-2 mx-1" />}
                   </div>
                 ) : (
-                  <p className="text-[10px] font-bold tracking-wider text-slate-400 uppercase mb-2 px-2">
+                  <p className="text-[10px] font-bold tracking-wider text-slate-400 dark:text-slate-500 uppercase mb-2 px-2">
                     {group.group}
                   </p>
                 )}
 
                 {/* Always show group title on mobile drawer */}
                 {sidebarCollapsed && (
-                  <p className="text-[10px] font-bold tracking-wider text-slate-400 uppercase mb-2 px-2 lg:hidden">
+                  <p className="text-[10px] font-bold tracking-wider text-slate-400 dark:text-slate-500 uppercase mb-2 px-2 lg:hidden">
                     {group.group}
                   </p>
                 )}
@@ -194,8 +194,8 @@ export default function AppSidebar({
                             ? "lg:justify-center lg:p-2.5 lg:h-10 lg:w-10 lg:mx-auto px-3 py-2 justify-between"
                             : "px-3 py-2 justify-between"
                           } ${active
-                            ? "bg-slate-900 text-white shadow-xs"
-                            : "text-slate-600 hover:text-slate-900 hover:bg-slate-100/80"
+                            ? "bg-slate-900 dark:bg-emerald-600 text-white shadow-xs"
+                            : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/80 dark:hover:bg-slate-800/60"
                           }`}
                       >
                         <div
@@ -203,7 +203,7 @@ export default function AppSidebar({
                             }`}
                         >
                           <Icon
-                            className={`h-4 w-4 shrink-0 ${active ? "text-white" : "text-slate-400 group-hover:text-slate-700"
+                            className={`h-4 w-4 shrink-0 ${active ? "text-white" : "text-slate-400 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-200"
                               }`}
                           />
                           <span
@@ -230,14 +230,14 @@ export default function AppSidebar({
 
           {/* User Profile & Logout in Sidebar Footer */}
           <div
-            className={`border-t border-slate-200 bg-slate-50/70 shrink-0 ${sidebarCollapsed ? "p-2 lg:py-3 lg:px-1" : "p-3"
+            className={`border-t border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-950/60 shrink-0 ${sidebarCollapsed ? "p-2 lg:py-3 lg:px-1" : "p-3"
               }`}
           >
             {/* Compact Profile for Desktop Collapsed State */}
             {sidebarCollapsed && (
               <div className="hidden lg:flex flex-col items-center space-y-2.5">
                 <Avatar
-                  className="h-9 w-9 ring-2 ring-white shadow-2xs cursor-pointer"
+                  className="h-9 w-9 ring-2 ring-white dark:ring-slate-800 shadow-2xs cursor-pointer"
                   title={`${user?.name} (${user?.email})`}
                 >
                   <AvatarImage src={user?.avatar_url || user?.avatar} alt={user?.name || "User"} />
@@ -267,15 +267,15 @@ export default function AppSidebar({
                 }`}
             >
               <div className="flex items-center space-x-3 overflow-hidden min-w-0">
-                <Avatar className="h-9 w-9 shrink-0 ring-2 ring-white shadow-2xs">
+                <Avatar className="h-9 w-9 shrink-0 ring-2 ring-white dark:ring-slate-800 shadow-2xs">
                   <AvatarImage src={user?.avatar_url || user?.avatar} alt={user?.name || "User"} />
                   <AvatarFallback className="bg-slate-900 text-white text-xs font-bold">
                     {getInitials(user?.name)}
                   </AvatarFallback>
                 </Avatar>
                 <div className="truncate min-w-0">
-                  <p className="text-xs font-semibold text-slate-900 truncate">{user?.name || "User"}</p>
-                  <p className="text-[10px] text-slate-500 truncate">{user?.email || user?.specialty || "-"}</p>
+                  <p className="text-xs font-semibold text-slate-900 dark:text-white truncate">{user?.name || "User"}</p>
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">{user?.email || user?.specialty || "-"}</p>
                 </div>
               </div>
               <Button

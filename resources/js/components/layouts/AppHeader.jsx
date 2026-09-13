@@ -35,6 +35,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 const ROUTE_LABELS = {
   // Common & Admin
@@ -140,27 +141,28 @@ export default function AppHeader({
   }, [currentRoute, title, isPhotographer]);
 
   return (
-    <header className="sticky top-0 z-20 bg-white border-b border-slate-200 h-16 px-4 flex items-center justify-between shadow-2xs shrink-0">
+    <header className="sticky top-0 z-20 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 h-16 px-4 flex items-center justify-between shadow-2xs shrink-0 transition-colors">
       <div className="flex items-center space-x-3 min-w-0">
         <Button
           variant="ghost"
           size="icon"
           onClick={toggleSidebar}
           title={sidebarCollapsed ? "Perluas Sidebar" : "Kecilkan Sidebar"}
+          className="text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
         >
           {sidebarCollapsed ? (
-            <PanelLeftOpen className="h-4 w-4 hidden lg:block text-slate-600" />
+            <PanelLeftOpen className="h-4 w-4 hidden lg:block" />
           ) : (
-            <PanelLeftClose className="h-4 w-4 hidden lg:block text-slate-600" />
+            <PanelLeftClose className="h-4 w-4 hidden lg:block" />
           )}
           {sidebarOpen ? (
-            <X className="h-4 w-4 lg:hidden text-slate-600" />
+            <X className="h-4 w-4 lg:hidden" />
           ) : (
-            <Menu className="h-4 w-4 lg:hidden text-slate-600" />
+            <Menu className="h-4 w-4 lg:hidden" />
           )}
         </Button>
 
-        <div className="h-4 w-px bg-slate-200 hidden sm:block" />
+        <div className="h-4 w-px bg-slate-200 dark:bg-slate-800 hidden sm:block" />
 
         {/* Dynamic Desktop Breadcrumb */}
         <Breadcrumb className="hidden sm:flex">
@@ -171,25 +173,25 @@ export default function AppHeader({
                 <React.Fragment key={idx}>
                   <BreadcrumbItem>
                     {isLast ? (
-                      <BreadcrumbPage className="font-semibold text-slate-900 text-sm max-w-[200px] md:max-w-[300px] lg:max-w-[420px] truncate">
+                      <BreadcrumbPage className="font-semibold text-slate-900 dark:text-slate-100 text-sm max-w-[200px] md:max-w-[300px] lg:max-w-[420px] truncate">
                         {item.label}
                       </BreadcrumbPage>
                     ) : item.href ? (
                       <BreadcrumbLink asChild>
                         <Link
                           href={item.href}
-                          className="text-xs font-medium text-slate-500 hover:text-slate-900 transition-colors"
+                          className="text-xs font-medium text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100 transition-colors"
                         >
                           {item.label}
                         </Link>
                       </BreadcrumbLink>
                     ) : (
-                      <span className="text-xs font-medium text-slate-400">
+                      <span className="text-xs font-medium text-slate-400 dark:text-slate-500">
                         {item.label}
                       </span>
                     )}
                   </BreadcrumbItem>
-                  {!isLast && <BreadcrumbSeparator className="text-slate-300" />}
+                  {!isLast && <BreadcrumbSeparator className="text-slate-300 dark:text-slate-700" />}
                 </React.Fragment>
               );
             })}
@@ -198,37 +200,40 @@ export default function AppHeader({
 
         {/* Mobile Header Title */}
         <div className="flex items-center space-x-2 truncate sm:hidden">
-          <span className="font-bold text-slate-900 tracking-tight text-base truncate">
+          <span className="font-bold text-slate-900 dark:text-white tracking-tight text-base truncate">
             {title || (isPhotographer ? "Portal Fotografer" : "Dashboard Admin")}
           </span>
         </div>
       </div>
 
-      <div className="flex items-center space-x-3 sm:space-x-4 shrink-0">
+      <div className="flex items-center space-x-2 sm:space-x-3 shrink-0">
+        {/* Dark Mode Theme Toggle */}
+        <ThemeToggle />
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
-              className="flex items-center space-x-2.5 p-1 sm:px-2 sm:py-1.5 h-auto rounded-lg hover:bg-slate-100 transition-colors focus-visible:ring-1 focus-visible:ring-slate-300"
+              className="flex items-center space-x-2.5 p-1 sm:px-2 sm:py-1.5 h-auto rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors focus-visible:ring-1 focus-visible:ring-slate-300"
             >
-              <Avatar className="h-8 w-8 ring-2 ring-slate-100 shrink-0">
+              <Avatar className="h-8 w-8 ring-2 ring-slate-100 dark:ring-slate-800 shrink-0">
                 <AvatarImage src={user?.avatar_url || user?.avatar} alt={user?.name || "User"} />
                 <AvatarFallback className="bg-slate-900 text-white text-xs font-bold">
                   {getInitials(user?.name)}
                 </AvatarFallback>
               </Avatar>
               <div className="hidden md:block text-left">
-                <p className="text-xs font-semibold text-slate-900 leading-tight truncate max-w-[130px]">
+                <p className="text-xs font-semibold text-slate-900 dark:text-slate-100 leading-tight truncate max-w-[130px]">
                   {user?.name}
                 </p>
-                <span className="text-[10px] font-bold px-1.5 py-0.2 bg-slate-100 text-slate-700 rounded border border-slate-200">
+                <span className="text-[10px] font-bold px-1.5 py-0.2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded border border-slate-200 dark:border-slate-700">
                   {userBadge}
                 </span>
               </div>
-              <ChevronDown className="h-3.5 w-3.5 text-slate-400 hidden sm:block" />
+              <ChevronDown className="h-3.5 w-3.5 text-slate-400 dark:text-slate-500 hidden sm:block" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56 mt-1 shadow-lg p-1.5">
+          <DropdownMenuContent align="end" className="w-56 mt-1 shadow-lg p-1.5 bg-card dark:bg-slate-900 border-border dark:border-slate-800">
             <DropdownMenuLabel className="font-normal py-2 px-2">
               <div className="flex items-center space-x-2.5">
                 <Avatar className="h-8 w-8 shrink-0">
@@ -238,12 +243,12 @@ export default function AppHeader({
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col space-y-0.5 overflow-hidden min-w-0">
-                  <p className="text-sm font-semibold text-slate-900 leading-none truncate">{user?.name}</p>
-                  <p className="text-xs text-slate-500 leading-none truncate">{user?.email || (isPhotographer ? "Portal Fotografer" : "Administrator")}</p>
+                  <p className="text-sm font-semibold text-slate-900 dark:text-white leading-none truncate">{user?.name}</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 leading-none truncate">{user?.email || (isPhotographer ? "Portal Fotografer" : "Administrator")}</p>
                 </div>
               </div>
             </DropdownMenuLabel>
-            <DropdownMenuSeparator />
+            <DropdownMenuSeparator className="dark:bg-slate-800" />
 
             {/* Quick Navigation Items */}
             {isPhotographer ? (
@@ -251,18 +256,18 @@ export default function AppHeader({
                 <DropdownMenuItem asChild>
                   <Link
                     href="/photographer/gallery"
-                    className="flex items-center cursor-pointer text-xs font-medium text-slate-700 py-1.5"
+                    className="flex items-center cursor-pointer text-xs font-medium text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white py-1.5"
                   >
-                    <Camera className="mr-2 h-4 w-4 text-slate-500" />
+                    <Camera className="mr-2 h-4 w-4 text-slate-500 dark:text-slate-400" />
                     <span>Galeri Portofolio</span>
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link
                     href="/photographer/salary"
-                    className="flex items-center cursor-pointer text-xs font-medium text-slate-700 py-1.5"
+                    className="flex items-center cursor-pointer text-xs font-medium text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white py-1.5"
                   >
-                    <DollarSign className="mr-2 h-4 w-4 text-slate-500" />
+                    <DollarSign className="mr-2 h-4 w-4 text-slate-500 dark:text-slate-400" />
                     <span>Riwayat Gaji</span>
                   </Link>
                 </DropdownMenuItem>
@@ -272,24 +277,24 @@ export default function AppHeader({
                 <DropdownMenuItem asChild>
                   <Link
                     href="/admin/settings"
-                    className="flex items-center cursor-pointer text-xs font-medium text-slate-700 py-1.5"
+                    className="flex items-center cursor-pointer text-xs font-medium text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white py-1.5"
                   >
-                    <Settings className="mr-2 h-4 w-4 text-slate-500" />
+                    <Settings className="mr-2 h-4 w-4 text-slate-500 dark:text-slate-400" />
                     <span>Pengaturan Sistem</span>
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link
                     href="/admin/activity-logs"
-                    className="flex items-center cursor-pointer text-xs font-medium text-slate-700 py-1.5"
+                    className="flex items-center cursor-pointer text-xs font-medium text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white py-1.5"
                   >
-                    <History className="mr-2 h-4 w-4 text-slate-500" />
+                    <History className="mr-2 h-4 w-4 text-slate-500 dark:text-slate-400" />
                     <span>Log Aktivitas</span>
                   </Link>
                 </DropdownMenuItem>
               </>
             )}
-            <DropdownMenuSeparator />
+            <DropdownMenuSeparator className="dark:bg-slate-800" />
 
             <DropdownMenuItem asChild className="p-0 focus:bg-transparent">
               <Button

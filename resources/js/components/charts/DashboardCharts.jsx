@@ -57,27 +57,27 @@ export function RevenueTrendChart({ data = [] }) {
   const totalPeriodProfit = safeData.reduce((acc, curr) => acc + (curr.profit || 0), 0);
 
   return (
-    <Card className="border-slate-200 shadow-2xs">
+    <Card className="border-slate-200 dark:border-slate-800 shadow-2xs bg-card text-card-foreground">
       <CardHeader className="pb-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
           <div className="flex items-center gap-2">
-            <TrendingUp className="h-5 w-5 text-emerald-600" />
-            <CardTitle className="text-base font-bold text-slate-900">
+            <TrendingUp className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+            <CardTitle className="text-base font-bold text-slate-900 dark:text-slate-100">
               Tren Keuangan (6 Bulan Terakhir)
             </CardTitle>
           </div>
-          <CardDescription className="text-xs text-slate-500 mt-0.5">
+          <CardDescription className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
             Performa omset revenue, profit aktual, dan biaya operasional.
           </CardDescription>
         </div>
 
-        <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-lg self-start sm:self-auto">
+        <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-lg self-start sm:self-auto">
           <button
             type="button"
             onClick={() => setActiveTab("all")}
             className={`px-2.5 py-1 text-xs font-semibold rounded-md transition-all ${activeTab === "all"
-                ? "bg-white text-slate-900 shadow-xs"
-                : "text-slate-600 hover:text-slate-900"
+                ? "bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-xs"
+                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
               }`}
           >
             Semua
@@ -87,7 +87,7 @@ export function RevenueTrendChart({ data = [] }) {
             onClick={() => setActiveTab("revenue")}
             className={`px-2.5 py-1 text-xs font-semibold rounded-md transition-all ${activeTab === "revenue"
                 ? "bg-emerald-600 text-white shadow-xs"
-                : "text-slate-600 hover:text-slate-900"
+                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
               }`}
           >
             Revenue
@@ -97,7 +97,7 @@ export function RevenueTrendChart({ data = [] }) {
             onClick={() => setActiveTab("profit")}
             className={`px-2.5 py-1 text-xs font-semibold rounded-md transition-all ${activeTab === "profit"
                 ? "bg-indigo-600 text-white shadow-xs"
-                : "text-slate-600 hover:text-slate-900"
+                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
               }`}
           >
             Profit
@@ -109,13 +109,13 @@ export function RevenueTrendChart({ data = [] }) {
         <div className="flex flex-wrap items-center gap-4 mb-3 text-xs">
           <div className="flex items-center gap-1.5">
             <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
-            <span className="text-slate-500">Total Omset:</span>
-            <span className="font-bold text-slate-900">{formatRupiah(totalPeriodRevenue)}</span>
+            <span className="text-slate-500 dark:text-slate-400">Total Omset:</span>
+            <span className="font-bold text-slate-900 dark:text-white">{formatRupiah(totalPeriodRevenue)}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="h-2.5 w-2.5 rounded-full bg-indigo-500" />
-            <span className="text-slate-500">Total Profit:</span>
-            <span className="font-bold text-indigo-700">{formatRupiah(totalPeriodProfit)}</span>
+            <span className="text-slate-500 dark:text-slate-400">Total Profit:</span>
+            <span className="font-bold text-indigo-700 dark:text-indigo-400">{formatRupiah(totalPeriodProfit)}</span>
           </div>
         </div>
 
@@ -135,7 +135,7 @@ export function RevenueTrendChart({ data = [] }) {
                 <stop offset="95%" stopColor="#f59e0b" stopOpacity={0.0} />
               </linearGradient>
             </defs>
-            <CartesianGrid vertical={false} strokeDasharray="3 3" className="stroke-slate-200/80" />
+            <CartesianGrid vertical={false} strokeDasharray="3 3" className="stroke-slate-200/80 dark:stroke-slate-800/80" />
             <XAxis
               dataKey="month"
               tickLine={false}
@@ -226,16 +226,16 @@ export function PackagePerformanceBarChart({ data = [] }) {
   }));
 
   return (
-    <Card className="border-slate-200 shadow-2xs">
+    <Card className="border-slate-200 dark:border-slate-800 shadow-2xs bg-card text-card-foreground">
       <CardHeader className="pb-3 flex flex-row items-center justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <BarChart3 className="h-5 w-5 text-indigo-600" />
-            <CardTitle className="text-base font-bold text-slate-900">
+            <BarChart3 className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
+            <CardTitle className="text-base font-bold text-slate-900 dark:text-slate-100">
               Performa Paket Terlaris
             </CardTitle>
           </div>
-          <CardDescription className="text-xs text-slate-500 mt-0.5">
+          <CardDescription className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
             Top 5 paket foto dengan kontribusi pendapatan tertinggi
           </CardDescription>
         </div>
@@ -243,7 +243,7 @@ export function PackagePerformanceBarChart({ data = [] }) {
 
       <CardContent className="pt-1">
         {chartData.length === 0 ? (
-          <div className="text-center py-8 text-xs text-slate-400">
+          <div className="text-center py-8 text-xs text-slate-400 dark:text-slate-500">
             Belum ada data transaksi paket foto selesai.
           </div>
         ) : (
@@ -253,7 +253,7 @@ export function PackagePerformanceBarChart({ data = [] }) {
               layout="vertical"
               margin={{ top: 5, right: 30, left: 10, bottom: 5 }}
             >
-              <CartesianGrid horizontal={false} strokeDasharray="3 3" className="stroke-slate-200/80" />
+              <CartesianGrid horizontal={false} strokeDasharray="3 3" className="stroke-slate-200/80 dark:stroke-slate-800/80" />
               <XAxis
                 type="number"
                 tickLine={false}
@@ -268,16 +268,16 @@ export function PackagePerformanceBarChart({ data = [] }) {
                 axisLine={false}
                 fontSize={11}
                 width={120}
-                className="font-medium text-slate-800"
+                className="font-medium text-slate-800 dark:text-slate-200"
               />
               <ChartTooltip
                 content={
                   <ChartTooltipContent
                     formatter={(value, _, item) => (
                       <div className="space-y-1">
-                        <p className="font-bold text-slate-900">{item.payload?.fullName}</p>
-                        <p className="text-indigo-600 font-semibold">{formatRupiah(value)}</p>
-                        <p className="text-xs text-slate-500">
+                        <p className="font-bold text-slate-900 dark:text-white">{item.payload?.fullName}</p>
+                        <p className="text-indigo-600 dark:text-indigo-400 font-semibold">{formatRupiah(value)}</p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">
                           {item.payload?.projects_count} project diselesaikan
                         </p>
                       </div>
@@ -330,13 +330,13 @@ export function ProjectStatusDonutChart({ statusCounts = {}, title = "Distribusi
   );
 
   return (
-    <Card className="border-slate-200 shadow-2xs">
+    <Card className="border-slate-200 dark:border-slate-800 shadow-2xs bg-card text-card-foreground">
       <CardHeader className="pb-2">
         <div className="flex items-center gap-2">
-          <PieChart className="h-5 w-5 text-slate-700" />
+          <PieChart className="h-5 w-5 text-slate-700 dark:text-slate-300" />
           <div>
-            <CardTitle className="text-base font-bold text-slate-900">{title}</CardTitle>
-            <CardDescription className="text-xs text-slate-500">
+            <CardTitle className="text-base font-bold text-slate-900 dark:text-slate-100">{title}</CardTitle>
+            <CardDescription className="text-xs text-slate-500 dark:text-slate-400">
               Total {total} project tercatat
             </CardDescription>
           </div>
@@ -345,7 +345,7 @@ export function ProjectStatusDonutChart({ statusCounts = {}, title = "Distribusi
 
       <CardContent className="pt-2">
         {total === 0 ? (
-          <div className="text-center py-12 text-xs text-slate-400">
+          <div className="text-center py-12 text-xs text-slate-400 dark:text-slate-500">
             Belum ada data status project.
           </div>
         ) : (
@@ -357,8 +357,8 @@ export function ProjectStatusDonutChart({ statusCounts = {}, title = "Distribusi
                     <ChartTooltipContent
                       formatter={(val, name) => (
                         <div className="flex items-center justify-between gap-4">
-                          <span className="text-slate-600">{name}:</span>
-                          <span className="font-bold text-slate-900">{val} project</span>
+                          <span className="text-slate-600 dark:text-slate-400">{name}:</span>
+                          <span className="font-bold text-slate-900 dark:text-white">{val} project</span>
                         </div>
                       )}
                     />
@@ -384,16 +384,16 @@ export function ProjectStatusDonutChart({ statusCounts = {}, title = "Distribusi
               {chartData.map((item) => (
                 <div
                   key={item.status}
-                  className="flex items-center justify-between p-1.5 px-2 rounded-md bg-slate-50 border border-slate-100"
+                  className="flex items-center justify-between p-1.5 px-2 rounded-md bg-slate-50 dark:bg-slate-900/60 border border-slate-100 dark:border-slate-800"
                 >
                   <div className="flex items-center gap-1.5 truncate">
                     <span
                       className="h-2.5 w-2.5 rounded-full shrink-0"
                       style={{ backgroundColor: item.fill }}
                     />
-                    <span className="font-medium text-slate-700 truncate">{item.name}</span>
+                    <span className="font-medium text-slate-700 dark:text-slate-300 truncate">{item.name}</span>
                   </div>
-                  <span className="font-bold text-slate-900 shrink-0">{item.count}</span>
+                  <span className="font-bold text-slate-900 dark:text-white shrink-0">{item.count}</span>
                 </div>
               ))}
             </div>
@@ -431,16 +431,16 @@ export function PhotographerEarningsChart({ data = [] }) {
   const totalEarnings = safeData.reduce((acc, c) => acc + (c.paid || 0) + (c.unpaid || 0), 0);
 
   return (
-    <Card className="border-slate-200 shadow-2xs">
+    <Card className="border-slate-200 dark:border-slate-800 shadow-2xs bg-card text-card-foreground">
       <CardHeader className="pb-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <div>
           <div className="flex items-center gap-2">
-            <DollarSign className="h-5 w-5 text-emerald-600" />
-            <CardTitle className="text-base font-bold text-slate-900">
+            <DollarSign className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+            <CardTitle className="text-base font-bold text-slate-900 dark:text-slate-100">
               Tren Penghasilan & Gaji (6 Bulan)
             </CardTitle>
           </div>
-          <CardDescription className="text-xs text-slate-500 mt-0.5">
+          <CardDescription className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
             Perbandingan gaji yang sudah dibayar vs menunggu pencairan
           </CardDescription>
         </div>
@@ -448,11 +448,11 @@ export function PhotographerEarningsChart({ data = [] }) {
         <div className="flex items-center gap-3 text-xs">
           <div className="flex items-center gap-1.5">
             <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
-            <span className="text-slate-600 font-medium">Dibayar</span>
+            <span className="text-slate-600 dark:text-slate-400 font-medium">Dibayar</span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="h-2.5 w-2.5 rounded-full bg-amber-500" />
-            <span className="text-slate-600 font-medium">Menunggu</span>
+            <span className="text-slate-600 dark:text-slate-400 font-medium">Menunggu</span>
           </div>
         </div>
       </CardHeader>
@@ -460,14 +460,14 @@ export function PhotographerEarningsChart({ data = [] }) {
       <CardContent className="pt-2">
         <ChartContainer config={chartConfig} className="h-56 w-full aspect-auto">
           <BarChart data={safeData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-            <CartesianGrid vertical={false} strokeDasharray="3 3" className="stroke-slate-200/80" />
+            <CartesianGrid vertical={false} strokeDasharray="3 3" className="stroke-slate-200/80 dark:stroke-slate-800/80" />
             <XAxis
               dataKey="month"
               tickLine={false}
               axisLine={false}
               tickMargin={8}
               fontSize={11}
-              className="text-slate-500"
+              className="text-slate-500 dark:text-slate-400"
             />
             <YAxis
               tickLine={false}
@@ -475,17 +475,17 @@ export function PhotographerEarningsChart({ data = [] }) {
               tickMargin={8}
               fontSize={10}
               tickFormatter={(v) => `${(v / 1000000).toFixed(1)}jt`}
-              className="text-slate-500"
+              className="text-slate-500 dark:text-slate-400"
             />
             <ChartTooltip
               content={
                 <ChartTooltipContent
                   formatter={(value, name) => (
                     <div className="flex items-center justify-between gap-4 w-full">
-                      <span className="text-slate-500 font-medium">
+                      <span className="text-slate-500 dark:text-slate-400 font-medium">
                         {chartConfig[name]?.label || name}:
                       </span>
-                      <span className="font-bold text-slate-900">{formatRupiah(value)}</span>
+                      <span className="font-bold text-slate-900 dark:text-white">{formatRupiah(value)}</span>
                     </div>
                   )}
                 />
@@ -508,9 +508,9 @@ export function PhotographerEarningsChart({ data = [] }) {
           </BarChart>
         </ChartContainer>
 
-        <div className="flex items-center justify-between pt-3 text-xs text-slate-500 border-t border-slate-100 mt-2">
+        <div className="flex items-center justify-between pt-3 text-xs text-slate-500 dark:text-slate-400 border-t border-slate-100 dark:border-slate-800 mt-2">
           <span>Akumulasi Total 6 Bulan:</span>
-          <span className="font-bold text-slate-900 text-sm">{formatRupiah(totalEarnings)}</span>
+          <span className="font-bold text-slate-900 dark:text-white text-sm">{formatRupiah(totalEarnings)}</span>
         </div>
       </CardContent>
     </Card>
