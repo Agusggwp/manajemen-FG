@@ -64,8 +64,8 @@ export default function ForgotPassword() {
           </div>
 
           {recentlySuccessful && (
-            <div className="mb-6 p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-start space-x-3">
-              <CheckCircle2 className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
+            <div className="mb-6 p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/50 text-emerald-800 dark:text-emerald-300 text-xs flex items-start space-x-3">
+              <CheckCircle2 className="h-5 w-5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
               <div>
                 <span className="font-bold block text-sm">Tautan Terkirim!</span>
                 Silakan periksa email Anda (termasuk folder spam) untuk melanjutkan pembuatan password baru.
@@ -98,7 +98,7 @@ export default function ForgotPassword() {
 
             <Button
               type="submit"
-              className="w-full gap-2 font-semibold bg-slate-900 hover:bg-slate-800 flex items-center justify-center h-10 shadow-xs"
+              className="w-full gap-2 font-semibold flex items-center justify-center h-10 shadow-xs"
               disabled={processing}
             >
               {processing ? (
@@ -120,7 +120,7 @@ export default function ForgotPassword() {
             <Separator className="mb-4" />
             <Link
               href="/login"
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 transition-colors"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               <span>Kembali ke Halaman Login</span>

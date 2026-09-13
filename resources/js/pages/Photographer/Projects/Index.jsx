@@ -15,10 +15,10 @@ export default function Index({ projects = { data: [] } }) {
       <Head title="Project Saya" />
       <div className="space-y-6">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
             Project Ditugaskan
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
             Daftar seluruh project pemotretan yang ditugaskan kepada Anda.
           </p>
         </div>
@@ -26,19 +26,19 @@ export default function Index({ projects = { data: [] } }) {
         {isNavigating ? (
           <CardGridSkeleton count={4} />
         ) : (!projects?.data || projects.data.length === 0) ? (
-          <div className="text-center py-12 bg-white rounded-xl border border-slate-200 text-slate-400">
+          <div className="text-center py-12 bg-card dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-400 dark:text-slate-500">
             Belum ada project yang ditugaskan.
           </div>
         ) : (
           <div className="space-y-3">
             {(projects?.data || []).map((prj) => (
-              <Card key={prj.id} className="border-slate-200 hover:shadow-xs transition-shadow">
+              <Card key={prj.id} className="border-slate-200 dark:border-slate-800 bg-card dark:bg-slate-900 hover:shadow-xs transition-shadow">
                 <CardContent className="p-3.5 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
                   <div className="space-y-1 flex-1 min-w-0">
-                    <span className="font-mono text-xs text-slate-400 font-bold block">{prj.project_code}</span>
-                    <h3 className="font-bold text-slate-900 text-sm sm:text-base truncate">{prj.project_name}</h3>
-                    <div className="text-xs text-slate-600 flex flex-wrap items-center gap-x-2 gap-y-1">
-                      <span>Pelanggan: <strong>{prj.customer?.name}</strong></span>
+                    <span className="font-mono text-xs text-slate-400 dark:text-slate-500 font-bold block">{prj.project_code}</span>
+                    <h3 className="font-bold text-slate-900 dark:text-white text-sm sm:text-base truncate">{prj.project_name}</h3>
+                    <div className="text-xs text-slate-600 dark:text-slate-300 flex flex-wrap items-center gap-x-2 gap-y-1">
+                      <span>Pelanggan: <strong className="text-slate-900 dark:text-white">{prj.customer?.name}</strong></span>
                       <span>•</span>
                       <span>Paket: {prj.package_name}</span>
                     </div>
@@ -55,7 +55,7 @@ export default function Index({ projects = { data: [] } }) {
                       {getStatusLabel(prj.status)}
                     </Badge>
                     <Link href={`/photographer/projects/${prj.id}`} className="w-full sm:w-auto">
-                      <Button size="sm" variant="outline" className="w-full sm:w-auto justify-center font-semibold gap-1.5">
+                      <Button size="sm" variant="outline" className="w-full sm:w-auto justify-center font-semibold gap-1.5 bg-card dark:bg-slate-900 border-slate-200 dark:border-slate-800">
                         <Eye className="h-3.5 w-3.5" /> Detail Project
                       </Button>
                     </Link>

@@ -89,58 +89,58 @@ export default function Create({ schedule, type, existingProof }) {
       <div className="space-y-6 max-w-xl mx-auto">
         <div className="flex items-center space-x-3">
           <Link href={`/photographer/schedules/${schedule.id}`}>
-            <Button variant="outline" size="icon" disabled={form.processing}>
+            <Button variant="outline" size="icon" disabled={form.processing} className="bg-card dark:bg-slate-900 border-slate-200 dark:border-slate-800">
               <ArrowLeft className="h-4 w-4" />
             </Button>
           </Link>
           <div>
-            <h1 className="text-xl font-bold text-slate-900">
+            <h1 className="text-xl font-bold text-slate-900 dark:text-white">
               Kirim Bukti Foto {type} Pemotretan
             </h1>
-            <p className="text-xs text-slate-500">{schedule.customer?.name} - {schedule.location_name}</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">{schedule.customer?.name} - {schedule.location_name}</p>
           </div>
         </div>
 
-        <Card className="border-slate-200">
-          <CardHeader className="bg-slate-50 border-b border-slate-100 py-3">
-            <CardTitle className="text-sm font-semibold flex items-center justify-between">
+        <Card className="border-slate-200 dark:border-slate-800 bg-card dark:bg-slate-900">
+          <CardHeader className="bg-slate-50 dark:bg-slate-950/60 border-b border-slate-100 dark:border-slate-800 py-3">
+            <CardTitle className="text-sm font-semibold flex items-center justify-between text-slate-900 dark:text-white">
               <span>Form Bukti Foto {type}</span>
-              <span className="font-mono text-xs px-2 py-0.5 bg-slate-900 text-white rounded uppercase">
+              <span className="font-mono text-xs px-2 py-0.5 bg-slate-900 dark:bg-slate-800 text-white rounded uppercase border border-transparent dark:border-slate-700">
                 {type} PROOF
               </span>
             </CardTitle>
           </CardHeader>
           <CardContent className="pt-5 space-y-5">
             {/* GPS Status Card */}
-            <div className="p-3.5 bg-slate-100 rounded-xl border border-slate-200 space-y-2 text-xs">
+            <div className="p-3.5 bg-slate-100 dark:bg-slate-950/60 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2 text-xs">
               <div className="flex items-center justify-between">
-                <span className="font-bold text-slate-900 flex items-center gap-1.5">
-                  <Navigation className="h-4 w-4 text-rose-600 animate-pulse" /> Deteksi GPS Lokasi
+                <span className="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                  <Navigation className="h-4 w-4 text-rose-600 dark:text-rose-400 animate-pulse" /> Deteksi GPS Lokasi
                 </span>
-                <Button type="button" size="xs" variant="outline" onClick={getGpsPosition} disabled={gpsLoading || form.processing}>
-                  <RefreshCw className={gpsLoading ? "animate-spin" : ""} />
+                <Button type="button" size="xs" variant="outline" onClick={getGpsPosition} disabled={gpsLoading || form.processing} className="bg-card dark:bg-slate-900 border-slate-200 dark:border-slate-800">
+                  <RefreshCw className={`h-3.5 w-3.5 mr-1.5 ${gpsLoading ? "animate-spin" : ""}`} />
                   {gpsLoading ? "Mendeteksi..." : "Muat Ulang GPS"}
                 </Button>
               </div>
 
               {gpsError ? (
-                <div className="p-2 bg-red-50 text-red-700 rounded border border-red-200">
+                <div className="p-2 bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-400 rounded border border-red-200 dark:border-red-900/40">
                   {gpsError}
                 </div>
               ) : gpsLoading ? (
-                <p className="text-slate-500 italic">Mencari sinyal satelit GPS ponsel Anda...</p>
+                <p className="text-slate-500 dark:text-slate-400 italic">Mencari sinyal satelit GPS ponsel Anda...</p>
               ) : (
-                <div className="grid grid-cols-3 gap-2 font-mono text-[11px] text-slate-700">
+                <div className="grid grid-cols-3 gap-2 font-mono text-[11px] text-slate-700 dark:text-slate-300">
                   <div>
-                    <span className="text-slate-400 block text-[10px]">LATITUDE:</span>
+                    <span className="text-slate-400 dark:text-slate-500 block text-[10px]">LATITUDE:</span>
                     <strong>{form.data.latitude?.toFixed(6)}</strong>
                   </div>
                   <div>
-                    <span className="text-slate-400 block text-[10px]">LONGITUDE:</span>
+                    <span className="text-slate-400 dark:text-slate-500 block text-[10px]">LONGITUDE:</span>
                     <strong>{form.data.longitude?.toFixed(6)}</strong>
                   </div>
                   <div>
-                    <span className="text-slate-400 block text-[10px]">AKURASI:</span>
+                    <span className="text-slate-400 dark:text-slate-500 block text-[10px]">AKURASI:</span>
                     <strong>±{form.data.accuracy?.toFixed(1)}m</strong>
                   </div>
                 </div>
@@ -150,8 +150,8 @@ export default function Create({ schedule, type, existingProof }) {
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Photo Upload / Camera Input */}
               <div className="space-y-2">
-                <Label>Ambil / Unggah Foto Bukti Pemotretan</Label>
-                <div className="border-2 border-dashed border-slate-300 rounded-xl p-4 text-center bg-slate-50 hover:bg-slate-100/50 transition-colors relative cursor-pointer">
+                <Label className="text-slate-900 dark:text-white">Ambil / Unggah Foto Bukti Pemotretan</Label>
+                <div className="border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl p-4 text-center bg-slate-50 dark:bg-slate-950/40 hover:bg-slate-100/50 dark:hover:bg-slate-950/70 transition-colors relative cursor-pointer">
                   {previewUrl ? (
                     <div className="space-y-2">
                       <img
@@ -159,15 +159,15 @@ export default function Create({ schedule, type, existingProof }) {
                         alt="Preview Proof"
                         className="max-h-64 mx-auto rounded-lg object-contain shadow-xs"
                       />
-                      <p className="text-xs text-slate-500">Ketuk untuk mengganti foto</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400">Ketuk untuk mengganti foto</p>
                     </div>
                   ) : (
                     <div className="py-8 space-y-2">
-                      <div className="w-12 h-12 rounded-full bg-slate-200 flex items-center justify-center mx-auto text-slate-600">
+                      <div className="w-12 h-12 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center mx-auto text-slate-600 dark:text-slate-300">
                         <Camera className="h-6 w-6" />
                       </div>
-                      <p className="text-sm font-semibold text-slate-700">Ambil Foto Langsung dari Kamera</p>
-                      <p className="text-xs text-slate-400">Pastikan GPS aktif & lokasi sesuai</p>
+                      <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">Ambil Foto Langsung dari Kamera</p>
+                      <p className="text-xs text-slate-400 dark:text-slate-500">Pastikan GPS aktif & lokasi sesuai</p>
                     </div>
                   )}
 
@@ -182,7 +182,7 @@ export default function Create({ schedule, type, existingProof }) {
                   />
                 </div>
                 {form.errors.photo && (
-                  <p className="text-xs text-red-600 font-medium">{form.errors.photo}</p>
+                  <p className="text-xs text-red-600 dark:text-red-400 font-medium">{form.errors.photo}</p>
                 )}
               </div>
 
@@ -191,7 +191,7 @@ export default function Create({ schedule, type, existingProof }) {
                 className="w-full font-bold"
                 disabled={form.processing || gpsLoading}
               >
-                {form.processing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload />}
+                {form.processing ? <Loader2 className="h-4 w-4 animate-spin mr-1.5" /> : <Upload className="h-4 w-4 mr-1.5" />}
                 <span>{form.processing ? "Mengirim..." : `KIRIM BUKTI FOTO ${type}`}</span>
               </Button>
             </form>
