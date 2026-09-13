@@ -1,5 +1,5 @@
 import React from "react";
-import { formatDate, formatRupiah } from "@/lib/utils";
+import { formatDate, formatRupiah, getStatusLabel } from "@/lib/utils";
 import { Head, Link } from "@inertiajs/react";
 import { Calendar, FolderKanban, Clock, CheckCircle2, DollarSign, Camera, MapPin, ArrowRight } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -174,8 +174,14 @@ export default function Dashboard({
                       <Badge variant="outline" className="text-[10px] bg-white">
                         {schedule.package?.name || "Paket Foto"}
                       </Badge>
-                      <Badge className="text-[10px]">
-                        {schedule.status}
+                      <Badge className="text-[10px]" variant={
+                        schedule.status === "COMPLETED"  ? "success"     :
+                        schedule.status === "SHOOTING"   ? "warning"     :
+                        schedule.status === "SCHEDULED"  ? "info"        :
+                        schedule.status === "CANCELLED"  ? "destructive" :
+                        "secondary"
+                      }>
+                        {getStatusLabel(schedule.status)}
                       </Badge>
                     </div>
                     <div className="flex flex-wrap items-center text-[11px] text-slate-500 gap-x-3 gap-y-1">

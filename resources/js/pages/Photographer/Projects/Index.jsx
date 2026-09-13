@@ -1,5 +1,5 @@
 import React from "react";
-import { formatDate } from "@/lib/utils";
+import { formatDate, getStatusLabel } from "@/lib/utils";
 import { Head, Link } from "@inertiajs/react";
 import { FolderKanban, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -45,8 +45,14 @@ export default function Index({ projects = { data: [] } }) {
                   </div>
 
                   <div className="flex items-center space-x-3 justify-between sm:justify-end">
-                    <Badge variant={prj.status === "COMPLETED" ? "success" : "warning"}>
-                      {prj.status}
+                    <Badge variant={
+                      prj.status === "COMPLETED"  ? "success"     :
+                      prj.status === "SHOOTING"   ? "warning"     :
+                      prj.status === "SCHEDULED"  ? "info"        :
+                      prj.status === "CANCELLED"  ? "destructive" :
+                      "secondary"
+                    }>
+                      {getStatusLabel(prj.status)}
                     </Badge>
                     <Link href={`/photographer/projects/${prj.id}`}>
                       <Button size="sm" variant="outline">

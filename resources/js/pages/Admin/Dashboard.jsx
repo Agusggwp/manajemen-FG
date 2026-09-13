@@ -1,5 +1,5 @@
 import React from "react";
-import { formatRupiah, formatDate } from "@/lib/utils";
+import { formatDate, formatRupiah, getStatusLabel } from "@/lib/utils";
 import { Head, Link } from "@inertiajs/react";
 import {
   Calendar,
@@ -296,7 +296,7 @@ export default function Dashboard({
                               : "secondary"
                           }
                         >
-                          {schedule.status}
+                          {getStatusLabel(schedule.status)}
                         </Badge>
                       </TableCell>
                     </TableRow>

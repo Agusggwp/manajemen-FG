@@ -1,5 +1,5 @@
 import React from "react";
-import { formatDate } from "@/lib/utils";
+import { formatDate, getStatusLabel } from "@/lib/utils";
 import { Head, Link } from "@inertiajs/react";
 import { ArrowLeft, MapPin, Clock, Camera, CheckCircle2, AlertCircle, PlayCircle, StopCircle, Lock } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -42,7 +42,7 @@ export default function Show({ schedule }) {
                 <span className="font-bold text-xs uppercase text-slate-700">1. Bukti Awal (START)</span>
                 {startProof ? (
                   <Badge variant={startProof.status === "START_VALID" ? "success" : "warning"}>
-                    {startProof.status}
+                    {getStatusLabel(startProof.status)}
                   </Badge>
                 ) : (
                   <Badge variant="secondary">Belum Dikirim</Badge>
@@ -106,7 +106,7 @@ export default function Show({ schedule }) {
                 <span className="font-bold text-xs uppercase text-slate-700">2. Bukti Selesai (END)</span>
                 {endProof ? (
                   <Badge variant={endProof.status === "END_VALID" ? "success" : "warning"}>
-                    {endProof.status}
+                    {getStatusLabel(endProof.status)}
                   </Badge>
                 ) : (
                   <Badge variant="secondary">Belum Dikirim</Badge>

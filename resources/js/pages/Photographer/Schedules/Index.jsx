@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { formatDate } from "@/lib/utils";
+import { formatDate, getStatusLabel } from "@/lib/utils";
 import { Head, Link, router } from "@inertiajs/react";
 import { Calendar, MapPin, Clock, Camera, Eye } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -72,14 +73,20 @@ export default function Index({ schedules = { data: [] }, filters = {} }) {
                     <div className="flex items-center space-x-2">
                       <span className="font-bold text-slate-900 text-base">{sch.customer?.name}</span>
                       <Badge variant="outline">{sch.photo_package?.name}</Badge>
-                      <Badge variant={sch.status === "COMPLETED" ? "success" : "warning"}>
-                        {sch.status}
+                      <Badge variant={
+                        sch.status === "COMPLETED"  ? "success"     :
+                        sch.status === "SHOOTING"   ? "warning"     :
+                        sch.status === "SCHEDULED"  ? "info"        :
+                        sch.status === "CANCELLED"  ? "destructive" :
+                        "secondary"
+                      }>
+                        {getStatusLabel(sch.status)}
                       </Badge>
                     </div>
 
                     <div className="text-xs text-slate-600 flex items-center space-x-3">
-                      <span>📅 {formatDate(sch.date)}</span>
-                      <span>⏰ {sch.start_time?.substring(0, 5)} - {sch.end_time?.substring(0, 5)}</span>
+                      <span className="flex items-center gap-1"><Calendar className="h-3.5 w-3.5 text-slate-400" /> {formatDate(sch.date)}</span>
+                      <span className="flex items-center gap-1"><Clock className="h-3.5 w-3.5 text-slate-400" /> {sch.start_time?.substring(0, 5)} - {sch.end_time?.substring(0, 5)}</span>
                     </div>
 
                     <div className="text-xs text-slate-800 font-semibold flex items-center gap-1">
