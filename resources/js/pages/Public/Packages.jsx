@@ -14,6 +14,7 @@ import FeaturesSection from "./components/FeaturesSection";
 import FaqSection from "./components/FaqSection";
 import FooterSection from "./components/FooterSection";
 import FloatingActions from "./components/FloatingActions";
+import Galleries from "@/components/Galleries";
 
 export default function Packages({ packages, categories, settings, auth }) {
   const safePackages = Array.isArray(packages) ? packages : [];
@@ -222,6 +223,9 @@ export default function Packages({ packages, categories, settings, auth }) {
           </div>
         )}
       </section>
+
+      {/* GALERI PORTOFOLIO & PERLENGKAPAN STUDIO */}
+      <Galleries isDarkTheme={isDarkTheme} />
 
       {/* KEUNGGULAN SECTION */}
       <FeaturesSection isDarkTheme={isDarkTheme} />
