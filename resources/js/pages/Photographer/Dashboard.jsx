@@ -141,20 +141,20 @@ export default function Dashboard({
 
         {/* Assigned Upcoming Schedules */}
         <Card className="border-slate-200 shadow-2xs">
-          <CardHeader className="p-4 sm:p-5 border-b border-slate-100 flex flex-row items-center justify-between">
-            <div>
-              <CardTitle className="text-sm sm:text-base font-bold text-slate-900">
+          <CardHeader className="p-4 sm:p-5 border-b border-slate-100 flex flex-row items-center justify-between gap-2">
+            <div className="min-w-0 flex-1">
+              <CardTitle className="text-sm sm:text-base font-bold text-slate-900 truncate">
                 Jadwal Pemotretan Mendatang
               </CardTitle>
-              <p className="text-xs text-slate-500">Daftar penugasan foto Anda</p>
+              <p className="text-xs text-slate-500 truncate">Daftar penugasan foto Anda</p>
             </div>
-            <Link href="/photographer/schedules">
-              <Button variant="ghost" size="sm">
-                Semua Jadwal <ArrowRight />
+            <Link href="/photographer/schedules" className="shrink-0">
+              <Button variant="ghost" size="sm" className="text-xs h-8 px-2.5">
+                Semua Jadwal <ArrowRight className="h-3.5 w-3.5 ml-1" />
               </Button>
             </Link>
           </CardHeader>
-          <CardContent className="p-4 sm:p-5 space-y-3">
+          <CardContent className="p-3 sm:p-5 space-y-3">
             {safeSchedules.length === 0 ? (
               <div className="text-center py-8">
                 <Calendar className="h-8 w-8 text-slate-300 mx-auto mb-2" />
@@ -164,17 +164,17 @@ export default function Dashboard({
               safeSchedules.map((schedule) => (
                 <div
                   key={schedule.id}
-                  className="p-3 sm:p-4 rounded-lg bg-slate-50 border border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+                  className="p-3 sm:p-4 rounded-xl bg-slate-50 border border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
                 >
-                  <div className="space-y-1">
-                    <div className="flex items-center space-x-2">
-                      <p className="text-xs font-bold text-slate-900">
+                  <div className="space-y-1.5 flex-1 min-w-0">
+                    <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                      <p className="text-sm font-bold text-slate-900 mr-1">
                         {schedule.customer?.name || "Pelanggan"}
                       </p>
-                      <Badge variant="outline" className="text-[10px] bg-white">
-                        {schedule.package?.name || "Paket Foto"}
+                      <Badge variant="outline" className="text-[10px] bg-white whitespace-nowrap py-0 px-2 h-5">
+                        {schedule.photo_package?.name || schedule.photoPackage?.name || schedule.package?.name || "Paket Foto"}
                       </Badge>
-                      <Badge className="text-[10px]" variant={
+                      <Badge className="text-[10px] whitespace-nowrap py-0 px-2 h-5" variant={
                         schedule.status === "COMPLETED"  ? "success"     :
                         schedule.status === "SHOOTING"   ? "warning"     :
                         schedule.status === "SCHEDULED"  ? "info"        :
@@ -184,28 +184,30 @@ export default function Dashboard({
                         {getStatusLabel(schedule.status)}
                       </Badge>
                     </div>
-                    <div className="flex flex-wrap items-center text-[11px] text-slate-500 gap-x-3 gap-y-1">
+                    <div className="flex flex-wrap items-center text-[11px] text-slate-500 gap-x-3 gap-y-1 pt-0.5">
                       <span className="flex items-center">
-                        <Calendar className="h-3.5 w-3.5 mr-1 text-slate-400" />
-                        {formatDate(schedule.shooting_date)}
+                        <Calendar className="h-3.5 w-3.5 mr-1 text-slate-400 shrink-0" />
+                        {formatDate(schedule.date || schedule.shooting_date)}
                       </span>
                       <span className="flex items-center">
-                        <Clock className="h-3.5 w-3.5 mr-1 text-slate-400" />
-                        {schedule.shooting_time?.substring(0, 5) || "-"}
+                        <Clock className="h-3.5 w-3.5 mr-1 text-slate-400 shrink-0" />
+                        {schedule.start_time
+                          ? `${schedule.start_time.substring(0, 5)}${schedule.end_time ? ` - ${schedule.end_time.substring(0, 5)}` : ''}`
+                          : (schedule.shooting_time?.substring(0, 5) || "-")}
                       </span>
-                      {schedule.location && (
-                        <span className="flex items-center">
-                          <MapPin className="h-3.5 w-3.5 mr-1 text-slate-400" />
-                          {schedule.location}
+                      {(schedule.location_name || schedule.location_address || schedule.location) && (
+                        <span className="flex items-center truncate">
+                          <MapPin className="h-3.5 w-3.5 mr-1 text-slate-400 shrink-0" />
+                          <span className="truncate">{schedule.location_name || schedule.location_address || schedule.location}</span>
                         </span>
                       )}
                     </div>
                   </div>
 
-                  <div className="flex items-center space-x-2 shrink-0">
-                    <Link href={`/photographer/schedules/${schedule.id}`}>
-                      <Button size="sm">
-                        <Camera /> Buka Jadwal & Kirim Proof
+                  <div className="shrink-0 w-full sm:w-auto pt-1 sm:pt-0">
+                    <Link href={`/photographer/schedules/${schedule.id}`} className="block w-full sm:w-auto">
+                      <Button size="sm" className="w-full sm:w-auto font-semibold gap-1.5 justify-center">
+                        <Camera className="h-3.5 w-3.5" /> Buka Jadwal & Kirim Proof
                       </Button>
                     </Link>
                   </div>

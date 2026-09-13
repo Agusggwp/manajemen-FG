@@ -72,7 +72,7 @@ export default function AppLayout({ children, title }) {
   const activeTitle = title || pageTitle || children?.props?.title || getFallbackTitle();
 
   return (
-    <div className="h-screen bg-slate-50 flex font-sans overflow-hidden">
+    <div className="h-screen bg-slate-50 flex font-sans overflow-hidden w-full">
       {/* Sidebar Component */}
       <AppSidebar
         sidebarOpen={sidebarOpen}
@@ -83,7 +83,7 @@ export default function AppLayout({ children, title }) {
       />
 
       {/* Main Content Area with Header */}
-      <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
+      <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden w-full max-w-full">
         {/* Header Component */}
         <AppHeader
           title={activeTitle}
@@ -94,7 +94,7 @@ export default function AppLayout({ children, title }) {
         />
 
         {/* Main Content Area */}
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 bg-slate-50">
+        <main className="flex-1 overflow-y-auto overflow-x-hidden p-3.5 sm:p-6 lg:p-8 bg-slate-50 w-full min-w-0 max-w-full">
           {children}
         </main>
       </div>

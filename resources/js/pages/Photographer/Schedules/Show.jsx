@@ -21,15 +21,15 @@ export default function Show({ schedule }) {
     <>
       <Head title={`Jadwal Pemotretan - ${schedule.customer?.name}`} />
       <div className="space-y-6">
-        <div className="flex items-center space-x-3">
-          <Link href="/photographer/schedules">
-            <Button variant="outline" size="icon">
+        <div className="flex items-center gap-3 w-full">
+          <Link href="/photographer/schedules" className="shrink-0">
+            <Button variant="outline" size="icon" className="h-9 w-9">
               <ArrowLeft className="h-4 w-4" />
             </Button>
           </Link>
-          <div>
-            <h1 className="text-xl font-bold text-slate-900">{schedule.customer?.name}</h1>
-            <p className="text-xs text-slate-500">{schedule.photo_package?.name}</p>
+          <div className="min-w-0 flex-1">
+            <h1 className="text-lg sm:text-xl font-bold text-slate-900 truncate">{schedule.customer?.name}</h1>
+            <p className="text-xs text-slate-500 truncate">{schedule.photo_package?.name}</p>
           </div>
         </div>
 

@@ -33,30 +33,30 @@ export default function Index({ projects = { data: [] } }) {
           <div className="space-y-3">
             {(projects?.data || []).map((prj) => (
               <Card key={prj.id} className="border-slate-200 hover:shadow-xs transition-shadow">
-                <CardContent className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <div className="space-y-1">
+                <CardContent className="p-3.5 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+                  <div className="space-y-1 flex-1 min-w-0">
                     <span className="font-mono text-xs text-slate-400 font-bold block">{prj.project_code}</span>
-                    <h3 className="font-bold text-slate-900 text-base">{prj.project_name}</h3>
-                    <div className="text-xs text-slate-600 flex items-center space-x-3">
-                      <span>Pelanggan: {prj.customer?.name}</span>
+                    <h3 className="font-bold text-slate-900 text-sm sm:text-base truncate">{prj.project_name}</h3>
+                    <div className="text-xs text-slate-600 flex flex-wrap items-center gap-x-2 gap-y-1">
+                      <span>Pelanggan: <strong>{prj.customer?.name}</strong></span>
                       <span>•</span>
                       <span>Paket: {prj.package_name}</span>
                     </div>
                   </div>
 
-                  <div className="flex items-center space-x-3 justify-between sm:justify-end">
+                  <div className="flex flex-wrap sm:flex-nowrap items-center justify-between sm:justify-end gap-2.5 pt-1 sm:pt-0">
                     <Badge variant={
                       prj.status === "COMPLETED"  ? "success"     :
                       prj.status === "SHOOTING"   ? "warning"     :
                       prj.status === "SCHEDULED"  ? "info"        :
                       prj.status === "CANCELLED"  ? "destructive" :
                       "secondary"
-                    }>
+                    } className="text-[10px] whitespace-nowrap py-0 px-2 h-5">
                       {getStatusLabel(prj.status)}
                     </Badge>
-                    <Link href={`/photographer/projects/${prj.id}`}>
-                      <Button size="sm" variant="outline">
-                        <Eye /> Detail Project
+                    <Link href={`/photographer/projects/${prj.id}`} className="w-full sm:w-auto">
+                      <Button size="sm" variant="outline" className="w-full sm:w-auto justify-center font-semibold gap-1.5">
+                        <Eye className="h-3.5 w-3.5" /> Detail Project
                       </Button>
                     </Link>
                   </div>

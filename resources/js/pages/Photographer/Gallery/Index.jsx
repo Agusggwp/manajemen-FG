@@ -66,13 +66,21 @@ export default function Index({ projects = [] }) {
           ) : (
             safeProjects.map((project) => (
               <Card key={project.id} className="border-slate-200 shadow-xs">
-                <CardHeader className="p-4 pb-2 border-b border-slate-100 flex flex-row items-center justify-between">
-                  <div>
-                    <CardTitle className="text-base font-bold">{project.project_name}</CardTitle>
-                    <p className="text-xs text-slate-500">{project.customer?.name} • {project.package_name}</p>
+                <CardHeader className="p-4 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="min-w-0 flex-1 space-y-0.5">
+                    <CardTitle className="text-sm sm:text-base font-bold text-slate-900 leading-snug">
+                      {project.project_name}
+                    </CardTitle>
+                    <p className="text-xs text-slate-500">
+                      {project.customer?.name} • {project.package_name}
+                    </p>
                   </div>
-                  <Button size="sm" onClick={() => handleOpenUpload(project)}>
-                    <Upload /> Unggah Foto
+                  <Button
+                    size="sm"
+                    className="w-full sm:w-auto shrink-0 font-semibold justify-center gap-1.5"
+                    onClick={() => handleOpenUpload(project)}
+                  >
+                    <Upload className="h-3.5 w-3.5" /> Unggah Foto
                   </Button>
                 </CardHeader>
                 <CardContent className="p-4 pt-3">
@@ -135,7 +143,7 @@ export default function Index({ projects = [] }) {
               </div>
 
               <DialogFooter>
-                <Button type="button" variant="outline" onClick={() => setUploadModalOpen(false)}>
+                <Button type="button" variant="outline" onClick={() => setUploadModalOpen(false)} className="mt-2">
                   <X /> Batal
                 </Button>
                 <Button type="submit" disabled={form.processing}>
