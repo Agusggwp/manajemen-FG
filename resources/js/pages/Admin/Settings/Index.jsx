@@ -1,14 +1,17 @@
-import React from "react";
-import { Head, useForm } from "@inertiajs/react";
-import { Settings, Save, Globe, Palette, Sparkles, MessageCircle, Mail, Clock } from "lucide-react";
+import React, { useState } from "react";
+import { Head, useForm, router } from "@inertiajs/react";
+import { Settings, Save, Globe, Palette, Sparkles, MessageCircle, Mail, Clock, Bell, Send, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { toast } from "@/components/ui/sonner";
 
 export default function Index({ settings }) {
+  const [testingDiscord, setTestingDiscord] = useState(false);
+
   const form = useForm({
     company_name: settings?.company_name || "ARTDEVATA Photography",
     company_phone: settings?.company_phone || "081999888777",
@@ -25,11 +28,30 @@ export default function Index({ settings }) {
     public_cta_title: settings?.public_cta_title || "Butuh Penawaran Custom atau Diskusi Lokasi?",
     public_show_search: settings?.public_show_search ?? "true",
     public_show_categories: settings?.public_show_categories ?? "true",
+
+    // Discord Webhook Settings
+    discord_webhook_url: settings?.discord_webhook_url || "",
+    discord_notify_enabled: settings?.discord_notify_enabled ?? "true",
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
     form.post("/admin/settings");
+  };
+
+  const handleTestDiscord = () => {
+    if (!form.data.discord_webhook_url) {
+      toast.error("Silakan masukkan URL Webhook Discord terlebih dahulu.");
+      return;
+    }
+    setTestingDiscord(true);
+    router.post(
+      "/admin/settings/test-discord",
+      { webhook_url: form.data.discord_webhook_url },
+      {
+        onFinish: () => setTestingDiscord(false),
+      }
+    );
   };
 
   return (
@@ -42,7 +64,7 @@ export default function Index({ settings }) {
               Pengaturan Sistem & Tampilan Web
             </h1>
             <p className="text-sm text-slate-500 mt-1">
-              Atur profil studio, radius validasi GPS, serta tema dan konten halaman katalog web publik (/)
+              Atur profil studio, radius validasi GPS, tema katalog web publik, serta integrasi Discord Webhook.
             </p>
           </div>
           <Button type="submit" disabled={form.processing}>
@@ -77,10 +99,11 @@ export default function Index({ settings }) {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div
                   onClick={() => form.setData("public_theme_mode", "light")}
-                  className={`p-4 rounded-xl border text-sm flex items-start space-x-3 cursor-pointer transition-all ${form.data.public_theme_mode === "light"
+                  className={`p-4 rounded-xl border text-sm flex items-start space-x-3 cursor-pointer transition-all ${
+                    form.data.public_theme_mode === "light"
                       ? "border-emerald-600 bg-emerald-50/50 ring-1 ring-emerald-600"
                       : "border-slate-200 bg-white hover:bg-slate-50"
-                    }`}
+                  }`}
                 >
                   <div className="h-5 w-5 rounded-full border border-slate-300 flex items-center justify-center mt-0.5 shrink-0 bg-white">
                     {form.data.public_theme_mode === "light" && (
@@ -97,10 +120,11 @@ export default function Index({ settings }) {
 
                 <div
                   onClick={() => form.setData("public_theme_mode", "dark")}
-                  className={`p-4 rounded-xl border text-sm flex items-start space-x-3 cursor-pointer transition-all ${form.data.public_theme_mode === "dark"
+                  className={`p-4 rounded-xl border text-sm flex items-start space-x-3 cursor-pointer transition-all ${
+                    form.data.public_theme_mode === "dark"
                       ? "border-emerald-600 bg-slate-900 text-white ring-1 ring-emerald-600"
                       : "border-slate-200 bg-slate-900/90 text-slate-300 hover:bg-slate-900"
-                    }`}
+                  }`}
                 >
                   <div className="h-5 w-5 rounded-full border border-slate-600 flex items-center justify-center mt-0.5 shrink-0 bg-slate-800">
                     {form.data.public_theme_mode === "dark" && (
@@ -208,7 +232,70 @@ export default function Index({ settings }) {
           </CardContent>
         </Card>
 
-        {/* SECTION 2: STUDIO PROFILE SETTINGS */}
+        {/* SECTION 2: DISCORD WEBHOOK LOG INTEGRATION */}
+        <Card className="border-indigo-200 shadow-2xs bg-indigo-50/20">
+          <CardHeader className="bg-indigo-50/60 border-b border-indigo-100">
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-base font-semibold flex items-center gap-2 text-indigo-950">
+                  <Bell className="h-5 w-5 text-indigo-600" /> Integrasi Discord Webhook Log
+                </CardTitle>
+                <CardDescription className="text-xs text-indigo-700/80 mt-1">
+                  Kirimkan notifikasi log aktivitas sistem (Login, CRUD, Dev Tools, Reset Password) secara real-time ke channel Discord Anda.
+                </CardDescription>
+              </div>
+              <Badge variant="outline" className="border-indigo-300 text-indigo-700 bg-white">
+                Live Discord Webhook
+              </Badge>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-4 pt-6">
+            <div className="space-y-2">
+              <Label className="font-bold text-slate-800">URL Webhook Discord</Label>
+              <div className="flex flex-col sm:flex-row gap-2">
+                <Input
+                  type="url"
+                  placeholder="https://discord.com/api/webhooks/123456789/abc..."
+                  value={form.data.discord_webhook_url}
+                  onChange={(e) => form.setData("discord_webhook_url", e.target.value)}
+                  className="bg-white font-mono text-xs flex-1"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleTestDiscord}
+                  disabled={testingDiscord || !form.data.discord_webhook_url}
+                  className="bg-white border-indigo-200 text-indigo-700 hover:bg-indigo-50 shrink-0"
+                >
+                  <Send className="h-4 w-4 mr-1.5" />
+                  {testingDiscord ? "Menguji..." : "Uji Coba Webhook"}
+                </Button>
+              </div>
+              <p className="text-[11px] text-slate-500">
+                Dapatkan URL Webhook dari Discord: Server Settings → Integrations → Webhooks → New Webhook → Copy Webhook URL.
+              </p>
+            </div>
+
+            <div className="pt-1">
+              <label className="p-3.5 rounded-xl border border-indigo-200 bg-white flex items-center justify-between text-xs cursor-pointer hover:bg-indigo-50/50">
+                <div>
+                  <span className="font-bold text-slate-900 block">Aktifkan Notifikasi Discord</span>
+                  <span className="text-slate-500 text-[11px]">
+                    Sistem akan mengirim pesan Rich Embed ke Discord setiap kali aktivitas dicatat.
+                  </span>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={form.data.discord_notify_enabled === "true"}
+                  onChange={(e) => form.setData("discord_notify_enabled", e.target.checked ? "true" : "false")}
+                  className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4 w-4"
+                />
+              </label>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* SECTION 3: STUDIO PROFILE SETTINGS */}
         <Card className="border-slate-200 shadow-2xs">
           <CardHeader className="bg-slate-50/50 border-b border-slate-100">
             <CardTitle className="text-base font-semibold flex items-center gap-2 text-slate-900">
@@ -254,7 +341,7 @@ export default function Index({ settings }) {
           </CardContent>
         </Card>
 
-        {/* SECTION 3: EMAIL REMINDER SETTINGS */}
+        {/* SECTION 4: EMAIL REMINDER SETTINGS */}
         <Card className="border-slate-200 shadow-2xs">
           <CardHeader className="bg-slate-50/50 border-b border-slate-100">
             <div className="flex items-center justify-between">

@@ -37,6 +37,19 @@ class User extends Authenticatable
         ];
     }
 
+    /**
+     * Send password reset notification using custom notification.
+     */
+    public function sendPasswordResetNotification($token): void
+    {
+        $url = route('password.reset', [
+            'token' => $token,
+            'email' => $this->getEmailForPasswordReset(),
+        ]);
+
+        $this->notify(new \App\Notifications\ResetPasswordNotification($url));
+    }
+
     public function scopePhotographer($query)
     {
         return $query->where('role', 'PHOTOGRAPHER');

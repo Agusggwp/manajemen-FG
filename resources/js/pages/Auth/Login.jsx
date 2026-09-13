@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useForm, usePage } from "@inertiajs/react";
+import { useForm, usePage, Link } from "@inertiajs/react";
 import {
   Camera,
   Lock,
@@ -137,7 +137,15 @@ export default function Login() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password">Kata Sandi</Label>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="password">Kata Sandi</Label>
+                  <Link
+                    href="/forgot-password"
+                    className="text-xs text-slate-500 hover:text-slate-900 font-medium transition-colors"
+                  >
+                    Lupa kata sandi?
+                  </Link>
+                </div>
                 <div className="relative">
                   <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input

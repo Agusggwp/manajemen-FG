@@ -14,7 +14,9 @@ use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\ScheduleController as AdminScheduleController;
 use App\Http\Controllers\Admin\DevToolController;
 use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Photographer\DashboardController as PhotographerDashboardController;
 use App\Http\Controllers\Photographer\GalleryController as PhotographerGalleryController;
 use App\Http\Controllers\Photographer\ProjectController as PhotographerProjectController;
@@ -33,6 +35,12 @@ Route::redirect('/admin/login', '/login');
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+// Forgot & Reset Password Routes
+Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+Route::get('/reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('password.update');
 
 // ADMIN ROUTES
 Route::middleware(['auth', 'role.admin'])->prefix('admin')->as('admin.')->group(function () {
@@ -85,6 +93,7 @@ Route::middleware(['auth', 'role.admin'])->prefix('admin')->as('admin.')->group(
     Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
     Route::post('/settings', [SettingsController::class, 'update'])->name('settings.update');
+    Route::post('/settings/test-discord', [SettingsController::class, 'testDiscord'])->name('settings.test-discord');
 
     // Dev Tools (Web Migration & System Maintenance)
     Route::get('/dev-tools', [DevToolController::class, 'index'])->name('dev-tools.index');
