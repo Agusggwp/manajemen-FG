@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Head, useForm } from "@inertiajs/react";
-import { Image, Upload, CheckCircle2, FolderKanban, X } from "lucide-react";
+import { Image, Upload, CheckCircle2, FolderKanban, X, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -111,7 +111,7 @@ export default function Index({ projects = [] }) {
         </div>
 
         {/* Upload Modal */}
-        <Dialog open={uploadModalOpen} onOpenChange={setUploadModalOpen}>
+        <Dialog open={uploadModalOpen} onOpenChange={(val) => { if (!form.processing) setUploadModalOpen(val); }}>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Unggah Hasil Foto Project</DialogTitle>
@@ -143,11 +143,12 @@ export default function Index({ projects = [] }) {
               </div>
 
               <DialogFooter>
-                <Button type="button" variant="outline" onClick={() => setUploadModalOpen(false)} className="mt-2">
-                  <X /> Batal
+                <Button type="button" variant="outline" disabled={form.processing} onClick={() => setUploadModalOpen(false)} className="mt-2">
+                  <X /> <span>Batal</span>
                 </Button>
                 <Button type="submit" disabled={form.processing}>
-                  <Upload /> {form.processing ? "Mengunggah..." : "Unggah Hasil Foto"}
+                  {form.processing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload />}
+                  <span>{form.processing ? "Mengunggah..." : "Unggah Hasil Foto"}</span>
                 </Button>
               </DialogFooter>
             </form>

@@ -157,94 +157,94 @@ export default function Index({ customers, filters }) {
           <TableSkeleton rows={6} cols={4} />
         ) : (
           <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
-          <Table>
-            <TableHeader className="bg-slate-50">
-              <TableRow>
-                <TableHead className="font-semibold text-slate-700">Nama Pelanggan</TableHead>
-                <TableHead className="font-semibold text-slate-700">Kontak</TableHead>
-                <TableHead className="font-semibold text-slate-700">Alamat</TableHead>
-                <TableHead className="font-semibold text-slate-700">Catatan</TableHead>
-                <TableHead className="font-semibold text-slate-700 text-right">Aksi</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {safeCustomers.data.length === 0 ? (
+            <Table>
+              <TableHeader className="bg-slate-50">
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center py-8 text-slate-400 font-sans">
-                    Belum ada data pelanggan.
-                  </TableCell>
+                  <TableHead className="font-semibold text-slate-700">Nama Pelanggan</TableHead>
+                  <TableHead className="font-semibold text-slate-700">Kontak</TableHead>
+                  <TableHead className="font-semibold text-slate-700">Alamat</TableHead>
+                  <TableHead className="font-semibold text-slate-700">Catatan</TableHead>
+                  <TableHead className="font-semibold text-slate-700 text-right">Aksi</TableHead>
                 </TableRow>
-              ) : (
-                safeCustomers.data.map((c) => (
-                  <TableRow key={c.id}>
-                    <TableCell className="font-semibold text-slate-900">
-                      {c.name}
-                    </TableCell>
-
-                    <TableCell>
-                      <div className="flex flex-col gap-0.5 text-xs">
-                        <span className="flex items-center text-slate-700">
-                          <Phone className="h-3 w-3 mr-1 text-slate-400" /> {c.phone}
-                        </span>
-                        {c.email && (
-                          <span className="flex items-center text-slate-500">
-                            <Mail className="h-3 w-3 mr-1 text-slate-400" /> {c.email}
-                          </span>
-                        )}
-                      </div>
-                    </TableCell>
-
-                    <TableCell className="text-xs text-slate-600 max-w-xs truncate">
-                      {c.address ? (
-                        <span className="flex items-center">
-                          <MapPin className="h-3 w-3 mr-1 text-slate-400 shrink-0" />
-                          <span className="truncate">{c.address}</span>
-                        </span>
-                      ) : (
-                        "-"
-                      )}
-                    </TableCell>
-
-                    <TableCell className="text-xs text-slate-500 max-w-xs truncate">
-                      {c.notes || "-"}
-                    </TableCell>
-
-                    <TableCell className="text-right whitespace-nowrap">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="h-8 w-8 text-slate-600 hover:text-slate-900 focus-visible:ring-1"
-                            title="Aksi Pelanggan"
-                          >
-                            <MoreVertical className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-36 shadow-md">
-                          <DropdownMenuItem
-                            onClick={() => handleOpenEdit(c)}
-                            className="cursor-pointer text-xs flex items-center gap-2"
-                          >
-                            <Edit3 className="h-3.5 w-3.5 text-slate-600" />
-                            <span>Edit Data</span>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => handleDeleteClick(c)}
-                            className="cursor-pointer text-xs text-red-600 focus:text-red-600 focus:bg-red-50 flex items-center gap-2"
-                          >
-                            <Trash2 className="h-3.5 w-3.5 text-red-600" />
-                            <span>Hapus</span>
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+              </TableHeader>
+              <TableBody>
+                {safeCustomers.data.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center py-8 text-slate-400 font-sans">
+                      Belum ada data pelanggan.
                     </TableCell>
                   </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </div>
+                ) : (
+                  safeCustomers.data.map((c) => (
+                    <TableRow key={c.id}>
+                      <TableCell className="font-semibold text-slate-900">
+                        {c.name}
+                      </TableCell>
+
+                      <TableCell>
+                        <div className="flex flex-col gap-0.5 text-xs">
+                          <span className="flex items-center text-slate-700">
+                            <Phone className="h-3 w-3 mr-1 text-slate-400" /> {c.phone}
+                          </span>
+                          {c.email && (
+                            <span className="flex items-center text-slate-500">
+                              <Mail className="h-3 w-3 mr-1 text-slate-400" /> {c.email}
+                            </span>
+                          )}
+                        </div>
+                      </TableCell>
+
+                      <TableCell className="text-xs text-slate-600 max-w-xs truncate">
+                        {c.address ? (
+                          <span className="flex items-center">
+                            <MapPin className="h-3 w-3 mr-1 text-slate-400 shrink-0" />
+                            <span className="truncate">{c.address}</span>
+                          </span>
+                        ) : (
+                          "-"
+                        )}
+                      </TableCell>
+
+                      <TableCell className="text-xs text-slate-500 max-w-xs truncate">
+                        {c.notes || "-"}
+                      </TableCell>
+
+                      <TableCell className="text-right whitespace-nowrap">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              className="h-8 w-8 text-slate-600 hover:text-slate-900 focus-visible:ring-1"
+                              title="Aksi Pelanggan"
+                            >
+                              <MoreVertical className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="w-36 shadow-md">
+                            <DropdownMenuItem
+                              onClick={() => handleOpenEdit(c)}
+                              className="cursor-pointer text-xs flex items-center gap-2"
+                            >
+                              <Edit3 className="h-3.5 w-3.5 text-slate-600" />
+                              <span>Edit Data</span>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() => handleDeleteClick(c)}
+                              className="cursor-pointer text-xs text-red-600 focus:text-red-600 focus:bg-red-50 flex items-center gap-2"
+                            >
+                              <Trash2 className="h-3.5 w-3.5 text-red-600" />
+                              <span>Hapus</span>
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </div>
         )}
 
         {/* Modal Form */}
@@ -322,7 +322,7 @@ export default function Index({ customers, filters }) {
                   variant="outline"
                   disabled={form.processing}
                   onClick={() => setModalOpen(false)}
-                  className="w-full sm:w-auto font-semibold text-xs sm:text-sm h-10"
+                  className="w-full sm:w-auto "
                 >
                   <X />
                   <span>Batal</span>
@@ -330,7 +330,7 @@ export default function Index({ customers, filters }) {
                 <Button
                   type="submit"
                   disabled={form.processing}
-                  className="w-full sm:w-auto font-semibold text-xs sm:text-sm h-10 shadow-xs"
+                  className="w-full sm:w-auto  shadow-xs"
                 >
                   {form.processing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save />}
                   <span>{form.processing ? "Menyimpan..." : "Simpan Pelanggan"}</span>

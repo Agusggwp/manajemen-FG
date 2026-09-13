@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Head, useForm, Link } from "@inertiajs/react";
-import { ArrowLeft, Camera, MapPin, Navigation, ShieldCheck, AlertCircle, RefreshCw, Upload } from "lucide-react";
+import { ArrowLeft, Camera, MapPin, Navigation, ShieldCheck, AlertCircle, RefreshCw, Upload, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -31,17 +31,17 @@ export default function Create({ schedule, type, existingProof }) {
     }
 
     navigator.geolocation.getCurrentPosition(
-      (position) => {
-        form.setData((prev) => ({
-          ...prev,
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-          accuracy: position.coords.accuracy,
-        }));
+      (pos) => {
+        form.setData({
+          ...form.data,
+          latitude: pos.coords.latitude,
+          longitude: pos.coords.longitude,
+          accuracy: pos.coords.accuracy,
+        });
         setGpsLoading(false);
       },
-      (error) => {
-        setGpsError(`Gagal mengambil koordinat GPS: ${error.message}`);
+      (err) => {
+        setGpsError(`Gagal mengambil lokasi: ${err.message}. Pastikan izin lokasi aktif.`);
         setGpsLoading(false);
       },
       {
@@ -67,22 +67,16 @@ export default function Create({ schedule, type, existingProof }) {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      if (previewUrl) {
-        URL.revokeObjectURL(previewUrl);
-      }
       form.setData("photo", file);
-      setPreviewUrl(URL.createObjectURL(file));
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!form.data.photo) {
-      toast.warning("Harap ambil/pilih foto bukti pemotretan terlebih dahulu.");
-      return;
-    }
-    if (!form.data.latitude || !form.data.longitude) {
-      toast.warning("Koordinat GPS belum terdeteksi. Silakan coba muat ulang GPS.");
+      toast.error("Wajib mengunggah foto bukti pemotretan!");
       return;
     }
 
@@ -91,11 +85,11 @@ export default function Create({ schedule, type, existingProof }) {
 
   return (
     <>
-      <Head title={`Kirim Proof ${type} - ${schedule.customer?.name}`} />
+      <Head title={`Unggah Bukti ${type} - ${schedule.customer?.name || ""}`} />
       <div className="space-y-6 max-w-xl mx-auto">
         <div className="flex items-center space-x-3">
           <Link href={`/photographer/schedules/${schedule.id}`}>
-            <Button variant="outline" size="icon">
+            <Button variant="outline" size="icon" disabled={form.processing}>
               <ArrowLeft className="h-4 w-4" />
             </Button>
           </Link>
@@ -123,7 +117,7 @@ export default function Create({ schedule, type, existingProof }) {
                 <span className="font-bold text-slate-900 flex items-center gap-1.5">
                   <Navigation className="h-4 w-4 text-rose-600 animate-pulse" /> Deteksi GPS Lokasi
                 </span>
-                <Button type="button" size="xs" variant="outline" onClick={getGpsPosition} disabled={gpsLoading}>
+                <Button type="button" size="xs" variant="outline" onClick={getGpsPosition} disabled={gpsLoading || form.processing}>
                   <RefreshCw className={gpsLoading ? "animate-spin" : ""} />
                   {gpsLoading ? "Mendeteksi..." : "Muat Ulang GPS"}
                 </Button>
@@ -163,19 +157,17 @@ export default function Create({ schedule, type, existingProof }) {
                       <img
                         src={previewUrl}
                         alt="Preview Proof"
-                        className="max-h-56 mx-auto rounded-lg object-contain border border-slate-200"
+                        className="max-h-64 mx-auto rounded-lg object-contain shadow-xs"
                       />
-                      <p className="text-xs text-emerald-600 font-semibold">✓ Foto berhasil dipilih</p>
+                      <p className="text-xs text-slate-500">Ketuk untuk mengganti foto</p>
                     </div>
                   ) : (
-                    <div className="py-6 space-y-2">
-                      <Camera className="h-10 w-10 text-slate-400 mx-auto" />
-                      <p className="text-xs font-semibold text-slate-700">
-                        Klik untuk mengambil foto dari kamera HP
-                      </p>
-                      <p className="text-[10px] text-slate-400">
-                        Format: JPG, PNG, WEBP (Maksimal 10MB)
-                      </p>
+                    <div className="py-8 space-y-2">
+                      <div className="w-12 h-12 rounded-full bg-slate-200 flex items-center justify-center mx-auto text-slate-600">
+                        <Camera className="h-6 w-6" />
+                      </div>
+                      <p className="text-sm font-semibold text-slate-700">Ambil Foto Langsung dari Kamera</p>
+                      <p className="text-xs text-slate-400">Pastikan GPS aktif & lokasi sesuai</p>
                     </div>
                   )}
 
@@ -184,6 +176,7 @@ export default function Create({ schedule, type, existingProof }) {
                     accept="image/*"
                     capture="environment"
                     required
+                    disabled={form.processing}
                     onChange={handleFileChange}
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                   />
@@ -198,8 +191,8 @@ export default function Create({ schedule, type, existingProof }) {
                 className="w-full font-bold"
                 disabled={form.processing || gpsLoading}
               >
-                <Upload />
-                {form.processing ? "Mengirim..." : `KIRIM BUKTI FOTO ${type}`}
+                {form.processing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload />}
+                <span>{form.processing ? "Mengirim..." : `KIRIM BUKTI FOTO ${type}`}</span>
               </Button>
             </form>
           </CardContent>

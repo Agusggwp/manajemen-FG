@@ -31,7 +31,7 @@ export default function Show({ schedule }) {
 
           <Button
             onClick={() => setReminderOpen(true)}
-            className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white flex items-center justify-center gap-2 font-semibold text-xs sm:text-sm h-10 px-4 shrink-0 shadow-xs"
+            className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white flex items-center justify-center gap-2  px-4 shrink-0 shadow-xs"
           >
             <Mail className="h-4 w-4" />
             <span>Kirim Email Peringatan</span>
@@ -50,11 +50,11 @@ export default function Show({ schedule }) {
                   </Badge>
                 )}
                 <Badge className="text-[10px] whitespace-nowrap py-0 px-2 h-5" variant={
-                  schedule.status === "COMPLETED"  ? "success"     :
-                  schedule.status === "SHOOTING"   ? "warning"     :
-                  schedule.status === "SCHEDULED"  ? "info"        :
-                  schedule.status === "CANCELLED"  ? "destructive" :
-                  "secondary"
+                  schedule.status === "COMPLETED" ? "success" :
+                    schedule.status === "SHOOTING" ? "warning" :
+                      schedule.status === "SCHEDULED" ? "info" :
+                        schedule.status === "CANCELLED" ? "destructive" :
+                          "secondary"
                 }>
                   {getStatusLabel(schedule.status)}
                 </Badge>

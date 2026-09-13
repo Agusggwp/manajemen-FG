@@ -361,7 +361,7 @@ export default function Index({ muas, filters }) {
                   variant="outline"
                   disabled={form.processing}
                   onClick={() => setModalOpen(false)}
-                  className="w-full sm:w-auto font-semibold text-xs sm:text-sm h-10"
+                  className="w-full sm:w-auto "
                 >
                   <X />
                   <span>Batal</span>
@@ -369,7 +369,7 @@ export default function Index({ muas, filters }) {
                 <Button
                   type="submit"
                   disabled={form.processing}
-                  className="w-full sm:w-auto font-semibold text-xs sm:text-sm h-10 shadow-xs"
+                  className="w-full sm:w-auto  shadow-xs"
                 >
                   {form.processing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save />}
                   <span>{form.processing ? "Menyimpan..." : "Simpan MUA"}</span>
