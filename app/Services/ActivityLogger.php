@@ -20,15 +20,35 @@ class ActivityLogger
      * @param int|null $recordId
      * @return ActivityLog
      */
+    /**
+     * Log an activity in the system and send Discord Webhook notification.
+     *
+     * @param string $action Action name (e.g. 'CREATED', 'UPDATED', 'DELETED')
+     * @param string $module Module name (e.g. 'PACKAGE', 'SCHEDULE', 'PROJECT')
+     * @param string $description Detailed description
+     * @param int|null $recordId
+     * @return ActivityLog
+     */
     public static function log(string $action, string $module, string $description, ?int $recordId = null): ActivityLog
     {
+        $ip = Request::ip() ?? '127.0.0.1';
+        $uaString = Request::header('User-Agent');
+        $uaInfo = self::parseUserAgent($uaString);
+
+        $clientInfo = "Perangkat: {$uaInfo['device']} ({$uaInfo['platform']}) | Browser: {$uaInfo['browser']} | IP: {$ip}";
+
+        // Automatically append device, browser, and IP info if not already included
+        if (!str_contains($description, 'Perangkat:')) {
+            $description = trim($description) . ". {$clientInfo}";
+        }
+
         $log = ActivityLog::create([
             'user_id' => Auth::id(),
             'action' => strtoupper($action),
             'module' => strtoupper($module),
             'record_id' => $recordId,
             'description' => $description,
-            'ip_address' => Request::ip() ?? '127.0.0.1',
+            'ip_address' => $ip,
         ]);
 
         // Trigger Discord Webhook Notification safely
@@ -36,6 +56,92 @@ class ActivityLogger
 
         return $log;
     }
+
+    /**
+     * Parse User-Agent header string to detect Device, OS/Platform, and Browser.
+     *
+     * @param string|null $userAgent
+     * @return array
+     */
+    public static function parseUserAgent(?string $userAgent): array
+    {
+        if (empty($userAgent)) {
+            return [
+                'device' => 'Unknown Device',
+                'platform' => 'Unknown OS',
+                'browser' => 'Unknown Browser',
+            ];
+        }
+
+        // Detect Device Type
+        $device = 'Desktop';
+        if (preg_match('/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i', $userAgent)) {
+            $device = 'Tablet';
+        } elseif (preg_match('/(Mobile|iPod|iPhone|Android|BlackBerry|IEMobile|Kindle|NetFront|Silk-Accelerated|hpwOS|webOS|Fennec|Minimo|Opera Mini|Opera Mobi)/i', $userAgent)) {
+            $device = 'Mobile';
+        }
+
+        // Detect OS / Platform
+        $platform = 'Unknown OS';
+        if (preg_match('/windows nt 10/i', $userAgent)) {
+            $platform = 'Windows 10/11';
+        } elseif (preg_match('/windows nt 6.3/i', $userAgent)) {
+            $platform = 'Windows 8.1';
+        } elseif (preg_match('/windows nt 6.2/i', $userAgent)) {
+            $platform = 'Windows 8';
+        } elseif (preg_match('/windows nt 6.1/i', $userAgent)) {
+            $platform = 'Windows 7';
+        } elseif (preg_match('/iphone/i', $userAgent)) {
+            $platform = 'iOS (iPhone)';
+        } elseif (preg_match('/ipad/i', $userAgent)) {
+            $platform = 'iOS (iPad)';
+        } elseif (preg_match('/macintosh|mac os x/i', $userAgent)) {
+            $platform = 'macOS';
+        } elseif (preg_match('/android/i', $userAgent)) {
+            $platform = 'Android';
+        } elseif (preg_match('/linux/i', $userAgent)) {
+            $platform = 'Linux';
+        }
+
+        // Detect Browser
+        $browser = 'Unknown Browser';
+        if (preg_match('/edg/i', $userAgent)) {
+            $browser = 'Microsoft Edge';
+        } elseif (preg_match('/chrome/i', $userAgent)) {
+            $browser = 'Google Chrome';
+        } elseif (preg_match('/safari/i', $userAgent)) {
+            $browser = 'Apple Safari';
+        } elseif (preg_match('/firefox/i', $userAgent)) {
+            $browser = 'Mozilla Firefox';
+        } elseif (preg_match('/opera|opr/i', $userAgent)) {
+            $browser = 'Opera';
+        }
+
+        return [
+            'device' => $device,
+            'platform' => $platform,
+            'browser' => $browser,
+        ];
+    }
+
+    /**
+     * Log web page access with IP, Device, Platform, and Browser details.
+     *
+     * @param string $module
+     * @param string $descriptionPrefix
+     * @return ActivityLog
+     */
+    public static function logAccess(string $module = 'PUBLIC_CATALOG', string $descriptionPrefix = 'Pengunjung mengakses katalog publik'): ActivityLog
+    {
+        $ip = Request::ip() ?? '127.0.0.1';
+        $uaString = Request::header('User-Agent');
+        $uaInfo = self::parseUserAgent($uaString);
+
+        $description = "{$descriptionPrefix}. Perangkat: {$uaInfo['device']} ({$uaInfo['platform']}) | Browser: {$uaInfo['browser']} | IP: {$ip}";
+
+        return self::log('VIEW', $module, $description);
+    }
+
 
     /**
      * Send log notification to Discord Webhook.
