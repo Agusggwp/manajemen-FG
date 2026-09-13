@@ -14,6 +14,7 @@ import {
   History,
   Camera,
   DollarSign,
+  Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -43,22 +44,20 @@ const ROUTE_LABELS = {
   projects: "Project",
   proofs: "Validasi Presensi Foto",
   customers: "Pelanggan",
-  photographers: "Fotografer",
+  packages: "Master Paket Foto",
   muas: "MUA",
-  packages: "Master Paket",
-  payments: "Pembayaran",
+  photographers: "Fotografer",
   salaries: "Gaji Fotografer",
   "mua-fees": "Gaji MUA",
-  reports: "Laporan",
-  "package-profit": "Keuntungan Per Paket",
-  "activity-logs": "Log Aktivitas",
-  settings: "Pengaturan Sistem",
+  reports: "Laporan Keuangan",
+  settings: "Pengaturan Profil",
+  activity: "Log Aktivitas",
+
   // Photographer
   photographer: "Fotografer",
-  gallery: "Galeri Foto",
+  proof: "Kirim Presensi Foto",
+  gallery: "Galeri & Klien",
   salary: "Gaji Saya",
-  proof: "Unggah Bukti",
-  create: "Unggah",
 };
 
 export default function AppHeader({
@@ -75,6 +74,17 @@ export default function AppHeader({
 
   const userBadge = isPhotographer ? "FOTOGRAFER" : "ADMIN";
   const [logoutOpen, setLogoutOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  const handleLogout = () => {
+    setIsLoggingOut(true);
+    router.post("/logout", {}, {
+      onFinish: () => {
+        setIsLoggingOut(false);
+        setLogoutOpen(false);
+      },
+    });
+  };
 
   const getInitials = (name) => {
     if (!name) return "U";
@@ -286,10 +296,20 @@ export default function AppHeader({
                 onClick={() => setLogoutOpen(true)}
                 variant="destructive"
                 size="sm"
-                className="w-full justify-center mt-0.5"
+                className="w-full justify-center mt-0.5 gap-2"
+                disabled={isLoggingOut}
               >
-                <LogOut className="h-4 w-4" />
-                <span>Keluar</span>
+                {isLoggingOut ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin shrink-0" />
+                    <span>Mengeluarkan...</span>
+                  </>
+                ) : (
+                  <>
+                    <LogOut className="h-4 w-4 shrink-0" />
+                    <span>Keluar</span>
+                  </>
+                )}
               </Button>
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -303,12 +323,11 @@ export default function AppHeader({
         description="Apakah Anda yakin ingin keluar dari sistem manajemen ART DEVATA?"
         confirmText="Keluar"
         cancelText="Batal"
+        loadingText="Mengeluarkan..."
+        loading={isLoggingOut}
         variant="destructive"
         icon={LogOut}
-        onConfirm={() => {
-          setLogoutOpen(false);
-          router.post("/logout");
-        }}
+        onConfirm={handleLogout}
       />
     </header>
   );

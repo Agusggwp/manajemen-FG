@@ -19,6 +19,7 @@ import {
   Image,
   DollarSign,
   Terminal,
+  Loader2,
 } from "lucide-react";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { Button } from "@/components/ui/button";
@@ -32,6 +33,7 @@ export default function AppSidebar({
   user,
 }) {
   const [logoutOpen, setLogoutOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const getInitials = (name) => {
     if (!name) return "U";
@@ -248,8 +250,13 @@ export default function AppSidebar({
                   size="icon"
                   onClick={() => setLogoutOpen(true)}
                   title="Logout"
+                  disabled={isLoggingOut}
                 >
-                  <LogOut className="h-4 w-4" />
+                  {isLoggingOut ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <LogOut className="h-4 w-4" />
+                  )}
                 </Button>
               </div>
             )}
@@ -273,13 +280,22 @@ export default function AppSidebar({
               </div>
               <Button
                 variant="destructive"
-                size="icon"
                 onClick={() => setLogoutOpen(true)}
                 title="Logout"
-                className="w-full"
+                className="w-full flex items-center justify-center gap-2"
+                disabled={isLoggingOut}
               >
-                <LogOut className="h-4 w-4" />
-                Keluar
+                {isLoggingOut ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin shrink-0" />
+                    <span>Mengeluarkan...</span>
+                  </>
+                ) : (
+                  <>
+                    <LogOut className="h-4 w-4 shrink-0" />
+                    <span>Keluar</span>
+                  </>
+                )}
               </Button>
             </div>
           </div>
@@ -293,11 +309,18 @@ export default function AppSidebar({
         description="Apakah Anda yakin ingin keluar dari sistem manajemen ART DEVATA?"
         confirmText="Keluar"
         cancelText="Batal"
+        loadingText="Mengeluarkan..."
+        loading={isLoggingOut}
         variant="destructive"
         icon={LogOut}
         onConfirm={() => {
-          setLogoutOpen(false);
-          router.post("/logout");
+          setIsLoggingOut(true);
+          router.post("/logout", {}, {
+            onFinish: () => {
+              setIsLoggingOut(false);
+              setLogoutOpen(false);
+            },
+          });
         }}
       />
     </>

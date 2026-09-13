@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Head, Link, useForm, usePage } from "@inertiajs/react";
-import { Mail, ArrowLeft, ArrowRight, ShieldCheck, CheckCircle2 } from "lucide-react";
+import { Mail, ArrowLeft, ArrowRight, ShieldCheck, CheckCircle2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -84,6 +84,7 @@ export default function ForgotPassword() {
                   type="email"
                   placeholder="nama@artdevata.com"
                   value={data.email}
+                  disabled={processing}
                   onChange={(e) => setData("email", e.target.value)}
                   className="pl-9"
                   required
@@ -95,9 +96,22 @@ export default function ForgotPassword() {
               )}
             </div>
 
-            <Button type="submit" className="w-full gap-2 font-semibold bg-slate-900 hover:bg-slate-800" disabled={processing}>
-              <span>{processing ? "Mengirim Tautan..." : "Kirim Tautan Reset Password"}</span>
-              <ArrowRight className="h-4 w-4" />
+            <Button
+              type="submit"
+              className="w-full gap-2 font-semibold bg-slate-900 hover:bg-slate-800 flex items-center justify-center h-10 shadow-xs"
+              disabled={processing}
+            >
+              {processing ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin shrink-0" />
+                  <span>Mengirim Tautan...</span>
+                </>
+              ) : (
+                <>
+                  <span>Kirim Tautan Reset Password</span>
+                  <ArrowRight className="h-4 w-4 shrink-0" />
+                </>
+              )}
             </Button>
           </form>
 
