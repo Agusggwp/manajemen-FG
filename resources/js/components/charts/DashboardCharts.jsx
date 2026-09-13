@@ -308,12 +308,13 @@ export function ProjectStatusDonutChart({ statusCounts = {}, title = "Distribusi
   const counts = statusCounts || {};
 
   const statusConfig = {
-    COMPLETED: { label: "Selesai", color: "#10b981" },
-    SHOOTING: { label: "Shooting", color: "#f59e0b" },
-    EDITING: { label: "Editing", color: "#3b82f6" },
-    REVIEW: { label: "Review", color: "#8b5cf6" },
-    BOOKED: { label: "Booked", color: "#64748b" },
-    CANCELLED: { label: "Batal", color: "#ef4444" },
+    SCHEDULED: { label: "Terjadwal",   color: "#3b82f6" },
+    COMPLETED: { label: "Selesai",     color: "#10b981" },
+    SHOOTING:  { label: "Pemotretan",  color: "#f59e0b" },
+    EDITING:   { label: "Pengeditan",  color: "#8b5cf6" },
+    REVIEW:    { label: "Peninjauan",  color: "#a855f7" },
+    BOOKED:    { label: "Dipesan",     color: "#64748b" },
+    CANCELLED: { label: "Dibatalkan",  color: "#ef4444" },
   };
 
   const chartData = Object.entries(counts)
