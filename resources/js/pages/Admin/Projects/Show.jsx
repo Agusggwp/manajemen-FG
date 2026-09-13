@@ -40,6 +40,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { ImageWithFallback } from "@/components/ui/image-with-fallback";
 
 export default function Show({ project, allPhotographers = [], allMuas = [] }) {
   const safeProject = project || {};
@@ -418,12 +419,13 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
 
                 {startProof ? (
                   <div className="space-y-2 text-xs">
-                    <div className="aspect-video w-full rounded-lg overflow-hidden border border-slate-200 bg-black/5">
-                      <img
-                        src={`/storage/${startProof.photo_path}`}
+                    <div className="aspect-video w-full rounded-lg overflow-hidden border border-slate-200 bg-slate-100">
+                      <ImageWithFallback
+                        src={startProof.photo_path ? `/storage/${startProof.photo_path}` : null}
                         alt="Start Proof"
+                        fallbackIcon={Camera}
+                        fallbackText="Foto bukti awal tidak tersedia"
                         className="w-full h-full object-cover"
-                        onError={(e) => { e.target.onerror = null; e.target.src = "https://via.placeholder.com/400x250?text=Photo+Proof+Start"; }}
                       />
                     </div>
                     <div className="grid grid-cols-2 gap-2 text-slate-700 pt-1">
@@ -466,12 +468,13 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
 
                 {endProof ? (
                   <div className="space-y-2 text-xs">
-                    <div className="aspect-video w-full rounded-lg overflow-hidden border border-slate-200 bg-black/5">
-                      <img
-                        src={`/storage/${endProof.photo_path}`}
+                    <div className="aspect-video w-full rounded-lg overflow-hidden border border-slate-200 bg-slate-100">
+                      <ImageWithFallback
+                        src={endProof.photo_path ? `/storage/${endProof.photo_path}` : null}
                         alt="End Proof"
+                        fallbackIcon={Camera}
+                        fallbackText="Foto bukti selesai tidak tersedia"
                         className="w-full h-full object-cover"
-                        onError={(e) => { e.target.onerror = null; e.target.src = "https://via.placeholder.com/400x250?text=Photo+Proof+End"; }}
                       />
                     </div>
                     <div className="grid grid-cols-2 gap-2 text-slate-700 pt-1">

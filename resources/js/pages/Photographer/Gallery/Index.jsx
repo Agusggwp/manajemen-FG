@@ -12,6 +12,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { usePageLoading, GalleryPageSkeleton } from "@/components/loading/PageSkeletons";
+import { ImageWithFallback } from "@/components/ui/image-with-fallback";
 
 export default function Index({ projects = [] }) {
   const safeProjects = Array.isArray(projects) ? projects : (projects?.data || []);
@@ -84,11 +85,12 @@ export default function Index({ projects = [] }) {
                     <div className="grid grid-cols-4 gap-2 mt-3">
                       {project.galleries.slice(0, 4).map((g) => (
                         <div key={g.id} className="aspect-square rounded-md overflow-hidden bg-slate-100 border border-slate-200">
-                          <img
-                            src={`/storage/${g.file_path}`}
+                          <ImageWithFallback
+                            src={g.file_path ? `/storage/${g.file_path}` : null}
                             alt={g.file_name}
+                            fallbackIcon={Image}
+                            showText={false}
                             className="w-full h-full object-cover"
-                            onError={(e) => { e.target.onerror = null; e.target.src = "https://via.placeholder.com/150"; }}
                           />
                         </div>
                       ))}

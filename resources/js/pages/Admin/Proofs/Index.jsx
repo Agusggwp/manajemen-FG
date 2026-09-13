@@ -25,6 +25,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { usePageLoading, CardGridSkeleton } from "@/components/loading/PageSkeletons";
+import { ImageWithFallback } from "@/components/ui/image-with-fallback";
 
 export default function Index({ proofs, counts, activeTab = "pending" }) {
   const safeProofs = proofs?.data ? proofs : { data: [] };
@@ -145,19 +146,20 @@ export default function Index({ proofs, counts, activeTab = "pending" }) {
             {safeProofs.data.map((proof) => (
               <Card key={proof.id} className="border-slate-200 overflow-hidden shadow-xs flex flex-col justify-between">
                 <div>
-                  <div className="relative aspect-video w-full bg-slate-900 overflow-hidden">
-                    <img
-                      src={`/storage/${proof.photo_path}`}
-                      alt="Proof Photo"
+                  <div className="relative aspect-video w-full bg-slate-100 overflow-hidden border-b border-slate-200">
+                    <ImageWithFallback
+                      src={proof.photo_path ? `/storage/${proof.photo_path}` : null}
+                      alt={`Bukti Foto ${proof.type}`}
+                      fallbackIcon={Camera}
+                      fallbackText="Foto bukti tidak tersedia"
                       className="w-full h-full object-cover"
-                      onError={(e) => { e.target.onerror = null; e.target.src = "https://via.placeholder.com/400x250?text=Photo+Proof"; }}
                     />
-                    <div className="absolute top-3 left-3">
-                      <Badge variant="default" className="uppercase font-bold tracking-wider">
+                    <div className="absolute top-3 left-3 z-10 pointer-events-none">
+                      <Badge variant="default" className="uppercase font-bold tracking-wider shadow-xs">
                         {proof.type} PROOF
                       </Badge>
                     </div>
-                    <div className="absolute bottom-2 right-2 bg-black/70 text-white text-[10px] font-mono px-2 py-0.5 rounded">
+                    <div className="absolute bottom-2 right-2 z-10 bg-slate-900/80 backdrop-blur-xs text-white text-[10px] font-mono px-2 py-0.5 rounded shadow-xs pointer-events-none">
                       {new Date(proof.captured_at).toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })}
                     </div>
                   </div>
