@@ -233,50 +233,48 @@ export default function Index({ schedules, existingAssignments, filters, custome
   return (
     <>
       <Head title="Manajemen Jadwal" />
-      <div className="space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+      <div className="space-y-4 sm:space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 w-full">
+          <div className="min-w-0">
+            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
               Manajemen Jadwal Pemotretan
             </h1>
-            <p className="text-sm text-slate-500 mt-1">
+            <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
               Buat jadwal baru, tentukan penugasan tim, dan tetapkan koordinat lokasi pemotretan.
             </p>
           </div>
-          <div className="flex items-center gap-3">
-            <Tabs value={viewMode} onValueChange={setViewMode}>
-              <TabsList className="bg-slate-100 border border-slate-200">
-                <TabsTrigger value="table" className="flex items-center gap-1.5 data-[state=active]:bg-white data-[state=active]:shadow-sm">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 w-full sm:w-auto">
+            <Tabs value={viewMode} onValueChange={setViewMode} className="w-full sm:w-auto">
+              <TabsList className="grid grid-cols-2 sm:flex bg-slate-100 border border-slate-200 h-10 p-1 w-full sm:w-auto">
+                <TabsTrigger value="table" className="flex items-center justify-center gap-1.5 text-xs font-semibold data-[state=active]:bg-white data-[state=active]:shadow-xs data-[state=active]:text-slate-900">
                   <LayoutList className="h-4 w-4" />
                   <span>Tabel</span>
                 </TabsTrigger>
-                <TabsTrigger value="calendar" className="flex items-center gap-1.5 data-[state=active]:bg-white data-[state=active]:shadow-sm">
+                <TabsTrigger value="calendar" className="flex items-center justify-center gap-1.5 text-xs font-semibold data-[state=active]:bg-white data-[state=active]:shadow-xs data-[state=active]:text-slate-900">
                   <Calendar className="h-4 w-4" />
                   <span>Kalender</span>
                 </TabsTrigger>
               </TabsList>
             </Tabs>
 
-            <Button onClick={() => setModalOpen(true)}>
-              <Plus />
-              Buat Jadwal Baru
+            <Button onClick={() => setModalOpen(true)} className="w-full sm:w-auto font-bold gap-2 text-xs sm:text-sm h-10 justify-center shadow-xs">
+              <Plus className="h-4 w-4" />
+              <span>Buat Jadwal Baru</span>
             </Button>
           </div>
         </div>
 
         {/* Search */}
-        <Card className="border-slate-200">
-          <CardContent className="pt-6">
-            <div className="flex gap-2">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
-                <Input
-                  placeholder="Cari pelanggan, nama lokasi, atau alamat..."
-                  value={search}
-                  onChange={handleSearchChange}
-                  className="pl-9"
-                />
-              </div>
+        <Card className="border-slate-200 shadow-2xs">
+          <CardContent className="p-3 sm:p-4">
+            <div className="relative w-full">
+              <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
+              <Input
+                placeholder="Cari pelanggan, nama lokasi, atau alamat..."
+                value={search}
+                onChange={handleSearchChange}
+                className="pl-9 bg-white text-xs sm:text-sm"
+              />
             </div>
           </CardContent>
         </Card>
@@ -332,13 +330,32 @@ export default function Index({ schedules, existingAssignments, filters, custome
                       <p className="text-[11px] text-slate-500 line-clamp-1">{s.location_address}</p>
                     </div>
 
-                    <div className="flex items-center justify-between pt-2 border-t border-slate-100">
-                      <span className="text-xs font-semibold text-slate-700">{formatDate(s.date)}</span>
-                      <Link href={`/admin/schedules/${s.id}`}>
-                        <Button size="sm" variant="outline">
-                          Lihat Detail <Eye />
+                    <div className="flex items-center justify-between pt-2.5 border-t border-slate-100 gap-2">
+                      <span className="text-xs font-semibold text-slate-700 truncate">{formatDate(s.date)}</span>
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        <Button
+                          variant={s.reminder_sent_at ? "outline" : "secondary"}
+                          size="sm"
+                          onClick={() => {
+                            setSelectedScheduleId(s.id);
+                            setReminderOpen(true);
+                          }}
+                          className={`${
+                            s.reminder_sent_at ? "text-emerald-700 border-emerald-300 bg-emerald-50/50 hover:bg-emerald-100" : "text-slate-700 hover:text-slate-900"
+                          }`}
+                          title={s.reminder_sent_at ? `Email Peringatan Terkirim (${formatDate(s.reminder_sent_at)}) - Klik untuk kirim ulang` : "Kirim Email Peringatan H-1"}
+                        >
+                          <Mail className="h-3.5 w-3.5" />
+                          <span className="hidden sm:inline">{s.reminder_sent_at ? "Email Terkirim" : "Kirim Email"}</span>
+                          <span className="sm:hidden">{s.reminder_sent_at ? "Terkirim" : "Email"}</span>
                         </Button>
-                      </Link>
+                        <Link href={`/admin/schedules/${s.id}`}>
+                          <Button size="sm" variant="outline" className="h-8 px-2.5 text-xs font-medium flex items-center gap-1">
+                            <span>Detail</span>
+                            <Eye className="h-3.5 w-3.5" />
+                          </Button>
+                        </Link>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -348,8 +365,9 @@ export default function Index({ schedules, existingAssignments, filters, custome
         ) : null}
 
         {viewMode === "table" && (
-          <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
-            <Table>
+          <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden w-full">
+            <div className="overflow-x-auto w-full">
+              <Table className="min-w-[800px]">
               <TableHeader className="bg-slate-50">
                 <TableRow>
                   <TableHead className="font-semibold text-slate-700">Tanggal & Waktu</TableHead>
@@ -463,6 +481,7 @@ export default function Index({ schedules, existingAssignments, filters, custome
                 )}
               </TableBody>
             </Table>
+            </div>
           </div>
         )}
 

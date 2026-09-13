@@ -13,43 +13,43 @@ export default function Show({ schedule }) {
   return (
     <>
       <Head title={`Detail Jadwal - ${schedule.customer?.name || ""}`} />
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <Link href="/admin/schedules">
-              <Button variant="outline" size="icon">
+      <div className="space-y-4 sm:space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 w-full">
+          <div className="flex items-center gap-3 min-w-0">
+            <Link href="/admin/schedules" className="shrink-0">
+              <Button variant="outline" size="icon" className="h-9 w-9">
                 <ArrowLeft className="h-4 w-4" />
               </Button>
             </Link>
-            <div>
-              <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+            <div className="min-w-0">
+              <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
                 Detail Jadwal Pemotretan
               </h1>
-              <p className="text-xs text-slate-500">Informasi lokasi, waktu, dan tim bertugas</p>
+              <p className="text-xs text-slate-500 mt-0.5">Informasi lokasi, waktu, dan tim bertugas</p>
             </div>
           </div>
 
           <Button
             onClick={() => setReminderOpen(true)}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white flex items-center gap-2"
+            className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white flex items-center justify-center gap-2 font-semibold text-xs sm:text-sm h-10 px-4 shrink-0 shadow-xs"
           >
             <Mail className="h-4 w-4" />
             <span>Kirim Email Peringatan</span>
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
           {/* Main Info */}
-          <Card className="border-slate-200 lg:col-span-2">
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="text-base font-semibold">Informasi Jadwal</CardTitle>
-              <div className="flex items-center space-x-2">
+          <Card className="border-slate-200 lg:col-span-2 shadow-2xs">
+            <CardHeader className="p-4 sm:p-5 border-b border-slate-100 flex flex-row items-center justify-between gap-2">
+              <CardTitle className="text-sm sm:text-base font-bold text-slate-900">Informasi Jadwal</CardTitle>
+              <div className="flex flex-wrap items-center gap-1.5 justify-end">
                 {schedule.reminder_sent_at && (
-                  <Badge variant="outline" className="border-emerald-500 text-emerald-700 bg-emerald-50">
+                  <Badge variant="outline" className="border-emerald-500 text-emerald-700 bg-emerald-50 text-[10px] whitespace-nowrap">
                     Email Reminder Terkirim
                   </Badge>
                 )}
-                <Badge variant={
+                <Badge className="text-[10px] whitespace-nowrap py-0 px-2 h-5" variant={
                   schedule.status === "COMPLETED"  ? "success"     :
                   schedule.status === "SHOOTING"   ? "warning"     :
                   schedule.status === "SCHEDULED"  ? "info"        :
@@ -60,28 +60,28 @@ export default function Show({ schedule }) {
                 </Badge>
               </div>
             </CardHeader>
-            <CardContent className="space-y-4 text-sm">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-xs text-slate-400 uppercase font-medium">Pelanggan</p>
-                  <p className="font-bold text-slate-900">{schedule.customer?.name}</p>
-                  <p className="text-xs text-slate-500">{schedule.customer?.phone}</p>
+            <CardContent className="p-4 sm:p-5 space-y-4 text-sm">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                <div className="p-3 bg-slate-50 rounded-lg border border-slate-200/70 space-y-0.5">
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Pelanggan</p>
+                  <p className="font-bold text-slate-900 text-sm">{schedule.customer?.name}</p>
+                  <p className="text-xs text-slate-500">{schedule.customer?.phone || "-"}</p>
                 </div>
-                <div>
-                  <p className="text-xs text-slate-400 uppercase font-medium">Paket Foto</p>
-                  <p className="font-bold text-slate-900">{schedule.photo_package?.name || "-"}</p>
+                <div className="p-3 bg-slate-50 rounded-lg border border-slate-200/70 space-y-0.5">
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Paket Foto</p>
+                  <p className="font-bold text-slate-900 text-sm">{schedule.photo_package?.name || "-"}</p>
                   <p className="text-xs text-slate-500">{formatRupiah(schedule.photo_package?.price)}</p>
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 border-t border-slate-100 pt-3">
-                <div>
-                  <p className="text-xs text-slate-400 uppercase font-medium">Tanggal</p>
-                  <p className="font-semibold text-slate-900">{formatDate(schedule.date)}</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                <div className="p-3 bg-slate-50 rounded-lg border border-slate-200/70 space-y-0.5">
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Tanggal</p>
+                  <p className="font-bold text-slate-900 text-sm">{formatDate(schedule.date)}</p>
                 </div>
-                <div>
-                  <p className="text-xs text-slate-400 uppercase font-medium">Waktu Pemotretan</p>
-                  <p className="font-semibold text-slate-900">
+                <div className="p-3 bg-slate-50 rounded-lg border border-slate-200/70 space-y-0.5">
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Waktu Pemotretan</p>
+                  <p className="font-bold text-slate-900 text-sm">
                     {schedule.start_time?.substring(0, 5)} - {schedule.end_time?.substring(0, 5)}
                   </p>
                   {Number(schedule.overtime_hours) > 0 && (
@@ -110,13 +110,15 @@ export default function Show({ schedule }) {
               )}
 
               {/* Location Detail Section */}
-              <div className="p-4 bg-slate-50 border border-slate-200 rounded-lg space-y-2">
+              <div className="p-3.5 sm:p-4 bg-slate-50 border border-slate-200 rounded-lg space-y-2">
                 <div className="flex items-center space-x-2 text-slate-900 font-bold">
                   <MapPin className="h-4 w-4 text-rose-600 shrink-0" />
-                  <span>{schedule.location_name}</span>
+                  <span className="text-sm">{schedule.location_name}</span>
                 </div>
-                <p className="text-xs text-slate-600 pl-6">{schedule.location_address}</p>
-                <div className="pl-6 pt-1 flex items-center space-x-4 text-[11px] text-slate-500 font-mono">
+                {schedule.location_address && (
+                  <p className="text-xs text-slate-600 pl-6">{schedule.location_address}</p>
+                )}
+                <div className="pl-6 pt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-slate-500 font-mono">
                   <span>Lat: {schedule.latitude}</span>
                   <span>Long: {schedule.longitude}</span>
                   <span>Radius GPS: {schedule.location_radius}m</span>

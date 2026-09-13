@@ -113,8 +113,9 @@ export default function Index({ projects, filters, statuses }) {
         {isLoading ? (
           <TableSkeleton rows={6} cols={6} />
         ) : (
-          <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
-          <Table>
+          <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden w-full">
+            <div className="overflow-x-auto w-full">
+              <Table className="min-w-[800px]">
             <TableHeader className="bg-slate-50">
               <TableRow>
                 <TableHead className="font-semibold text-slate-700">Kode & Project</TableHead>
@@ -190,6 +191,7 @@ export default function Index({ projects, filters, statuses }) {
               )}
             </TableBody>
           </Table>
+          </div>
         </div>
         )}
       </div>

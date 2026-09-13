@@ -124,33 +124,31 @@ export default function Index({ photographers, filters }) {
     <>
       <Head title="Manajemen Photographer" />
       <div className="space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 w-full">
+          <div className="min-w-0">
+            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
               Manajemen Photographer
             </h1>
-            <p className="text-sm text-slate-500 mt-1">
-              Kelola tim tim photographer internal ARTDEVATA dan kredensial login portal.
+            <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+              Kelola tim photographer internal ARTDEVATA dan kredensial login portal.
             </p>
           </div>
-          <Button onClick={handleOpenCreate}>
-            <Plus />
+          <Button onClick={handleOpenCreate} size="sm" className="font-semibold gap-1.5 text-xs w-full sm:w-auto shrink-0">
+            <Plus className="h-4 w-4" />
             Tambah Photographer Baru
           </Button>
         </div>
 
-        <Card className="border-slate-200">
-          <CardContent className="pt-6">
-            <div className="flex gap-2">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
-                <Input
-                  placeholder="Cari nama, email, atau spesialisasi photographer..."
-                  value={search}
-                  onChange={handleSearchChange}
-                  className="pl-9"
-                />
-              </div>
+        <Card className="border-slate-200 shadow-2xs">
+          <CardContent className="p-3 sm:p-4">
+            <div className="relative w-full">
+              <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
+              <Input
+                placeholder="Cari nama, email, atau spesialisasi photographer..."
+                value={search}
+                onChange={handleSearchChange}
+                className="pl-9 bg-white text-xs sm:text-sm"
+              />
             </div>
           </CardContent>
         </Card>
