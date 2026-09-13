@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import { formatDate } from "@/lib/utils";
+import { formatDate, formatDateTime } from "@/lib/utils";
 import { Head, router } from "@inertiajs/react";
-import { History, Search } from "lucide-react";
+import { History, Search, Clock } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -131,8 +131,14 @@ export default function Index({ logs, filters }) {
               ) : (
                 safeLogs.data.map((log) => (
                   <TableRow key={log.id} className="border-border dark:border-slate-800">
-                    <TableCell className="text-xs text-slate-400 dark:text-slate-500 whitespace-nowrap">
-                      {formatDate(log.created_at)}
+                    <TableCell className="text-xs whitespace-nowrap">
+                      <span className="font-semibold text-slate-900 dark:text-slate-100 block">
+                        {log.formatted_date || formatDate(log.created_at)}
+                      </span>
+                      <span className="text-[11px] text-slate-500 dark:text-slate-400 font-mono flex items-center gap-1 mt-0.5">
+                        <Clock className="h-3 w-3 text-indigo-500 dark:text-indigo-400 shrink-0" />
+                        {log.formatted_time || (log.formatted_created_at ? log.formatted_created_at : formatDateTime(log.created_at))}
+                      </span>
                     </TableCell>
                     <TableCell className="font-semibold text-slate-900 dark:text-white">
                       {log.user?.name || "Sistem"}

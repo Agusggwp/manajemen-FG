@@ -30,6 +30,21 @@ export function formatTime(timeString) {
   return timeString.substring(0, 5);
 }
 
+export function formatDateTime(dateString) {
+  if (!dateString) return "-";
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return dateString;
+  return new Intl.DateTimeFormat("id-ID", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  }).format(date);
+}
+
 // Satu sumber terjemahan status — seluruh UI wajib pakai fungsi ini
 const STATUS_LABELS = {
   // Jadwal & Project
