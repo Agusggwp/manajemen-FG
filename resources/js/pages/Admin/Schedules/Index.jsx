@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { formatDate, formatRupiah } from "@/lib/utils";
+import { formatDate, formatRupiah, getStatusLabel } from "@/lib/utils";
 import { Head, useForm, router, Link } from "@inertiajs/react";
 import {
   Calendar,
@@ -246,8 +246,14 @@ export default function Index({ schedules, existingAssignments, filters, custome
                 <Card key={s.id} className="border-slate-200 hover:shadow-md transition-shadow">
                   <CardContent className="p-4 space-y-3">
                     <div className="flex items-center justify-between">
-                      <Badge variant={s.status === "COMPLETED" ? "success" : s.status === "SHOOTING" ? "warning" : "secondary"}>
-                        {s.status}
+                      <Badge variant={
+                        s.status === "COMPLETED"  ? "success"     :
+                        s.status === "SHOOTING"   ? "warning"     :
+                        s.status === "SCHEDULED"  ? "info"        :
+                        s.status === "CANCELLED"  ? "destructive" :
+                        "secondary"
+                      }>
+                        {getStatusLabel(s.status)}
                       </Badge>
                       <span className="text-xs font-mono text-slate-500 flex items-center gap-1">
                         <Clock className="h-3 w-3" /> {s.start_time?.substring(0, 5)} - {s.end_time?.substring(0, 5)}
@@ -352,14 +358,14 @@ export default function Index({ schedules, existingAssignments, filters, custome
                       <TableCell className="text-center">
                         <Badge
                           variant={
-                            s.status === "COMPLETED"
-                              ? "success"
-                              : s.status === "SHOOTING"
-                                ? "warning"
-                                : "secondary"
+                            s.status === "COMPLETED"  ? "success"     :
+                            s.status === "SHOOTING"   ? "warning"     :
+                            s.status === "SCHEDULED"  ? "info"        :
+                            s.status === "CANCELLED"  ? "destructive" :
+                            "secondary"
                           }
                         >
-                          {s.status}
+                          {getStatusLabel(s.status)}
                         </Badge>
                       </TableCell>
 

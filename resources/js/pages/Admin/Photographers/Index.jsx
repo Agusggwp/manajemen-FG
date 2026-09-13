@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import { Head, useForm, router } from "@inertiajs/react";
 import { Plus, Search, Camera, Edit3, Trash2, Phone, Mail, UserCheck, MoreVertical, X, Save } from "lucide-react";
+import { getStatusLabel } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -177,7 +178,7 @@ export default function Index({ photographers, filters }) {
                       </div>
                     </div>
                     <Badge variant={p.status === "ACTIVE" ? "success" : "secondary"}>
-                      {p.status}
+                      {getStatusLabel(p.status)}
                     </Badge>
                   </div>
 

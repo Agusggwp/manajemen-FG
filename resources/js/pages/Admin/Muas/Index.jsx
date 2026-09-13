@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { Head, useForm, router, Link } from "@inertiajs/react";
 import { Plus, Search, Sparkles, Edit3, Trash2, Eye, Phone, MapPin, MoreVertical, X, Save, Wallet } from "lucide-react";
-import { formatRupiah } from "@/lib/utils";
+import { formatRupiah, getStatusLabel } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -182,7 +182,7 @@ export default function Index({ muas, filters }) {
                       </div>
                     </div>
                     <Badge variant={mua.status === "ACTIVE" ? "success" : "secondary"}>
-                      {mua.status}
+                      {getStatusLabel(mua.status)}
                     </Badge>
                   </div>
 

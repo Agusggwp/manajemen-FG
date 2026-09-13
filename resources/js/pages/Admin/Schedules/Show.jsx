@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { formatDate, formatRupiah } from "@/lib/utils";
+import { formatDate, formatRupiah, getStatusLabel } from "@/lib/utils";
 import { Head, Link, router } from "@inertiajs/react";
 import { ArrowLeft, MapPin, Clock, Camera, Sparkles, User, CheckCircle2, Mail } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -49,8 +49,14 @@ export default function Show({ schedule }) {
                     Email Reminder Terkirim
                   </Badge>
                 )}
-                <Badge variant={schedule.status === "COMPLETED" ? "success" : "warning"}>
-                  {schedule.status}
+                <Badge variant={
+                  schedule.status === "COMPLETED"  ? "success"     :
+                  schedule.status === "SHOOTING"   ? "warning"     :
+                  schedule.status === "SCHEDULED"  ? "info"        :
+                  schedule.status === "CANCELLED"  ? "destructive" :
+                  "secondary"
+                }>
+                  {getStatusLabel(schedule.status)}
                 </Badge>
               </div>
             </CardHeader>

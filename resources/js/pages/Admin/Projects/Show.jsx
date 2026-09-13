@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { formatDate, formatRupiah } from "@/lib/utils";
+import { formatDate, formatRupiah, getStatusLabel } from "@/lib/utils";
 import { Head, Link, useForm, router } from "@inertiajs/react";
 import {
   ArrowLeft,
@@ -192,7 +192,7 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
               </SelectTrigger>
               <SelectContent>
                 {["PLANNING", "SCHEDULED", "SHOOTING", "EDITING", "REVIEW", "COMPLETED", "DELIVERED", "CANCELLED"].map((s) => (
-                  <SelectItem key={s} value={s}>{s}</SelectItem>
+                  <SelectItem key={s} value={s}>{getStatusLabel(s)}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -207,8 +207,14 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
           <CardHeader className="border-b border-slate-100 bg-slate-50/50">
             <CardTitle className="text-base font-semibold flex items-center justify-between">
               <span>SECTION 1 — INFORMASI PROJECT</span>
-              <Badge variant={project.status === "COMPLETED" ? "success" : "warning"}>
-                {project.status}
+              <Badge variant={
+                project.status === "COMPLETED"  ? "success"     :
+                project.status === "SHOOTING"   ? "warning"     :
+                project.status === "SCHEDULED"  ? "info"        :
+                project.status === "CANCELLED"  ? "destructive" :
+                "secondary"
+              }>
+                {getStatusLabel(project.status)}
               </Badge>
             </CardTitle>
           </CardHeader>
@@ -403,7 +409,7 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
                   </span>
                   {startProof ? (
                     <Badge variant={startProof.status === "START_VALID" ? "success" : "warning"}>
-                      {startProof.status}
+                      {getStatusLabel(startProof.status)}
                     </Badge>
                   ) : (
                     <Badge variant="secondary">Belum Dikirim</Badge>
@@ -451,7 +457,7 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
                   </span>
                   {endProof ? (
                     <Badge variant={endProof.status === "END_VALID" ? "success" : "warning"}>
-                      {endProof.status}
+                      {getStatusLabel(endProof.status)}
                     </Badge>
                   ) : (
                     <Badge variant="secondary">Belum Dikirim</Badge>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { formatDate, formatRupiah } from "@/lib/utils";
+import { formatDate, formatRupiah, getStatusLabel } from "@/lib/utils";
 import { Head, Link, router } from "@inertiajs/react";
 import { FolderKanban, Search, Eye, Clock, TrendingUp, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -174,7 +174,7 @@ export default function Index({ projects, filters, statuses }) {
 
                     <TableCell className="text-center">
                       <Badge variant={prj.status === "COMPLETED" ? "success" : "secondary"}>
-                        {prj.status}
+                        {getStatusLabel(prj.status)}
                       </Badge>
                     </TableCell>
 
