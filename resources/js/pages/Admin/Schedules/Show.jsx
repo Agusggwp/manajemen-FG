@@ -167,17 +167,17 @@ export default function Show({ schedule }) {
 
       <ConfirmDialog
         open={reminderOpen}
-        onOpenChange={setReminderOpen}
+        onOpenChange={(val) => { if (!isSendingReminder) setReminderOpen(val); }}
         title="Kirim Email Peringatan"
         description="Apakah Anda yakin ingin mengirim email peringatan (reminder) H-1 ke Pelanggan, Fotografer, dan MUA untuk jadwal pemotretan ini?"
         confirmText="Kirim Email"
         cancelText="Batal"
+        loadingText="Mengirim Email..."
         variant="default"
         icon={Mail}
-        onConfirm={() => {
-          setReminderOpen(false);
-          router.post(`/admin/schedules/${schedule.id}/send-reminder`);
-        }}
+        loading={isSendingReminder}
+        disabled={isSendingReminder}
+        onConfirm={handleSendReminder}
       />
     </>
   );

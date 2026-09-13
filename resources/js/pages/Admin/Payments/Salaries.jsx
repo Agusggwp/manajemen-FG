@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { formatDate, formatRupiah } from "@/lib/utils";
 import { Head, useForm, router } from "@inertiajs/react";
-import { CreditCard, CheckCircle2, DollarSign, Clock, Search, X } from "lucide-react";
+import { CreditCard, CheckCircle2, DollarSign, Clock, Search, X, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -177,7 +177,7 @@ export default function Salaries({ salaries, filters, unpaidTotal = 0, paidTotal
         )}
 
         {/* Pay Modal */}
-        <Dialog open={payModalOpen} onOpenChange={setPayModalOpen}>
+        <Dialog open={payModalOpen} onOpenChange={(val) => { if (!payForm.processing) setPayModalOpen(val); }}>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Konfirmasi Pembayaran Gaji Fotografer</DialogTitle>
@@ -219,13 +219,13 @@ export default function Salaries({ salaries, filters, unpaidTotal = 0, paidTotal
               </div>
 
               <DialogFooter className="gap-2">
-                <Button type="button" variant="outline" onClick={() => setPayModalOpen(false)}>
+                <Button type="button" variant="outline" disabled={payForm.processing} onClick={() => setPayModalOpen(false)}>
                   <X />
                   <span>Batal</span>
                 </Button>
-                <Button type="submit">
-                  <CheckCircle2 />
-                  <span>Konfirmasi Pembayaran</span>
+                <Button type="submit" disabled={payForm.processing}>
+                  {payForm.processing ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle2 />}
+                  <span>{payForm.processing ? "Memproses..." : "Konfirmasi Pembayaran"}</span>
                 </Button>
               </DialogFooter>
             </form>

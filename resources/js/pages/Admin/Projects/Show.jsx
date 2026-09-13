@@ -19,6 +19,7 @@ import {
   Check,
   X,
   Save,
+  Loader2,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -50,6 +51,7 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
   const [expenseModalOpen, setExpenseModalOpen] = useState(false);
   const [photographerModalOpen, setPhotographerModalOpen] = useState(false);
   const [muaModalOpen, setMuaModalOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [confirmConfig, setConfirmConfig] = useState({
     open: false,
     title: "",
@@ -120,12 +122,14 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
   const handleRemovePhotographer = (salary) => {
     setConfirmConfig({
       open: true,
-      title: "Hapus Photographer dari Project",
-      description: `Apakah Anda yakin ingin menghapus photographer "${salary.photographer?.name}" dari penugasan project ini?`,
+      title: "Hapus Fotografer dari Project",
+      description: `Apakah Anda yakin ingin menghapus fotografer "${salary.photographer?.name}" dari penugasan project ini?`,
       confirmText: "Hapus Penugasan",
       action: () => {
+        setIsDeleting(true);
         router.delete(`/admin/projects/${safeProject.id}/photographers/${salary.photographer_id}`, {
           onSuccess: () => setConfirmConfig((prev) => ({ ...prev, open: false })),
+          onFinish: () => setIsDeleting(false),
         });
       },
     });
@@ -138,8 +142,10 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
       description: `Apakah Anda yakin ingin menghapus MUA "${fee.mua?.name}" dari penugasan project ini?`,
       confirmText: "Hapus Penugasan",
       action: () => {
+        setIsDeleting(true);
         router.delete(`/admin/projects/${safeProject.id}/muas/${fee.mua_id}`, {
           onSuccess: () => setConfirmConfig((prev) => ({ ...prev, open: false })),
+          onFinish: () => setIsDeleting(false),
         });
       },
     });
@@ -152,8 +158,10 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
       description: `Apakah Anda yakin ingin menghapus pengeluaran "${exp.name}" sebesar ${formatRupiah(exp.amount)}?`,
       confirmText: "Hapus Biaya",
       action: () => {
+        setIsDeleting(true);
         router.delete(`/admin/expenses/${exp.id}`, {
           onSuccess: () => setConfirmConfig((prev) => ({ ...prev, open: false })),
+          onFinish: () => setIsDeleting(false),
         });
       },
     });
@@ -585,25 +593,25 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
         </Card>
 
         {/* Modal Expense */}
-        <Dialog open={expenseModalOpen} onOpenChange={setExpenseModalOpen}>
+        <Dialog open={expenseModalOpen} onOpenChange={(val) => { if (!expenseForm.processing) setExpenseModalOpen(val); }}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Tambah Biaya Operasional Project</DialogTitle>
+              <DialogTitle>Tambah Biaya Operasional</DialogTitle>
             </DialogHeader>
 
             <form onSubmit={handleAddExpense} className="space-y-4 py-2">
               <div className="space-y-2">
-                <Label>Nama Pengeluaran</Label>
+                <Label>Nama Pengeluaran / Item</Label>
                 <Input
                   required
-                  placeholder="misal: Transport, Parkir, Konsumsi"
+                  placeholder="misal: Tiket Masuk Lokasi, Transportasi"
                   value={expenseForm.data.name}
                   onChange={(e) => expenseForm.setData("name", e.target.value)}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label>Jumlah Biaya (Rp)</Label>
+                <Label>Nominal Biaya (Rp)</Label>
                 <Input
                   type="number"
                   min="0"
@@ -615,20 +623,22 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
               </div>
 
               <div className="space-y-2">
-                <Label>Keterangan (Opsional)</Label>
+                <Label>Keterangan Tambahan (Opsional)</Label>
                 <Input
-                  placeholder="Catatan..."
+                  placeholder="Catatan kwitansi / invoice"
                   value={expenseForm.data.description}
                   onChange={(e) => expenseForm.setData("description", e.target.value)}
                 />
               </div>
 
-              <DialogFooter>
-                <Button type="button" variant="outline" onClick={() => setExpenseModalOpen(false)}>
-                  <X /> Batal
+              <DialogFooter className="gap-2">
+                <Button type="button" variant="outline" disabled={expenseForm.processing} onClick={() => setExpenseModalOpen(false)}>
+                  <X />
+                  <span>Batal</span>
                 </Button>
                 <Button type="submit" disabled={expenseForm.processing}>
-                  <Save /> Simpan Biaya
+                  {expenseForm.processing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save />}
+                  <span>{expenseForm.processing ? "Menyimpan..." : "Simpan Biaya"}</span>
                 </Button>
               </DialogFooter>
             </form>
@@ -636,21 +646,21 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
         </Dialog>
 
         {/* Modal Photographer Assign */}
-        <Dialog open={photographerModalOpen} onOpenChange={setPhotographerModalOpen}>
+        <Dialog open={photographerModalOpen} onOpenChange={(val) => { if (!photographerForm.processing) setPhotographerModalOpen(val); }}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Assign Photographer ke Project</DialogTitle>
+              <DialogTitle>Assign Fotografer ke Project</DialogTitle>
             </DialogHeader>
 
             <form onSubmit={handleAddPhotographer} className="space-y-4 py-2">
               <div className="space-y-2">
-                <Label>Pilih Photographer</Label>
+                <Label>Pilih Fotografer</Label>
                 <Select
                   value={photographerForm.data.photographer_id ? String(photographerForm.data.photographer_id) : ""}
                   onValueChange={(val) => photographerForm.setData("photographer_id", val)}
                 >
                   <SelectTrigger className="w-full bg-white">
-                    <SelectValue placeholder="-- Pilih Photographer --" />
+                    <SelectValue placeholder="-- Pilih Fotografer --" />
                   </SelectTrigger>
                   <SelectContent>
                     {allPhotographers?.map((p) => (
@@ -672,11 +682,12 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
               </div>
 
               <DialogFooter>
-                <Button type="button" variant="outline" onClick={() => setPhotographerModalOpen(false)}>
+                <Button type="button" variant="outline" disabled={photographerForm.processing} onClick={() => setPhotographerModalOpen(false)}>
                   <X /> Batal
                 </Button>
                 <Button type="submit" disabled={photographerForm.processing}>
-                  <Plus /> Assign Photographer
+                  {photographerForm.processing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus />}
+                  <span>{photographerForm.processing ? "Menyimpan..." : "Assign Fotografer"}</span>
                 </Button>
               </DialogFooter>
             </form>
@@ -684,7 +695,7 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
         </Dialog>
 
         {/* Modal MUA Assign */}
-        <Dialog open={muaModalOpen} onOpenChange={setMuaModalOpen}>
+        <Dialog open={muaModalOpen} onOpenChange={(val) => { if (!muaForm.processing) setMuaModalOpen(val); }}>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Assign MUA ke Project</DialogTitle>
@@ -718,7 +729,7 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
               </div>
 
               <div className="space-y-2">
-                <Label>Fee MUA per Project ini (Rp)</Label>
+                <Label>Gaji MUA per Project ini (Rp)</Label>
                 <Input
                   type="number"
                   min="0"
@@ -730,13 +741,13 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
               </div>
 
               <DialogFooter className="gap-2">
-                <Button type="button" variant="outline" onClick={() => setMuaModalOpen(false)}>
+                <Button type="button" variant="outline" disabled={muaForm.processing} onClick={() => setMuaModalOpen(false)}>
                   <X />
                   <span>Batal</span>
                 </Button>
                 <Button type="submit" disabled={muaForm.processing}>
-                  <Plus />
-                  <span>Assign MUA</span>
+                  {muaForm.processing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus />}
+                  <span>{muaForm.processing ? "Menyimpan..." : "Assign MUA"}</span>
                 </Button>
               </DialogFooter>
             </form>
@@ -745,12 +756,14 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
         {/* Universal Confirm Dialog */}
         <ConfirmDialog
           open={confirmConfig.open}
-          onOpenChange={(open) => setConfirmConfig((prev) => ({ ...prev, open }))}
+          onOpenChange={(open) => { if (!isDeleting) setConfirmConfig((prev) => ({ ...prev, open })); }}
           title={confirmConfig.title}
           description={confirmConfig.description}
           confirmText={confirmConfig.confirmText}
           cancelText="Batal"
           variant="destructive"
+          loading={isDeleting}
+          disabled={isDeleting}
           onConfirm={() => confirmConfig.action?.()}
         />
       </div>

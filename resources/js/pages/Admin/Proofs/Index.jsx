@@ -11,6 +11,7 @@ import {
   User,
   AlertCircle,
   X,
+  Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -37,6 +38,8 @@ export default function Index({ proofs, counts, activeTab = "pending" }) {
   const [adminNote, setAdminNote] = useState("");
   const [approveTarget, setApproveTarget] = useState(null);
   const [approveOpen, setApproveOpen] = useState(false);
+  const [isApproving, setIsApproving] = useState(false);
+  const [isRejecting, setIsRejecting] = useState(false);
 
   const handleTabChange = (tab) => {
     router.get("/admin/proofs", { tab }, { preserveState: true });
@@ -48,7 +51,8 @@ export default function Index({ proofs, counts, activeTab = "pending" }) {
   };
 
   const handleConfirmApprove = () => {
-    if (!approveTarget) return;
+    if (!approveTarget || isApproving) return;
+    setIsApproving(true);
     router.post(`/admin/proofs/${approveTarget.id}/validate`, {
       is_valid: true,
     }, {
@@ -56,6 +60,7 @@ export default function Index({ proofs, counts, activeTab = "pending" }) {
         setApproveOpen(false);
         setApproveTarget(null);
       },
+      onFinish: () => setIsApproving(false),
     });
   };
 
@@ -67,12 +72,14 @@ export default function Index({ proofs, counts, activeTab = "pending" }) {
 
   const handleConfirmReject = (e) => {
     e.preventDefault();
-    if (!selectedProof) return;
+    if (!selectedProof || isRejecting) return;
+    setIsRejecting(true);
     router.post(`/admin/proofs/${selectedProof.id}/validate`, {
       is_valid: false,
       admin_note: adminNote,
     }, {
       onSuccess: () => setRejectModalOpen(false),
+      onFinish: () => setIsRejecting(false),
     });
   };
 
@@ -85,7 +92,7 @@ export default function Index({ proofs, counts, activeTab = "pending" }) {
             Validasi Pemotretan
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Verifikasi bukti foto awal (START) dan selesai (END) beserta koordinat GPS dari photographer.
+            Verifikasi bukti foto awal (START) dan selesai (END) beserta koordinat GPS dari fotografer.
           </p>
         </div>
 
@@ -233,7 +240,7 @@ export default function Index({ proofs, counts, activeTab = "pending" }) {
         )}
 
         {/* Modal Reject */}
-        <Dialog open={rejectModalOpen} onOpenChange={setRejectModalOpen}>
+        <Dialog open={rejectModalOpen} onOpenChange={(val) => { if (!isRejecting) setRejectModalOpen(val); }}>
           <DialogContent>
             <DialogHeader>
               <DialogTitle className="text-red-600 flex items-center gap-2">
@@ -243,7 +250,7 @@ export default function Index({ proofs, counts, activeTab = "pending" }) {
 
             <form onSubmit={handleConfirmReject} className="space-y-4 py-2">
               <p className="text-xs text-slate-600">
-                Tolak bukti foto {selectedProof?.type} dari {selectedProof?.photographer?.name}? Berikan alasan penolakan agar photographer dapat mengirimkan bukti ulang.
+                Tolak bukti foto {selectedProof?.type} dari {selectedProof?.photographer?.name}? Berikan alasan penolakan agar fotografer dapat mengirimkan bukti ulang.
               </p>
 
               <div className="space-y-2">
@@ -256,13 +263,13 @@ export default function Index({ proofs, counts, activeTab = "pending" }) {
               </div>
 
               <DialogFooter className="gap-2">
-                <Button type="button" variant="outline" onClick={() => setRejectModalOpen(false)}>
+                <Button type="button" variant="outline" disabled={isRejecting} onClick={() => setRejectModalOpen(false)}>
                   <X />
                   <span>Batal</span>
                 </Button>
-                <Button type="submit" variant="destructive">
-                  <XCircle />
-                  <span>Konfirmasi Tolak</span>
+                <Button type="submit" variant="destructive" disabled={isRejecting}>
+                  {isRejecting ? <Loader2 className="h-4 w-4 animate-spin" /> : <XCircle />}
+                  <span>{isRejecting ? "Menolak..." : "Konfirmasi Tolak"}</span>
                 </Button>
               </DialogFooter>
             </form>
@@ -271,13 +278,16 @@ export default function Index({ proofs, counts, activeTab = "pending" }) {
         {/* Confirm Approve Dialog */}
         <ConfirmDialog
           open={approveOpen}
-          onOpenChange={setApproveOpen}
+          onOpenChange={(val) => { if (!isApproving) setApproveOpen(val); }}
           title="Setujui Bukti Foto"
           description={`Apakah Anda yakin ingin menyetujui foto bukti ${approveTarget?.type} dari ${approveTarget?.photographer?.name}? Status presensi pemotretan akan ditandai valid.`}
           confirmText="Setujui Valid"
           cancelText="Batal"
+          loadingText="Menyetujui..."
           variant="default"
           icon={CheckCircle2}
+          loading={isApproving}
+          disabled={isApproving}
           onConfirm={handleConfirmApprove}
         />
       </div>

@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { Head, useForm, router } from "@inertiajs/react";
-import { Plus, Search, Users, Edit3, Trash2, Phone, Mail, MapPin, MoreVertical, X, Save } from "lucide-react";
+import { Plus, Search, Users, Edit3, Trash2, Phone, Mail, MapPin, MoreVertical, X, Save, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -41,6 +41,7 @@ export default function Index({ customers, filters }) {
   const [search, setSearch] = useState(safeFilters.search || "");
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const form = useForm({
     name: "",
@@ -102,12 +103,14 @@ export default function Index({ customers, filters }) {
   };
 
   const handleConfirmDelete = () => {
-    if (!deleteTarget) return;
+    if (!deleteTarget || isDeleting) return;
+    setIsDeleting(true);
     router.delete(`/admin/customers/${deleteTarget.id}`, {
       onSuccess: () => {
         setDeleteOpen(false);
         setDeleteTarget(null);
       },
+      onFinish: () => setIsDeleting(false),
     });
   };
 
@@ -244,8 +247,8 @@ export default function Index({ customers, filters }) {
         </div>
         )}
 
-        {/* Modal Create/Edit Customer */}
-        <Dialog open={modalOpen} onOpenChange={setModalOpen}>
+        {/* Modal Form */}
+        <Dialog open={modalOpen} onOpenChange={(val) => { if (!form.processing) setModalOpen(val); }}>
           <DialogContent className="max-w-[95vw] sm:max-w-md max-h-[90vh] overflow-y-auto p-4 sm:p-6 rounded-2xl">
             <DialogHeader>
               <DialogTitle className="text-base sm:text-lg font-bold text-slate-900">
@@ -317,6 +320,7 @@ export default function Index({ customers, filters }) {
                 <Button
                   type="button"
                   variant="outline"
+                  disabled={form.processing}
                   onClick={() => setModalOpen(false)}
                   className="w-full sm:w-auto font-semibold text-xs sm:text-sm h-10"
                 >
@@ -328,7 +332,7 @@ export default function Index({ customers, filters }) {
                   disabled={form.processing}
                   className="w-full sm:w-auto font-semibold text-xs sm:text-sm h-10 shadow-xs"
                 >
-                  <Save />
+                  {form.processing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save />}
                   <span>{form.processing ? "Menyimpan..." : "Simpan Pelanggan"}</span>
                 </Button>
               </DialogFooter>
@@ -338,12 +342,14 @@ export default function Index({ customers, filters }) {
         {/* Confirm Delete Dialog */}
         <ConfirmDialog
           open={deleteOpen}
-          onOpenChange={setDeleteOpen}
+          onOpenChange={(val) => { if (!isDeleting) setDeleteOpen(val); }}
           title="Hapus Data Pelanggan"
           description={`Apakah Anda yakin ingin menghapus pelanggan "${deleteTarget?.name}"? Seluruh data yang terkait akan terhapus.`}
           confirmText="Hapus Pelanggan"
           cancelText="Batal"
           variant="destructive"
+          loading={isDeleting}
+          disabled={isDeleting}
           onConfirm={handleConfirmDelete}
         />
       </div>

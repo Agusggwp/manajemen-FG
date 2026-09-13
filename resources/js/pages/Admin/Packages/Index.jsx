@@ -14,6 +14,7 @@ import {
   MoreVertical,
   X,
   Save,
+  Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -74,6 +75,7 @@ export default function Index({ packages, filters, categories, muas }) {
   const [sortBy, setSortBy] = useState(safeFilters.sort || "all");
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const triggerFilter = (newSearch = search, newCategory = category, newSort = sortBy) => {
     setIsSearching(true);
@@ -164,12 +166,14 @@ export default function Index({ packages, filters, categories, muas }) {
   };
 
   const handleConfirmDelete = () => {
-    if (!deleteTarget) return;
+    if (!deleteTarget || isDeleting) return;
+    setIsDeleting(true);
     router.delete(`/admin/packages/${deleteTarget.id}`, {
       onSuccess: () => {
         setDeleteOpen(false);
         setDeleteTarget(null);
       },
+      onFinish: () => setIsDeleting(false),
     });
   };
 
@@ -389,7 +393,7 @@ export default function Index({ packages, filters, categories, muas }) {
         )}
 
         {/* Modal Form Create/Edit Package */}
-        <Dialog open={modalOpen} onOpenChange={setModalOpen}>
+        <Dialog open={modalOpen} onOpenChange={(val) => { if (!form.processing) setModalOpen(val); }}>
           <DialogContent className="max-w-[95vw] sm:max-w-2xl max-h-[90vh] overflow-y-auto p-4 sm:p-6 rounded-2xl">
             <DialogHeader>
               <DialogTitle className="text-base sm:text-lg font-bold text-slate-900">
@@ -610,6 +614,7 @@ export default function Index({ packages, filters, categories, muas }) {
                 <Button
                   type="button"
                   variant="outline"
+                  disabled={form.processing}
                   onClick={() => setModalOpen(false)}
                   className="w-full sm:w-auto font-semibold text-xs sm:text-sm h-10"
                 >
@@ -621,7 +626,7 @@ export default function Index({ packages, filters, categories, muas }) {
                   disabled={form.processing}
                   className="w-full sm:w-auto font-semibold text-xs sm:text-sm h-10 shadow-xs"
                 >
-                  <Save />
+                  {form.processing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save />}
                   <span>{form.processing ? "Menyimpan..." : "Simpan Paket"}</span>
                 </Button>
               </DialogFooter>
@@ -631,12 +636,14 @@ export default function Index({ packages, filters, categories, muas }) {
         {/* Confirm Delete Dialog */}
         <ConfirmDialog
           open={deleteOpen}
-          onOpenChange={setDeleteOpen}
+          onOpenChange={(val) => { if (!isDeleting) setDeleteOpen(val); }}
           title="Hapus Paket Foto"
           description={`Apakah Anda yakin ingin menghapus paket "${deleteTarget?.name}"? Tindakan ini tidak dapat dibatalkan.`}
           confirmText="Hapus Paket"
           cancelText="Batal"
           variant="destructive"
+          loading={isDeleting}
+          disabled={isDeleting}
           onConfirm={handleConfirmDelete}
         />
       </div>

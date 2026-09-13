@@ -16,6 +16,7 @@ import {
   CheckCircle2,
   LayoutList,
   X,
+  Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -60,6 +61,7 @@ export default function Index({ schedules, existingAssignments, filters, custome
 
   const [modalOpen, setModalOpen] = useState(false);
   const [reminderOpen, setReminderOpen] = useState(false);
+  const [isSendingReminder, setIsSendingReminder] = useState(false);
   const [selectedScheduleId, setSelectedScheduleId] = useState(null);
   const [search, setSearch] = useState(safeFilters.search || "");
   const [selectedPackage, setSelectedPackage] = useState(null);
@@ -482,8 +484,8 @@ export default function Index({ schedules, existingAssignments, filters, custome
           </div>
         )}
 
-        {/* Modal Create Schedule */}
-        <Dialog open={modalOpen} onOpenChange={setModalOpen}>
+        {/* Modal Form Create Schedule */}
+        <Dialog open={modalOpen} onOpenChange={(val) => { if (!form.processing) setModalOpen(val); }}>
           <DialogContent className="max-w-[95vw] sm:max-w-3xl max-h-[90vh] overflow-y-auto p-4 sm:p-6 rounded-2xl">
             <DialogHeader>
               <DialogTitle className="text-base sm:text-lg font-bold text-slate-900">
@@ -793,6 +795,7 @@ export default function Index({ schedules, existingAssignments, filters, custome
                 <Button
                   type="button"
                   variant="outline"
+                  disabled={form.processing}
                   onClick={() => setModalOpen(false)}
                   className="w-full sm:w-auto font-semibold text-xs sm:text-sm h-10"
                 >
@@ -804,7 +807,7 @@ export default function Index({ schedules, existingAssignments, filters, custome
                   disabled={form.processing}
                   className="w-full sm:w-auto font-semibold text-xs sm:text-sm h-10 shadow-xs"
                 >
-                  <Plus />
+                  {form.processing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus />}
                   <span>{form.processing ? "Memproses..." : "Buat Jadwal & Project"}</span>
                 </Button>
               </DialogFooter>
@@ -814,18 +817,23 @@ export default function Index({ schedules, existingAssignments, filters, custome
 
         <ConfirmDialog
           open={reminderOpen}
-          onOpenChange={setReminderOpen}
+          onOpenChange={(val) => { if (!isSendingReminder) setReminderOpen(val); }}
           title="Kirim Email Peringatan"
           description="Apakah Anda yakin ingin mengirim email peringatan (reminder) H-1 ke Pelanggan, Fotografer, dan MUA untuk jadwal pemotretan ini?"
           confirmText="Kirim Email"
           cancelText="Batal"
+          loadingText="Mengirim Email..."
           variant="default"
           icon={Mail}
+          loading={isSendingReminder}
+          disabled={isSendingReminder}
           onConfirm={() => {
-            setReminderOpen(false);
-            if (selectedScheduleId) {
-              router.post(`/admin/schedules/${selectedScheduleId}/send-reminder`);
-            }
+            if (!selectedScheduleId || isSendingReminder) return;
+            setIsSendingReminder(true);
+            router.post(`/admin/schedules/${selectedScheduleId}/send-reminder`, {}, {
+              onSuccess: () => setReminderOpen(false),
+              onFinish: () => setIsSendingReminder(false),
+            });
           }}
         />
       </div>

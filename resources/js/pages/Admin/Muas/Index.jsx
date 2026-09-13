@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { Head, useForm, router, Link } from "@inertiajs/react";
-import { Plus, Search, Sparkles, Edit3, Trash2, Eye, Phone, MapPin, MoreVertical, X, Save, Wallet } from "lucide-react";
+import { Plus, Search, Sparkles, Edit3, Trash2, Eye, Phone, MapPin, MoreVertical, X, Save, Wallet, Loader2 } from "lucide-react";
 import { formatRupiah, getStatusLabel } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -44,6 +44,7 @@ export default function Index({ muas, filters }) {
   const [search, setSearch] = useState(safeFilters.search || "");
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const form = useForm({
     name: "",
@@ -113,12 +114,14 @@ export default function Index({ muas, filters }) {
   };
 
   const handleConfirmDelete = () => {
-    if (!deleteTarget) return;
+    if (!deleteTarget || isDeleting) return;
+    setIsDeleting(true);
     router.delete(`/admin/muas/${deleteTarget.id}`, {
       onSuccess: () => {
         setDeleteOpen(false);
         setDeleteTarget(null);
       },
+      onFinish: () => setIsDeleting(false),
     });
   };
 
@@ -248,7 +251,7 @@ export default function Index({ muas, filters }) {
         )}
 
         {/* Modal Form */}
-        <Dialog open={modalOpen} onOpenChange={setModalOpen}>
+        <Dialog open={modalOpen} onOpenChange={(val) => { if (!form.processing) setModalOpen(val); }}>
           <DialogContent className="max-w-[95vw] sm:max-w-lg max-h-[90vh] overflow-y-auto p-5 sm:p-6 rounded-2xl">
             <DialogHeader>
               <DialogTitle className="text-base sm:text-lg font-bold text-slate-900">
@@ -356,6 +359,7 @@ export default function Index({ muas, filters }) {
                 <Button
                   type="button"
                   variant="outline"
+                  disabled={form.processing}
                   onClick={() => setModalOpen(false)}
                   className="w-full sm:w-auto font-semibold text-xs sm:text-sm h-10"
                 >
@@ -367,7 +371,7 @@ export default function Index({ muas, filters }) {
                   disabled={form.processing}
                   className="w-full sm:w-auto font-semibold text-xs sm:text-sm h-10 shadow-xs"
                 >
-                  <Save />
+                  {form.processing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save />}
                   <span>{form.processing ? "Menyimpan..." : "Simpan MUA"}</span>
                 </Button>
               </DialogFooter>
@@ -377,12 +381,14 @@ export default function Index({ muas, filters }) {
         {/* Confirm Delete Dialog */}
         <ConfirmDialog
           open={deleteOpen}
-          onOpenChange={setDeleteOpen}
+          onOpenChange={(val) => { if (!isDeleting) setDeleteOpen(val); }}
           title="Hapus Data MUA"
           description={`Apakah Anda yakin ingin menghapus MUA "${deleteTarget?.name}"? Seluruh riwayat gaji yang terkait akan terhapus.`}
           confirmText="Hapus MUA"
           cancelText="Batal"
           variant="destructive"
+          loading={isDeleting}
+          disabled={isDeleting}
           onConfirm={handleConfirmDelete}
         />
       </div>
