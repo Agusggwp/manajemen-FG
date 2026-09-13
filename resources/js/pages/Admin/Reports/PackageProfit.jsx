@@ -72,54 +72,58 @@ export default function PackageProfit({ reportData, summary, filters, categories
 
   return (
     <>
-      <Head title="Laporan Profitability Paket" />
-      <div className="space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
-              Laporan Profitability Paket Foto
+      <Head title="Laporan Keuntungan Paket Foto" />
+      <div className="space-y-4 sm:space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+          <div className="min-w-0">
+            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+              Laporan Keuntungan Paket Foto
             </h1>
-            <p className="text-sm text-slate-500 mt-1">
-              Analisis perbandingan revenue, total cost aktual, dan profit per paket foto ARTDEVATA.
+            <p className="text-xs sm:text-sm text-slate-500 mt-0.5 sm:mt-1">
+              Analisis perbandingan pendapatan, total biaya aktual, dan keuntungan per paket foto ARTDEVATA.
             </p>
           </div>
           <a
             href={`/admin/reports/package-profit/export-csv?start_date=${startDate}&end_date=${endDate}&category=${category}`}
             target="_blank"
             rel="noopener noreferrer"
+            className="w-full sm:w-auto shrink-0"
           >
-            <Button>
-              <Download /> Unduh Laporan CSV
+            <Button size="sm" className="font-semibold gap-1.5 text-xs w-full sm:w-auto h-10 shadow-xs">
+              <Download className="h-4 w-4" />
+              <span>Unduh Laporan CSV</span>
             </Button>
           </a>
         </div>
 
         {/* Filters */}
-        <Card className="border-slate-200">
-          <CardContent className="pt-6">
-            <div className="flex flex-col sm:flex-row gap-3 items-end">
-              <div className="flex-1 space-y-1">
-                <label className="text-xs font-semibold text-slate-600">Tanggal Mulai</label>
+        <Card className="border-slate-200 shadow-2xs">
+          <CardContent className="p-4 sm:p-5">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 w-full">
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-slate-700">Tanggal Mulai</label>
                 <Input
                   type="date"
                   value={startDate}
                   onChange={handleStartDate}
+                  className="w-full bg-white text-xs sm:text-sm h-9 sm:h-10"
                 />
               </div>
 
-              <div className="flex-1 space-y-1">
-                <label className="text-xs font-semibold text-slate-600">Tanggal Selesai</label>
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-slate-700">Tanggal Selesai</label>
                 <Input
                   type="date"
                   value={endDate}
                   onChange={handleEndDate}
+                  className="w-full bg-white text-xs sm:text-sm h-9 sm:h-10"
                 />
               </div>
 
-              <div className="flex-1 space-y-1">
-                <label className="text-xs font-semibold text-slate-600">Kategori Paket</label>
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-slate-700">Kategori Paket</label>
                 <Select value={category || "all"} onValueChange={handleCategoryChange}>
-                  <SelectTrigger className="w-full bg-white">
+                  <SelectTrigger className="w-full bg-white text-xs sm:text-sm h-9 sm:h-10">
                     <SelectValue placeholder="Semua Kategori" />
                   </SelectTrigger>
                   <SelectContent>
@@ -135,43 +139,46 @@ export default function PackageProfit({ reportData, summary, filters, categories
         </Card>
 
         {/* Global Summary Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-          <Card className="bg-slate-900 text-white shadow-sm border-slate-800">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+          <Card className="bg-slate-900 text-white shadow-2xs border-slate-800">
             <CardHeader className="p-4 pb-1">
-              <CardTitle className="text-xs font-semibold text-slate-400 uppercase">Total Revenue</CardTitle>
+              <CardTitle className="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Pendapatan</CardTitle>
             </CardHeader>
             <CardContent className="p-4 pt-1">
-              <div className="text-xl font-bold">{formatRupiah(safeSummary.total_revenue || 0)}</div>
+              <div className="text-lg sm:text-xl font-bold">{formatRupiah(safeSummary.total_revenue || 0)}</div>
               <p className="text-[11px] text-slate-400 mt-0.5">{safeSummary.total_projects || 0} Project Selesai</p>
             </CardContent>
           </Card>
 
-          <Card className="bg-white border-slate-200">
+          <Card className="bg-white border-slate-200 shadow-2xs">
             <CardHeader className="p-4 pb-1">
-              <CardTitle className="text-xs font-semibold text-slate-500 uppercase">Total Cost Aktual</CardTitle>
+              <CardTitle className="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Biaya Aktual</CardTitle>
             </CardHeader>
             <CardContent className="p-4 pt-1">
-              <div className="text-xl font-bold text-slate-900">{formatRupiah(safeSummary.total_cost || 0)}</div>
+              <div className="text-lg sm:text-xl font-bold text-slate-900">{formatRupiah(safeSummary.total_cost || 0)}</div>
+              <p className="text-[11px] text-slate-400 mt-0.5">Gaji & Biaya Operasional</p>
             </CardContent>
           </Card>
 
-          <Card className="bg-white border-slate-200">
+          <Card className="bg-white border-slate-200 shadow-2xs">
             <CardHeader className="p-4 pb-1">
-              <CardTitle className="text-xs font-semibold text-slate-500 uppercase">Total Profit</CardTitle>
+              <CardTitle className="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Keuntungan</CardTitle>
             </CardHeader>
             <CardContent className="p-4 pt-1">
-              <div className={`text-xl font-bold ${(safeSummary.total_profit || 0) >= 0 ? "text-emerald-600" : "text-red-600"}`}>
+              <div className={`text-lg sm:text-xl font-bold ${(safeSummary.total_profit || 0) >= 0 ? "text-emerald-600" : "text-red-600"}`}>
                 {formatRupiah(safeSummary.total_profit || 0)}
               </div>
+              <p className="text-[11px] text-slate-400 mt-0.5">Laba Bersih Project</p>
             </CardContent>
           </Card>
 
-          <Card className="bg-white border-slate-200">
+          <Card className="bg-white border-slate-200 shadow-2xs">
             <CardHeader className="p-4 pb-1">
-              <CardTitle className="text-xs font-semibold text-slate-500 uppercase">Rata-Rata Margin</CardTitle>
+              <CardTitle className="text-xs font-bold text-slate-500 uppercase tracking-wider">Rata-Rata Margin</CardTitle>
             </CardHeader>
             <CardContent className="p-4 pt-1">
-              <div className="text-xl font-bold text-slate-900">{safeSummary.total_margin || 0}%</div>
+              <div className="text-lg sm:text-xl font-bold text-slate-900">{safeSummary.total_margin || 0}%</div>
+              <p className="text-[11px] text-slate-400 mt-0.5">Rasio Keuntungan</p>
             </CardContent>
           </Card>
         </div>
@@ -187,73 +194,73 @@ export default function PackageProfit({ reportData, summary, filters, categories
                   <TableHead className="font-semibold text-slate-700">Nama Paket Foto</TableHead>
                   <TableHead className="font-semibold text-slate-700 text-center">MUA</TableHead>
                   <TableHead className="font-semibold text-slate-700 text-center">Jumlah Project</TableHead>
-                  <TableHead className="font-semibold text-slate-700 text-right">Total Revenue</TableHead>
-                  <TableHead className="font-semibold text-slate-700 text-right">Total Cost</TableHead>
-                  <TableHead className="font-semibold text-slate-700 text-right">Total Profit</TableHead>
-                  <TableHead className="font-semibold text-slate-700 text-right">Avg Profit / Project</TableHead>
-                  <TableHead className="font-semibold text-slate-700 text-center">Avg Margin</TableHead>
+                  <TableHead className="font-semibold text-slate-700 text-right">Total Pendapatan</TableHead>
+                  <TableHead className="font-semibold text-slate-700 text-right">Total Biaya</TableHead>
+                  <TableHead className="font-semibold text-slate-700 text-right">Total Keuntungan</TableHead>
+                  <TableHead className="font-semibold text-slate-700 text-right">Rata-rata / Project</TableHead>
+                  <TableHead className="font-semibold text-slate-700 text-center">Margin</TableHead>
                 </TableRow>
               </TableHeader>
-            <TableBody>
-              {safeReportData.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={8} className="text-center py-8 text-slate-400">
-                    Tidak ada data profitabilitas paket foto.
-                  </TableCell>
-                </TableRow>
-              ) : (
-                safeReportData.map((row) => (
-                  <TableRow key={row.package_id}>
-                    <TableCell className="font-bold text-slate-900">
-                      {row.package_name}
-                      <span className="text-xs text-slate-400 font-normal block">{row.category}</span>
-                    </TableCell>
-
-                    <TableCell className="text-center">
-                      {row.includes_mua ? (
-                        <Badge variant="outline" className="text-amber-700 border-amber-300 bg-amber-50 text-[10px]">
-                          MUA
-                        </Badge>
-                      ) : (
-                        <span className="text-xs text-slate-400">-</span>
-                      )}
-                    </TableCell>
-
-                    <TableCell className="text-center font-bold text-slate-900">
-                      {row.project_count}
-                    </TableCell>
-
-                    <TableCell className="text-right font-semibold text-slate-900">
-                      {formatRupiah(row.total_revenue)}
-                    </TableCell>
-
-                    <TableCell className="text-right font-medium text-slate-600">
-                      {formatRupiah(row.total_cost)}
-                    </TableCell>
-
-                    <TableCell className="text-right font-bold">
-                      {row.total_profit >= 0 ? (
-                        <span className="text-emerald-600">{formatRupiah(row.total_profit)}</span>
-                      ) : (
-                        <span className="text-red-600">RUGI {formatRupiah(row.total_profit)}</span>
-                      )}
-                    </TableCell>
-
-                    <TableCell className="text-right font-medium text-slate-800">
-                      {formatRupiah(row.avg_profit)}
-                    </TableCell>
-
-                    <TableCell className="text-center">
-                      <Badge variant={row.avg_margin >= 35 ? "success" : row.avg_margin > 0 ? "warning" : "destructive"}>
-                        {row.avg_margin}%
-                      </Badge>
+              <TableBody>
+                {safeReportData.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={8} className="text-center py-8 text-slate-400">
+                      Tidak ada data profitabilitas paket foto.
                     </TableCell>
                   </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </div>
+                ) : (
+                  safeReportData.map((row) => (
+                    <TableRow key={row.package_id}>
+                      <TableCell className="font-bold text-slate-900">
+                        {row.package_name}
+                        <span className="text-xs text-slate-400 font-normal block">{row.category}</span>
+                      </TableCell>
+
+                      <TableCell className="text-center">
+                        {row.includes_mua ? (
+                          <Badge variant="outline" className="text-amber-700 border-amber-300 bg-amber-50 text-[10px]">
+                            MUA
+                          </Badge>
+                        ) : (
+                          <span className="text-xs text-slate-400">-</span>
+                        )}
+                      </TableCell>
+
+                      <TableCell className="text-center font-bold text-slate-900">
+                        {row.project_count}
+                      </TableCell>
+
+                      <TableCell className="text-right font-semibold text-slate-900">
+                        {formatRupiah(row.total_revenue)}
+                      </TableCell>
+
+                      <TableCell className="text-right font-medium text-slate-600">
+                        {formatRupiah(row.total_cost)}
+                      </TableCell>
+
+                      <TableCell className="text-right font-bold">
+                        {row.total_profit >= 0 ? (
+                          <span className="text-emerald-600">{formatRupiah(row.total_profit)}</span>
+                        ) : (
+                          <span className="text-red-600">RUGI {formatRupiah(row.total_profit)}</span>
+                        )}
+                      </TableCell>
+
+                      <TableCell className="text-right font-medium text-slate-800">
+                        {formatRupiah(row.avg_profit)}
+                      </TableCell>
+
+                      <TableCell className="text-center">
+                        <Badge variant={row.avg_margin >= 35 ? "success" : row.avg_margin > 0 ? "warning" : "destructive"}>
+                          {row.avg_margin}%
+                        </Badge>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </div>
         )}
       </div>
     </>

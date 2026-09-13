@@ -95,9 +95,9 @@ export default function ForgotPassword() {
               )}
             </div>
 
-            <Button type="submit" className="w-full bg-slate-900 hover:bg-slate-800" disabled={processing}>
-              {processing ? "Mengirim Tautan..." : "Kirim Tautan Reset Password"}
-              <ArrowRight className="ml-1 h-4 w-4" />
+            <Button type="submit" className="w-full gap-2 font-semibold bg-slate-900 hover:bg-slate-800" disabled={processing}>
+              <span>{processing ? "Mengirim Tautan..." : "Kirim Tautan Reset Password"}</span>
+              <ArrowRight className="h-4 w-4" />
             </Button>
           </form>
 
@@ -106,9 +106,10 @@ export default function ForgotPassword() {
             <Separator className="mb-4" />
             <Link
               href="/login"
-              className="inline-flex items-center text-xs font-semibold text-slate-600 hover:text-slate-900 transition-colors"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 transition-colors"
             >
-              <ArrowLeft className="mr-1.5 h-3.5 w-3.5" /> Kembali ke Halaman Login
+              <ArrowLeft className="h-3.5 w-3.5" />
+              <span>Kembali ke Halaman Login</span>
             </Link>
           </div>
 

@@ -25,7 +25,7 @@ export default function Dashboard({
   if (isNavigating) {
     return (
       <>
-        <Head title="Dashboard Photographer" />
+        <Head title="Dashboard Fotografer" />
         <PhotographerDashboardSkeleton />
       </>
     );
@@ -33,11 +33,11 @@ export default function Dashboard({
 
   return (
     <>
-      <Head title="Dashboard Photographer" />
+      <Head title="Dashboard Fotografer" />
       <div className="space-y-6">
         <div>
           <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-            Portal Photographer
+            Portal Fotografer
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
             Selamat datang! Berikut jadwal pemotretan dan status penugasan Anda.
@@ -124,7 +124,7 @@ export default function Dashboard({
             </div>
             <div>
               <p className="text-xs font-bold text-slate-900">Gaji Saya</p>
-              <p className="text-[10px] text-slate-500">Riwayat gaji</p>
+              <p className="text-[10px] text-slate-500">Riwayat Gaji</p>
             </div>
           </Link>
         </div>

@@ -50,7 +50,7 @@ export default function Index({ salaries = { data: [] }, unpaidTotal = 0, paidTo
       <div className="space-y-6">
         <div>
           <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-            Gaji & Honor Saya (Per Project)
+            Gaji Saya (Per Project)
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
             Rincian gaji penugasan project dan status pelunasan dari Admin.
@@ -101,54 +101,54 @@ export default function Index({ salaries = { data: [] }, unpaidTotal = 0, paidTo
           <TableSkeleton rows={5} cols={5} hasActions={false} />
         ) : (
           <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
-          <Table>
-            <TableHeader className="bg-slate-50">
-              <TableRow>
-                <TableHead className="font-semibold text-slate-700">Project / Pelanggan</TableHead>
-                <TableHead className="font-semibold text-slate-700">Paket</TableHead>
-                <TableHead className="font-semibold text-slate-700 text-right">Gaji Project</TableHead>
-                <TableHead className="font-semibold text-slate-700 text-center">Status Pembayaran</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {(!salaries?.data || salaries.data.length === 0) ? (
+            <Table>
+              <TableHeader className="bg-slate-50">
                 <TableRow>
-                  <TableCell colSpan={4} className="text-center py-8 text-slate-400">
-                    Belum ada rekaman gaji penugasan project.
-                  </TableCell>
+                  <TableHead className="font-semibold text-slate-700">Project / Pelanggan</TableHead>
+                  <TableHead className="font-semibold text-slate-700">Paket</TableHead>
+                  <TableHead className="font-semibold text-slate-700 text-right">Gaji Project</TableHead>
+                  <TableHead className="font-semibold text-slate-700 text-center">Status Pembayaran</TableHead>
                 </TableRow>
-              ) : (
-                (salaries?.data || []).map((sal) => (
-                  <TableRow key={sal.id}>
-                    <TableCell>
-                      <span className="font-bold text-slate-900 block">{sal.project?.project_name}</span>
-                      <span className="text-xs text-slate-500">{sal.project?.customer?.name}</span>
-                    </TableCell>
-
-                    <TableCell className="text-slate-700">
-                      {sal.project?.photoPackage?.name || sal.project?.package_name || "-"}
-                    </TableCell>
-
-                    <TableCell className="text-right font-bold text-slate-900">
-                      {formatRupiah(sal.amount)}
-                    </TableCell>
-
-                    <TableCell className="text-center">
-                      <Badge variant={sal.payment_status === "PAID" ? "success" : "warning"}>
-                        {sal.payment_status}
-                      </Badge>
-                      {sal.paid_at && (
-                        <span className="text-[10px] text-slate-400 block mt-0.5">
-                          Lunas pada: {formatDate(sal.paid_at)}
-                        </span>
-                      )}
+              </TableHeader>
+              <TableBody>
+                {(!salaries?.data || salaries.data.length === 0) ? (
+                  <TableRow>
+                    <TableCell colSpan={4} className="text-center py-8 text-slate-400">
+                      Belum ada rekaman gaji penugasan project.
                     </TableCell>
                   </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </div>
+                ) : (
+                  (salaries?.data || []).map((sal) => (
+                    <TableRow key={sal.id}>
+                      <TableCell>
+                        <span className="font-bold text-slate-900 block">{sal.project?.project_name}</span>
+                        <span className="text-xs text-slate-500">{sal.project?.customer?.name}</span>
+                      </TableCell>
+
+                      <TableCell className="text-slate-700">
+                        {sal.project?.photoPackage?.name || sal.project?.package_name || "-"}
+                      </TableCell>
+
+                      <TableCell className="text-right font-bold text-slate-900">
+                        {formatRupiah(sal.amount)}
+                      </TableCell>
+
+                      <TableCell className="text-center">
+                        <Badge variant={sal.payment_status === "PAID" ? "success" : "warning"}>
+                          {sal.payment_status}
+                        </Badge>
+                        {sal.paid_at && (
+                          <span className="text-[10px] text-slate-400 block mt-0.5">
+                            Lunas pada: {formatDate(sal.paid_at)}
+                          </span>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </div>
         )}
       </div>
     </>
