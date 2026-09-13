@@ -6,6 +6,7 @@ use App\Models\ActivityLog;
 use App\Models\SystemSetting;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
 
 class ActivityLogger
@@ -30,7 +31,7 @@ class ActivityLogger
             'ip_address' => Request::ip() ?? '127.0.0.1',
         ]);
 
-        // Trigger Discord Webhook Notification asynchronously/safely
+        // Trigger Discord Webhook Notification safely
         self::sendDiscordNotification($log);
 
         return $log;
@@ -54,15 +55,17 @@ class ActivityLogger
             $userRole = $user ? $user->role : 'SYSTEM';
 
             $colorMap = [
-                'CREATED' => 65280,      // Emerald Green
-                'LOGIN' => 65280,        // Emerald Green
-                'VALIDATE' => 65280,     // Emerald Green
-                'UPDATED' => 16750592,   // Amber / Yellow
-                'SETTINGS' => 16750592,  // Amber / Yellow
+                'CREATED' => 65280,          // Emerald Green
+                'LOGIN' => 65280,            // Emerald Green
+                'VALIDATE' => 65280,         // Emerald Green
+                'UPDATED' => 16750592,       // Amber / Yellow
+                'SETTINGS' => 16750592,      // Amber / Yellow
                 'DEV_TOOL_EXEC' => 10181046, // Purple
-                'DELETED' => 15744000,   // Red
-                'LOGOUT' => 15744000,    // Red
-                'DEV_TOOL_ERROR' => 15744000, // Red
+                'DELETED' => 15744000,       // Red
+                'LOGOUT' => 15744000,        // Red
+                'DEV_TOOL_ERROR' => 15744000,// Red
+                'FORGOT_PASSWORD_REQUEST' => 3885046,
+                'RESET_PASSWORD_SUCCESS' => 65280,
             ];
 
             $actionUpper = strtoupper($log->action);
@@ -70,11 +73,10 @@ class ActivityLogger
 
             $embedPayload = [
                 'username' => 'ARTDEVATA System Log',
-                'avatar_url' => asset('logo.svg'),
                 'embeds' => [
                     [
                         'title' => "📷 [{$log->action}] - {$log->module}",
-                        'description' => $log->description,
+                        'description' => (string) ($log->description ?: 'Aktivitas dicatat.'),
                         'color' => $embedColor,
                         'fields' => [
                             [
@@ -84,12 +86,12 @@ class ActivityLogger
                             ],
                             [
                                 'name' => '🌐 IP Address',
-                                'value' => $log->ip_address ?? '127.0.0.1',
+                                'value' => (string) ($log->ip_address ?: '127.0.0.1'),
                                 'inline' => true,
                             ],
                             [
                                 'name' => '📌 Modul',
-                                'value' => $log->module,
+                                'value' => (string) ($log->module ?: 'GENERAL'),
                                 'inline' => true,
                             ],
                         ],
@@ -101,12 +103,23 @@ class ActivityLogger
                 ],
             ];
 
-            // Send HTTP POST to Discord Webhook with short timeout
-            Http::timeout(3)->post($webhookUrl, $embedPayload);
+            // Only add avatar_url if it is a public https URL
+            $assetUrl = asset('logo.svg');
+            if (str_starts_with($assetUrl, 'https://')) {
+                $embedPayload['avatar_url'] = $assetUrl;
+            }
+
+            // Send HTTP POST to Discord Webhook with 5s timeout
+            $response = Http::timeout(5)->post($webhookUrl, $embedPayload);
+
+            if (!$response->successful()) {
+                Log::warning('Discord Webhook failed with status: ' . $response->status() . ' Body: ' . $response->body());
+                return false;
+            }
 
             return true;
         } catch (\Throwable $e) {
-            // Silently swallow errors so system logger never crashes main request
+            Log::error('Discord Webhook Exception: ' . $e->getMessage());
             return false;
         }
     }
