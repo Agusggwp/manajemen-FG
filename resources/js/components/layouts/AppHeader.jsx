@@ -41,24 +41,24 @@ const ROUTE_LABELS = {
   dashboard: "Dashboard",
   schedules: "Jadwal",
   projects: "Project",
-  proofs: "Validasi Proof",
+  proofs: "Validasi Presensi Foto",
   customers: "Pelanggan",
-  photographers: "Photographer",
+  photographers: "Fotografer",
   muas: "MUA",
   packages: "Master Paket",
   payments: "Pembayaran",
-  salaries: "Gaji Photographer",
-  "mua-fees": "Fee MUA",
+  salaries: "Gaji Fotografer",
+  "mua-fees": "Gaji MUA",
   reports: "Laporan",
-  "package-profit": "Profit Per Paket",
-  "activity-logs": "Activity Logs",
+  "package-profit": "Keuntungan Per Paket",
+  "activity-logs": "Log Aktivitas",
   settings: "Pengaturan Sistem",
   // Photographer
-  photographer: "Photographer",
+  photographer: "Fotografer",
   gallery: "Galeri Foto",
-  salary: "Gaji & Fee",
-  proof: "Upload Bukti",
-  create: "Upload",
+  salary: "Gaji Saya",
+  proof: "Unggah Bukti",
+  create: "Unggah",
 };
 
 export default function AppHeader({
@@ -73,7 +73,7 @@ export default function AppHeader({
   const isPhotographer =
     currentRoute.startsWith("/photographer") || user?.role === "photographer";
 
-  const userBadge = isPhotographer ? "PHOTOGRAPHER" : "ADMIN";
+  const userBadge = isPhotographer ? "FOTOGRAFER" : "ADMIN";
   const [logoutOpen, setLogoutOpen] = useState(false);
 
   const getInitials = (name) => {
@@ -92,7 +92,7 @@ export default function AppHeader({
     }
 
     const rootPrefix = segments[0] === "photographer" ? "photographer" : "admin";
-    const rootLabel = rootPrefix === "photographer" ? "Photographer" : "Admin";
+    const rootLabel = rootPrefix === "photographer" ? "Fotografer" : "Admin";
     const rootHref = `/${rootPrefix}/dashboard`;
 
     const crumbs = [{ label: rootLabel, href: rootHref }];
@@ -189,7 +189,7 @@ export default function AppHeader({
         {/* Mobile Header Title */}
         <div className="flex items-center space-x-2 truncate sm:hidden">
           <span className="font-bold text-slate-900 tracking-tight text-base truncate">
-            {title || (isPhotographer ? "Photographer Portal" : "Dashboard Admin")}
+            {title || (isPhotographer ? "Portal Fotografer" : "Dashboard Admin")}
           </span>
         </div>
       </div>
@@ -229,7 +229,7 @@ export default function AppHeader({
                 </Avatar>
                 <div className="flex flex-col space-y-0.5 overflow-hidden min-w-0">
                   <p className="text-sm font-semibold text-slate-900 leading-none truncate">{user?.name}</p>
-                  <p className="text-xs text-slate-500 leading-none truncate">{user?.email || (isPhotographer ? "Portal Photographer" : "Administrator")}</p>
+                  <p className="text-xs text-slate-500 leading-none truncate">{user?.email || (isPhotographer ? "Portal Fotografer" : "Administrator")}</p>
                 </div>
               </div>
             </DropdownMenuLabel>

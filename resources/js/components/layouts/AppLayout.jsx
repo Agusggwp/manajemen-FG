@@ -40,33 +40,33 @@ export default function AppLayout({ children, title }) {
 
   const routeTitles = {
     // Admin routes
-    "/admin/dashboard": "Dashboard Overview",
+    "/admin/dashboard": "Ringkasan Dashboard",
     "/admin/schedules": "Manajemen Jadwal",
     "/admin/projects": "Manajemen Project",
     "/admin/proofs": "Validasi Pemotretan",
     "/admin/customers": "Manajemen Pelanggan",
-    "/admin/photographers": "Manajemen Photographer",
+    "/admin/photographers": "Manajemen Fotografer",
     "/admin/muas": "Manajemen MUA",
     "/admin/packages": "Master Paket Foto",
-    "/admin/payments/salaries": "Pembayaran Gaji Photographer",
-    "/admin/payments/mua-fees": "Pembayaran Fee MUA",
-    "/admin/reports/package-profit": "Laporan Profit Per Paket",
-    "/admin/activity-logs": "Activity Logs",
+    "/admin/payments/salaries": "Pembayaran Gaji Fotografer",
+    "/admin/payments/mua-fees": "Pembayaran Gaji MUA",
+    "/admin/reports/package-profit": "Laporan Keuntungan Paket Foto",
+    "/admin/activity-logs": "Log Aktivitas Sistem",
     "/admin/settings": "Pengaturan Sistem & Web Publik",
     // Photographer routes
-    "/photographer/dashboard": "Dashboard Photographer",
+    "/photographer/dashboard": "Dashboard Fotografer",
     "/photographer/schedules": "Jadwal Pemotretan",
     "/photographer/projects": "Project Saya",
     "/photographer/gallery": "Galeri Foto",
-    "/photographer/salary": "Gaji & Fee Saya",
-    "/photographer/proof": "Upload Bukti Proof",
+    "/photographer/salary": "Gaji Saya",
+    "/photographer/proof": "Unggah Bukti Presensi",
   };
 
   const getFallbackTitle = () => {
     for (const [route, name] of Object.entries(routeTitles)) {
       if (currentPath.startsWith(route)) return name;
     }
-    return isPhotographer ? "Photographer Portal" : "Dashboard Admin";
+    return isPhotographer ? "Portal Fotografer" : "Dashboard Admin";
   };
 
   const activeTitle = title || pageTitle || children?.props?.title || getFallbackTitle();

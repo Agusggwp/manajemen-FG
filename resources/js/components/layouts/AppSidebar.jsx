@@ -50,7 +50,7 @@ export default function AppSidebar({
 
   const adminNavigation = [
     {
-      group: "MAIN",
+      group: "UTAMA",
       items: [
         { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
       ],
@@ -60,14 +60,14 @@ export default function AppSidebar({
       items: [
         { name: "Jadwal", href: "/admin/schedules", icon: Calendar },
         { name: "Project", href: "/admin/projects", icon: FolderKanban },
-        { name: "Validasi Proof", href: "/admin/proofs", icon: CheckCircle2 },
+        { name: "Validasi Presensi Foto", href: "/admin/proofs", icon: CheckCircle2 },
         { name: "Pelanggan", href: "/admin/customers", icon: Users },
       ],
     },
     {
       group: "MANAJEMEN",
       items: [
-        { name: "Photographer", href: "/admin/photographers", icon: Camera },
+        { name: "Fotografer", href: "/admin/photographers", icon: Camera },
         { name: "MUA", href: "/admin/muas", icon: Sparkles },
         { name: "Paket Foto", href: "/admin/packages", icon: Package },
       ],
@@ -75,17 +75,17 @@ export default function AppSidebar({
     {
       group: "KEUANGAN",
       items: [
-        { name: "Gaji Photographer", href: "/admin/payments/salaries", icon: CreditCard },
-        { name: "Fee MUA", href: "/admin/payments/mua-fees", icon: UserCheck },
-        { name: "Laporan Profit", href: "/admin/reports/package-profit", icon: TrendingUp },
+        { name: "Gaji Fotografer", href: "/admin/payments/salaries", icon: CreditCard },
+        { name: "Gaji MUA", href: "/admin/payments/mua-fees", icon: UserCheck },
+        { name: "Laporan Keuntungan", href: "/admin/reports/package-profit", icon: TrendingUp },
       ],
     },
     {
       group: "SISTEM",
       items: [
-        { name: "Activity Logs", href: "/admin/activity-logs", icon: History },
+        { name: "Log Aktivitas", href: "/admin/activity-logs", icon: History },
         { name: "Dev Tools", href: "/admin/dev-tools", icon: Terminal },
-        { name: "Settings", href: "/admin/settings", icon: Settings },
+        { name: "Pengaturan", href: "/admin/settings", icon: Settings },
       ],
     },
   ];
@@ -97,15 +97,15 @@ export default function AppSidebar({
         { name: "Dashboard", href: "/photographer/dashboard", icon: LayoutDashboard },
         { name: "Jadwal", href: "/photographer/schedules", icon: Calendar },
         { name: "Project", href: "/photographer/projects", icon: FolderKanban },
-        { name: "Galeri", href: "/photographer/gallery", icon: Image },
+        { name: "Galeri Foto", href: "/photographer/gallery", icon: Image },
         { name: "Gaji Saya", href: "/photographer/salary", icon: DollarSign },
       ],
     },
   ];
 
   const navigation = isPhotographer ? photographerNavigation : adminNavigation;
-  const portalSubtitle = isPhotographer ? "Photographer Portal" : "Photography System";
-  const portalBadge = isPhotographer ? "PHOTOGRAPHER" : "ADMIN";
+  const portalSubtitle = isPhotographer ? "Portal Fotografer" : "Sistem Fotografi";
+  const portalBadge = isPhotographer ? "FOTOGRAFER" : "ADMIN";
 
   return (
     <>
@@ -119,27 +119,24 @@ export default function AppSidebar({
 
       {/* Sidebar Desktop & Mobile */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 bg-white border-r border-slate-200 flex flex-col transition-all duration-300 ease-in-out lg:static lg:h-screen lg:z-30 shrink-0 ${
-          sidebarOpen
+        className={`fixed inset-y-0 left-0 z-50 bg-white border-r border-slate-200 flex flex-col transition-all duration-300 ease-in-out lg:static lg:h-screen lg:z-30 shrink-0 ${sidebarOpen
             ? "translate-x-0 w-64 shadow-2xl lg:shadow-none"
             : "-translate-x-full lg:translate-x-0"
-        } ${sidebarCollapsed ? "lg:w-[72px]" : "lg:w-64"}`}
+          } ${sidebarCollapsed ? "lg:w-[72px]" : "lg:w-64"}`}
       >
         <div className="flex flex-col h-full overflow-hidden">
           {/* Logo Brand */}
           <div
-            className={`h-16 border-b border-slate-200 flex items-center shrink-0 ${
-              sidebarCollapsed ? "lg:justify-center lg:px-2 px-4" : "px-4"
-            }`}
+            className={`h-16 border-b border-slate-200 flex items-center shrink-0 ${sidebarCollapsed ? "lg:justify-center lg:px-2 px-4" : "px-4"
+              }`}
           >
             <div className="flex items-center space-x-3 overflow-hidden">
               {/* Logo Mark (Always visible) */}
               <img
                 src="/logo.svg"
                 alt="ARTDEVATA Logo"
-                className={`h-9 w-9 object-contain shrink-0 cursor-pointer transition-transform ${
-                  sidebarCollapsed ? "mx-auto" : ""
-                }`}
+                className={`h-9 w-9 object-contain shrink-0 cursor-pointer transition-transform ${sidebarCollapsed ? "mx-auto" : ""
+                  }`}
                 onClick={sidebarCollapsed ? toggleSidebar : undefined}
                 title={sidebarCollapsed ? "Buka / Perluas Sidebar" : "ARTDEVATA"}
               />
@@ -158,9 +155,8 @@ export default function AppSidebar({
 
           {/* Navigation Items */}
           <nav
-            className={`flex-1 overflow-y-auto overflow-x-hidden ${
-              sidebarCollapsed ? "p-2 lg:px-2 lg:py-3 space-y-4" : "p-4 space-y-6"
-            }`}
+            className={`flex-1 overflow-y-auto overflow-x-hidden ${sidebarCollapsed ? "p-2 lg:px-2 lg:py-3 space-y-4" : "p-4 space-y-6"
+              }`}
           >
             {navigation.map((group, idx) => (
               <div key={idx}>
@@ -192,30 +188,25 @@ export default function AppSidebar({
                         href={item.href}
                         onClick={() => setSidebarOpen(false)}
                         title={sidebarCollapsed ? item.name : undefined}
-                        className={`flex items-center rounded-lg transition-colors group relative ${
-                          sidebarCollapsed
+                        className={`flex items-center rounded-lg transition-colors group relative ${sidebarCollapsed
                             ? "lg:justify-center lg:p-2.5 lg:h-10 lg:w-10 lg:mx-auto px-3 py-2 justify-between"
                             : "px-3 py-2 justify-between"
-                        } ${
-                          active
+                          } ${active
                             ? "bg-slate-900 text-white shadow-xs"
                             : "text-slate-600 hover:text-slate-900 hover:bg-slate-100/80"
-                        }`}
+                          }`}
                       >
                         <div
-                          className={`flex items-center ${
-                            sidebarCollapsed ? "lg:space-x-0 space-x-3" : "space-x-3"
-                          }`}
+                          className={`flex items-center ${sidebarCollapsed ? "lg:space-x-0 space-x-3" : "space-x-3"
+                            }`}
                         >
                           <Icon
-                            className={`h-4 w-4 shrink-0 ${
-                              active ? "text-white" : "text-slate-400 group-hover:text-slate-700"
-                            }`}
+                            className={`h-4 w-4 shrink-0 ${active ? "text-white" : "text-slate-400 group-hover:text-slate-700"
+                              }`}
                           />
                           <span
-                            className={`text-sm font-medium whitespace-nowrap ${
-                              sidebarCollapsed ? "lg:hidden block" : "block"
-                            }`}
+                            className={`text-sm font-medium whitespace-nowrap ${sidebarCollapsed ? "lg:hidden block" : "block"
+                              }`}
                           >
                             {item.name}
                           </span>
@@ -237,9 +228,8 @@ export default function AppSidebar({
 
           {/* User Profile & Logout in Sidebar Footer */}
           <div
-            className={`border-t border-slate-200 bg-slate-50/70 shrink-0 ${
-              sidebarCollapsed ? "p-2 lg:py-3 lg:px-1" : "p-3"
-            }`}
+            className={`border-t border-slate-200 bg-slate-50/70 shrink-0 ${sidebarCollapsed ? "p-2 lg:py-3 lg:px-1" : "p-3"
+              }`}
           >
             {/* Compact Profile for Desktop Collapsed State */}
             {sidebarCollapsed && (
@@ -266,9 +256,8 @@ export default function AppSidebar({
 
             {/* Full Profile on Mobile or Expanded Desktop */}
             <div
-              className={`flex flex-col gap-2 ${
-                sidebarCollapsed ? "lg:hidden flex" : "flex"
-              }`}
+              className={`flex flex-col gap-2 ${sidebarCollapsed ? "lg:hidden flex" : "flex"
+                }`}
             >
               <div className="flex items-center space-x-3 overflow-hidden min-w-0">
                 <Avatar className="h-9 w-9 shrink-0 ring-2 ring-white shadow-2xs">
