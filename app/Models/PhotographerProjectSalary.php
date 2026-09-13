@@ -30,6 +30,15 @@ class PhotographerProjectSalary extends Model
         'work_duration_minutes' => 'integer',
     ];
 
+    protected $appends = [
+        'formatted_paid_at',
+    ];
+
+    public function getFormattedPaidAtAttribute()
+    {
+        return $this->paid_at ? $this->paid_at->setTimezone('Asia/Makassar')->format('d M Y, H:i') . ' WITA' : '-';
+    }
+
     public static function boot()
     {
         parent::boot();

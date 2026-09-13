@@ -35,6 +35,21 @@ class PhotoSessionProof extends Model
         'validated_at' => 'datetime',
     ];
 
+    protected $appends = [
+        'formatted_captured_at',
+        'formatted_validated_at',
+    ];
+
+    public function getFormattedCapturedAtAttribute()
+    {
+        return $this->captured_at ? $this->captured_at->setTimezone('Asia/Makassar')->format('d M Y, H:i:s') . ' WITA' : '-';
+    }
+
+    public function getFormattedValidatedAtAttribute()
+    {
+        return $this->validated_at ? $this->validated_at->setTimezone('Asia/Makassar')->format('d M Y, H:i:s') . ' WITA' : '-';
+    }
+
     public function schedule()
     {
         return $this->belongsTo(Schedule::class);

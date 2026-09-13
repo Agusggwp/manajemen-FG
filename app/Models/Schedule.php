@@ -40,6 +40,15 @@ class Schedule extends Model
         'reminder_sent_at' => 'datetime',
     ];
 
+    protected $appends = [
+        'formatted_reminder_sent_at',
+    ];
+
+    public function getFormattedReminderSentAtAttribute()
+    {
+        return $this->reminder_sent_at ? $this->reminder_sent_at->setTimezone('Asia/Makassar')->format('d M Y, H:i') . ' WITA' : null;
+    }
+
     public function booking()
     {
         return $this->belongsTo(Booking::class);
