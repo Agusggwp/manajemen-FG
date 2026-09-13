@@ -79,58 +79,64 @@ export default function Index({ proofs, counts, activeTab = "pending" }) {
   return (
     <>
       <Head title="Validasi Pemotretan" />
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+      <div className="space-y-4 sm:space-y-6">
+        <div className="min-w-0">
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
             Validasi Pemotretan
           </h1>
-          <p className="text-sm text-slate-500 mt-1">
+          <p className="text-xs sm:text-sm text-slate-500 mt-1">
             Verifikasi bukti foto awal (START) dan selesai (END) beserta koordinat GPS dari photographer.
           </p>
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex border-b border-slate-200 space-x-4">
+        <div className="flex items-center border-b border-slate-200 gap-2 sm:gap-6 overflow-x-auto no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0">
           <button
             type="button"
             onClick={() => handleTabChange("pending")}
-            className={`pb-3 px-1 text-sm font-semibold border-b-2 flex items-center space-x-2 transition-colors ${
+            className={`pb-3 px-2 sm:px-1 text-xs sm:text-sm font-semibold border-b-2 flex items-center gap-1.5 sm:gap-2 shrink-0 whitespace-nowrap transition-colors ${
               activeTab === "pending"
                 ? "border-slate-900 text-slate-900"
                 : "border-transparent text-slate-400 hover:text-slate-700"
             }`}
           >
-            <Clock className="h-4 w-4" />
+            <Clock className="h-4 w-4 shrink-0" />
             <span>Menunggu Validasi</span>
-            <Badge variant="warning">{safeCounts.pending || 0}</Badge>
+            <Badge variant="warning" className="text-[10px] sm:text-xs px-1.5 py-0">
+              {safeCounts.pending || 0}
+            </Badge>
           </button>
 
           <button
             type="button"
             onClick={() => handleTabChange("approved")}
-            className={`pb-3 px-1 text-sm font-semibold border-b-2 flex items-center space-x-2 transition-colors ${
+            className={`pb-3 px-2 sm:px-1 text-xs sm:text-sm font-semibold border-b-2 flex items-center gap-1.5 sm:gap-2 shrink-0 whitespace-nowrap transition-colors ${
               activeTab === "approved"
                 ? "border-emerald-600 text-emerald-600"
                 : "border-transparent text-slate-400 hover:text-slate-700"
             }`}
           >
-            <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+            <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
             <span>Disetujui</span>
-            <Badge variant="success">{safeCounts.approved || 0}</Badge>
+            <Badge variant="success" className="text-[10px] sm:text-xs px-1.5 py-0">
+              {safeCounts.approved || 0}
+            </Badge>
           </button>
 
           <button
             type="button"
             onClick={() => handleTabChange("rejected")}
-            className={`pb-3 px-1 text-sm font-semibold border-b-2 flex items-center space-x-2 transition-colors ${
+            className={`pb-3 px-2 sm:px-1 text-xs sm:text-sm font-semibold border-b-2 flex items-center gap-1.5 sm:gap-2 shrink-0 whitespace-nowrap transition-colors ${
               activeTab === "rejected"
                 ? "border-red-600 text-red-600"
                 : "border-transparent text-slate-400 hover:text-slate-700"
             }`}
           >
-            <XCircle className="h-4 w-4 text-red-600" />
+            <XCircle className="h-4 w-4 text-red-600 shrink-0" />
             <span>Ditolak</span>
-            <Badge variant="destructive">{safeCounts.rejected || 0}</Badge>
+            <Badge variant="destructive" className="text-[10px] sm:text-xs px-1.5 py-0">
+              {safeCounts.rejected || 0}
+            </Badge>
           </button>
         </div>
 
@@ -204,16 +210,20 @@ export default function Index({ proofs, counts, activeTab = "pending" }) {
                     <Button
                       variant="destructive"
                       size="sm"
+                      className="gap-1.5 font-semibold text-xs"
                       onClick={() => handleOpenReject(proof)}
                     >
-                      <XCircle /> TIDAK VALID
+                      <XCircle className="h-4 w-4" />
+                      <span>TIDAK VALID</span>
                     </Button>
                     <Button
                       size="sm"
                       variant="success"
+                      className="gap-1.5 font-semibold text-xs"
                       onClick={() => handleApproveClick(proof)}
                     >
-                      <CheckCircle2 /> VALID
+                      <CheckCircle2 className="h-4 w-4" />
+                      <span>VALID</span>
                     </Button>
                   </div>
                 )}
@@ -245,12 +255,14 @@ export default function Index({ proofs, counts, activeTab = "pending" }) {
                 />
               </div>
 
-              <DialogFooter>
+              <DialogFooter className="gap-2">
                 <Button type="button" variant="outline" onClick={() => setRejectModalOpen(false)}>
-                  <X /> Batal
+                  <X />
+                  <span>Batal</span>
                 </Button>
                 <Button type="submit" variant="destructive">
-                  <XCircle /> Konfirmasi Tolak
+                  <XCircle />
+                  <span>Konfirmasi Tolak</span>
                 </Button>
               </DialogFooter>
             </form>

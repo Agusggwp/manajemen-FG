@@ -64,14 +64,14 @@ export default function Salaries({ salaries, filters, unpaidTotal = 0, paidTotal
 
   return (
     <>
-      <Head title="Pembayaran Gaji Photographer" />
+      <Head title="Pembayaran Gaji Fotografer" />
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
-            Pembayaran Gaji Photographer (Per Project)
+            Pembayaran Gaji Fotografer (Per Project)
           </h1>
           <p className="text-sm text-slate-500 mt-1">
-            Kelola dan tandai status pembayaran gaji per project untuk photographer.
+            Kelola dan tandai status pembayaran gaji per project untuk fotografer.
           </p>
         </div>
 
@@ -106,7 +106,7 @@ export default function Salaries({ salaries, filters, unpaidTotal = 0, paidTotal
           <Table>
             <TableHeader className="bg-slate-50">
               <TableRow>
-                <TableHead className="font-semibold text-slate-700">Photographer</TableHead>
+                <TableHead className="font-semibold text-slate-700">Fotografer</TableHead>
                 <TableHead className="font-semibold text-slate-700">Project / Pelanggan</TableHead>
                 <TableHead className="font-semibold text-slate-700 text-right">Nominal Gaji</TableHead>
                 <TableHead className="font-semibold text-slate-700 text-center">Status</TableHead>
@@ -155,13 +155,16 @@ export default function Salaries({ salaries, filters, unpaidTotal = 0, paidTotal
                       {sal.payment_status === "UNPAID" ? (
                         <Button
                           size="sm"
+                          className="gap-1.5 text-xs font-semibold"
                           onClick={() => handleOpenPay(sal)}
                         >
-                          <CreditCard /> Bayar Gaji
+                          <CreditCard className="h-3.5 w-3.5" />
+                          <span>Bayar Gaji</span>
                         </Button>
                       ) : (
-                        <span className="text-xs text-emerald-600 font-medium flex items-center justify-center">
-                          <CheckCircle2 className="h-3.5 w-3.5 mr-1" /> Lunas
+                        <span className="text-xs text-emerald-600 font-medium flex items-center justify-center gap-1">
+                          <CheckCircle2 className="h-3.5 w-3.5" />
+                          <span>Lunas</span>
                         </span>
                       )}
                     </TableCell>
@@ -177,12 +180,12 @@ export default function Salaries({ salaries, filters, unpaidTotal = 0, paidTotal
         <Dialog open={payModalOpen} onOpenChange={setPayModalOpen}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Konfirmasi Pembayaran Gaji Photographer</DialogTitle>
+              <DialogTitle>Konfirmasi Pembayaran Gaji Fotografer</DialogTitle>
             </DialogHeader>
 
             <form onSubmit={handleConfirmPay} className="space-y-4 py-2">
               <div className="p-3 bg-slate-50 rounded-lg border border-slate-200 text-xs space-y-1">
-                <p>Photographer: <strong className="text-slate-900">{selectedSalary?.photographer?.name}</strong></p>
+                <p>Fotografer: <strong className="text-slate-900">{selectedSalary?.photographer?.name}</strong></p>
                 <p>Project: <strong className="text-slate-900">{selectedSalary?.project?.project_name}</strong></p>
                 <p className="text-sm font-bold text-emerald-700 pt-1">
                   Nominal: {formatRupiah(selectedSalary?.amount)}
@@ -215,12 +218,14 @@ export default function Salaries({ salaries, filters, unpaidTotal = 0, paidTotal
                 />
               </div>
 
-              <DialogFooter>
+              <DialogFooter className="gap-2">
                 <Button type="button" variant="outline" onClick={() => setPayModalOpen(false)}>
-                  <X /> Batal
+                  <X />
+                  <span>Batal</span>
                 </Button>
                 <Button type="submit">
-                  <CheckCircle2 /> Konfirmasi Pembayaran
+                  <CheckCircle2 />
+                  <span>Konfirmasi Pembayaran</span>
                 </Button>
               </DialogFooter>
             </form>

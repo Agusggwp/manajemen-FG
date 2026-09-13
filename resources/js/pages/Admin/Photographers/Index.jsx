@@ -122,20 +122,20 @@ export default function Index({ photographers, filters }) {
 
   return (
     <>
-      <Head title="Manajemen Photographer" />
+      <Head title="Manajemen Fotografer" />
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 w-full">
           <div className="min-w-0">
             <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-              Manajemen Photographer
+              Manajemen Fotografer
             </h1>
             <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
-              Kelola tim photographer internal ARTDEVATA dan kredensial login portal.
+              Kelola tim fotografer internal ARTDEVATA dan kredensial login portal.
             </p>
           </div>
           <Button onClick={handleOpenCreate} size="sm" className="font-semibold gap-1.5 text-xs w-full sm:w-auto shrink-0">
             <Plus className="h-4 w-4" />
-            Tambah Photographer Baru
+            <span>Tambah Fotografer Baru</span>
           </Button>
         </div>
 
@@ -144,7 +144,7 @@ export default function Index({ photographers, filters }) {
             <div className="relative w-full">
               <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
               <Input
-                placeholder="Cari nama, email, atau spesialisasi photographer..."
+                placeholder="Cari nama, email, atau spesialisasi fotografer..."
                 value={search}
                 onChange={handleSearchChange}
                 className="pl-9 bg-white text-xs sm:text-sm"
@@ -158,7 +158,7 @@ export default function Index({ photographers, filters }) {
           <CardGridSkeleton count={6} />
         ) : safePhotographers.data.length === 0 ? (
           <div className="col-span-full text-center py-12 bg-white rounded-xl border border-slate-200 text-slate-400">
-            Belum ada data Photographer.
+            Belum ada data Fotografer.
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -172,7 +172,7 @@ export default function Index({ photographers, filters }) {
                       </div>
                       <div>
                         <h3 className="font-bold text-slate-900 text-base">{p.name}</h3>
-                        <p className="text-xs text-slate-500">{p.specialty || "General Photographer"}</p>
+                        <p className="text-xs text-slate-500">{p.specialty || "Fotografer Umum"}</p>
                       </div>
                     </div>
                     <Badge variant={p.status === "ACTIVE" ? "success" : "secondary"}>
@@ -203,7 +203,7 @@ export default function Index({ photographers, filters }) {
                           size="icon"
                           variant="ghost"
                           className="h-8 w-8 text-slate-600 hover:text-slate-900 focus-visible:ring-1"
-                          title="Aksi Photographer"
+                          title="Aksi Fotografer"
                         >
                           <MoreVertical className="h-4 w-4" />
                         </Button>
@@ -211,16 +211,16 @@ export default function Index({ photographers, filters }) {
                       <DropdownMenuContent align="end" className="w-36 shadow-md">
                         <DropdownMenuItem
                           onClick={() => handleOpenEdit(p)}
-                          className="cursor-pointer text-xs"
+                          className="cursor-pointer text-xs flex items-center gap-2"
                         >
-                          <Edit3 className="mr-2 h-3.5 w-3.5 text-slate-600" />
+                          <Edit3 className="h-3.5 w-3.5 text-slate-600" />
                           <span>Edit Data</span>
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => handleDeleteClick(p)}
-                          className="cursor-pointer text-xs text-red-600 focus:text-red-600 focus:bg-red-50"
+                          className="cursor-pointer text-xs text-red-600 focus:text-red-600 focus:bg-red-50 flex items-center gap-2"
                         >
-                          <Trash2 className="mr-2 h-3.5 w-3.5 text-red-600" />
+                          <Trash2 className="h-3.5 w-3.5 text-red-600" />
                           <span>Hapus</span>
                         </DropdownMenuItem>
                       </DropdownMenuContent>
@@ -234,91 +234,104 @@ export default function Index({ photographers, filters }) {
 
         {/* Modal Form */}
         <Dialog open={modalOpen} onOpenChange={setModalOpen}>
-          <DialogContent>
+          <DialogContent className="max-w-[95vw] sm:max-w-lg max-h-[90vh] overflow-y-auto p-5 sm:p-6 rounded-2xl">
             <DialogHeader>
-              <DialogTitle>
-                {editingPhotographer ? "Edit Photographer" : "Tambah Photographer Baru"}
+              <DialogTitle className="text-base sm:text-lg font-bold text-slate-900">
+                {editingPhotographer ? "Edit Fotografer" : "Tambah Fotografer Baru"}
               </DialogTitle>
             </DialogHeader>
 
-            <form onSubmit={handleSubmit} className="space-y-4 py-2">
-              <div className="space-y-2">
-                <Label>Nama Lengkap</Label>
+            <form onSubmit={handleSubmit} className="space-y-3.5 sm:space-y-4 py-2">
+              <div className="space-y-1.5 sm:space-y-2">
+                <Label className="text-xs sm:text-sm font-semibold text-slate-700">Nama Lengkap</Label>
                 <Input
                   required
-                  placeholder="misal: Agus Photographer"
+                  placeholder="misal: Agus Fotografer"
                   value={form.data.name}
                   onChange={(e) => form.setData("name", e.target.value)}
+                  className="text-xs sm:text-sm h-9 sm:h-10"
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Email (Untuk Login Portal)</Label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                <div className="space-y-1.5 sm:space-y-2">
+                  <Label className="text-xs sm:text-sm font-semibold text-slate-700">Email Akun Login</Label>
                   <Input
-                    type="email"
                     required
-                    placeholder="agus@artdevata.com"
+                    type="email"
+                    placeholder="fotografer@artdevata.com"
                     value={form.data.email}
                     onChange={(e) => form.setData("email", e.target.value)}
+                    className="text-xs sm:text-sm h-9 sm:h-10"
                   />
                 </div>
-
-                <div className="space-y-2">
-                  <Label>{editingPhotographer ? "Password Baru (Opsional)" : "Password"}</Label>
-                  <Input
-                    type="password"
-                    required={!editingPhotographer}
-                    placeholder="••••••••"
-                    value={form.data.password}
-                    onChange={(e) => form.setData("password", e.target.value)}
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Nomor HP / WA</Label>
+                <div className="space-y-1.5 sm:space-y-2">
+                  <Label className="text-xs sm:text-sm font-semibold text-slate-700">Nomor WhatsApp</Label>
                   <Input
                     placeholder="0812xxxx"
                     value={form.data.phone}
                     onChange={(e) => form.setData("phone", e.target.value)}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label>Spesialisasi</Label>
-                  <Input
-                    placeholder="misal: Graduation, Wedding"
-                    value={form.data.specialty}
-                    onChange={(e) => form.setData("specialty", e.target.value)}
+                    className="text-xs sm:text-sm h-9 sm:h-10"
                   />
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label>Status</Label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                <div className="space-y-1.5 sm:space-y-2">
+                  <Label className="text-xs sm:text-sm font-semibold text-slate-700">Password {editingPhotographer ? "(Kosongkan jika tidak ubah)" : ""}</Label>
+                  <Input
+                    type="password"
+                    placeholder="••••••••"
+                    required={!editingPhotographer}
+                    value={form.data.password}
+                    onChange={(e) => form.setData("password", e.target.value)}
+                    className="text-xs sm:text-sm h-9 sm:h-10"
+                  />
+                </div>
+                <div className="space-y-1.5 sm:space-y-2">
+                  <Label className="text-xs sm:text-sm font-semibold text-slate-700">Spesialisasi</Label>
+                  <Input
+                    placeholder="misal: Wedding, Prewedding"
+                    value={form.data.specialty}
+                    onChange={(e) => form.setData("specialty", e.target.value)}
+                    className="text-xs sm:text-sm h-9 sm:h-10"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1.5 sm:space-y-2">
+                <Label className="text-xs sm:text-sm font-semibold text-slate-700">Status</Label>
                 <Select
                   value={form.data.status || "ACTIVE"}
                   onValueChange={(val) => form.setData("status", val)}
                 >
-                  <SelectTrigger className="w-full bg-white">
+                  <SelectTrigger className="w-full bg-white text-xs sm:text-sm h-9 sm:h-10">
                     <SelectValue placeholder="Pilih Status" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="ACTIVE">ACTIVE</SelectItem>
-                    <SelectItem value="INACTIVE">INACTIVE</SelectItem>
+                    <SelectItem value="ACTIVE">Aktif (ACTIVE)</SelectItem>
+                    <SelectItem value="INACTIVE">Nonaktif (INACTIVE)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
-              <DialogFooter>
-                <Button type="button" variant="outline" onClick={() => setModalOpen(false)}>
-                  <X /> Batal
+              <DialogFooter className="pt-2 flex flex-col-reverse sm:flex-row gap-2 sm:justify-end">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setModalOpen(false)}
+                  className="w-full sm:w-auto font-semibold text-xs sm:text-sm h-10"
+                >
+                  <X />
+                  <span>Batal</span>
                 </Button>
-                <Button type="submit" disabled={form.processing}>
+                <Button
+                  type="submit"
+                  disabled={form.processing}
+                  className="w-full sm:w-auto font-semibold text-xs sm:text-sm h-10 shadow-xs"
+                >
                   <Save />
-                  {form.processing ? "Menyimpan..." : "Simpan Photographer"}
+                  <span>{form.processing ? "Menyimpan..." : "Simpan Fotografer"}</span>
                 </Button>
               </DialogFooter>
             </form>
@@ -328,9 +341,9 @@ export default function Index({ photographers, filters }) {
         <ConfirmDialog
           open={deleteOpen}
           onOpenChange={setDeleteOpen}
-          title="Hapus Data Photographer"
-          description={`Apakah Anda yakin ingin menghapus photographer "${deleteTarget?.name}"? Akun dan akses penugasan akan dihapus.`}
-          confirmText="Hapus Photographer"
+          title="Hapus Data Fotografer"
+          description={`Apakah Anda yakin ingin menghapus fotografer "${deleteTarget?.name}"? Akun dan akses penugasan akan dihapus.`}
+          confirmText="Hapus Fotografer"
           cancelText="Batal"
           variant="destructive"
           onConfirm={handleConfirmDelete}

@@ -27,7 +27,7 @@ export default function Show({ mua }) {
           </Link>
           <div>
             <h1 className="text-2xl font-bold text-slate-900 tracking-tight">{mua.name}</h1>
-            <p className="text-xs text-slate-500">Histori Penugasan & Fee Project</p>
+            <p className="text-xs text-slate-500">Histori Penugasan & Gaji Project</p>
           </div>
         </div>
 
@@ -42,16 +42,16 @@ export default function Show({ mua }) {
             <CardContent className="space-y-4 text-sm">
               <div>
                 <p className="text-xs text-slate-400 font-medium uppercase">Spesialisasi</p>
-                <p className="font-semibold text-slate-900">{mua.specialty || "General Makeup"}</p>
+                <p className="font-semibold text-slate-900">{mua.specialty || "Tata Rias Umum"}</p>
               </div>
               <div>
-                <p className="text-xs text-slate-400 font-medium uppercase">Fee</p>
+                <p className="text-xs text-slate-400 font-medium uppercase">Gaji Standar</p>
                 <p className="font-bold text-emerald-700 text-base">{formatRupiah(mua.default_fee || 0)}</p>
               </div>
               <div>
                 <p className="text-xs text-slate-400 font-medium uppercase">Status</p>
                 <Badge variant={mua.status === "ACTIVE" ? "success" : "secondary"}>
-                  {mua.status}
+                  {mua.status === "ACTIVE" ? "Aktif" : "Nonaktif"}
                 </Badge>
               </div>
               <div className="pt-2 border-t border-slate-100 space-y-2 text-xs">
@@ -79,7 +79,7 @@ export default function Show({ mua }) {
           <Card className="border-slate-200 md:col-span-2">
             <CardHeader>
               <CardTitle className="text-base font-semibold">
-                Histori Project & Pembayaran Fee ({mua.projects?.length || 0})
+                Histori Project & Pembayaran Gaji ({mua.projects?.length || 0})
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
@@ -89,8 +89,8 @@ export default function Show({ mua }) {
                     <TableHead className="font-semibold text-slate-700">Tanggal</TableHead>
                     <TableHead className="font-semibold text-slate-700">Project / Pelanggan</TableHead>
                     <TableHead className="font-semibold text-slate-700">Paket</TableHead>
-                    <TableHead className="font-semibold text-slate-700 text-right">Fee MUA</TableHead>
-                    <TableHead className="font-semibold text-slate-700 text-center">Status Fee</TableHead>
+                    <TableHead className="font-semibold text-slate-700 text-right">Gaji MUA</TableHead>
+                    <TableHead className="font-semibold text-slate-700 text-center">Status Gaji</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -119,7 +119,7 @@ export default function Show({ mua }) {
                           <TableCell className="text-center">
                             {feeRecord ? (
                               <Badge variant={feeRecord.payment_status === "PAID" ? "success" : "warning"}>
-                                {feeRecord.payment_status}
+                                {feeRecord.payment_status === "PAID" ? "Lunas" : "Belum Bayar"}
                               </Badge>
                             ) : (
                               <span className="text-xs text-slate-400">-</span>

@@ -729,12 +729,14 @@ export default function Show({ project, allPhotographers = [], allMuas = [] }) {
                 />
               </div>
 
-              <DialogFooter>
+              <DialogFooter className="gap-2">
                 <Button type="button" variant="outline" onClick={() => setMuaModalOpen(false)}>
-                  <X /> Batal
+                  <X />
+                  <span>Batal</span>
                 </Button>
                 <Button type="submit" disabled={muaForm.processing}>
-                  <Plus /> Assign MUA
+                  <Plus />
+                  <span>Assign MUA</span>
                 </Button>
               </DialogFooter>
             </form>

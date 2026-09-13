@@ -56,14 +56,14 @@ export default function MuaFees({ fees = { data: [] }, filters = {}, unpaidTotal
 
   return (
     <>
-      <Head title="Pembayaran Fee MUA" />
+      <Head title="Pembayaran Gaji MUA" />
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
-            Pembayaran Fee Make Up Artist (MUA)
+            Pembayaran Gaji Make Up Artist (MUA)
           </h1>
           <p className="text-sm text-slate-500 mt-1">
-            Kelola dan tandai status pelunasan fee MUA per project.
+            Kelola dan tandai status pelunasan gaji MUA per project.
           </p>
         </div>
 
@@ -95,80 +95,83 @@ export default function MuaFees({ fees = { data: [] }, filters = {}, unpaidTotal
           <TableSkeleton rows={6} cols={5} />
         ) : (
           <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
-          <Table>
-            <TableHeader className="bg-slate-50">
-              <TableRow>
-                <TableHead className="font-semibold text-slate-700">Nama MUA</TableHead>
-                <TableHead className="font-semibold text-slate-700">Project / Pelanggan</TableHead>
-                <TableHead className="font-semibold text-slate-700 text-right">Nominal Fee</TableHead>
-                <TableHead className="font-semibold text-slate-700 text-center">Status</TableHead>
-                <TableHead className="font-semibold text-slate-700 text-center">Aksi</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {(!fees?.data || fees.data.length === 0) ? (
+            <Table>
+              <TableHeader className="bg-slate-50">
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center py-8 text-slate-400">
-                    Belum ada data rekaman fee MUA.
-                  </TableCell>
+                  <TableHead className="font-semibold text-slate-700">Nama MUA</TableHead>
+                  <TableHead className="font-semibold text-slate-700">Project / Pelanggan</TableHead>
+                  <TableHead className="font-semibold text-slate-700 text-right">Nominal Gaji</TableHead>
+                  <TableHead className="font-semibold text-slate-700 text-center">Status</TableHead>
+                  <TableHead className="font-semibold text-slate-700 text-center">Aksi</TableHead>
                 </TableRow>
-              ) : (
-                (fees?.data || []).map((f) => (
-                  <TableRow key={f.id}>
-                    <TableCell className="font-bold text-slate-900">
-                      <div className="flex items-center gap-1.5">
-                        <Sparkles className="h-4 w-4 text-amber-500 shrink-0" />
-                        <span>{f.mua?.name}</span>
-                      </div>
-                    </TableCell>
-
-                    <TableCell>
-                      <span className="font-semibold text-slate-900 block">{f.project?.project_name}</span>
-                      <span className="text-xs text-slate-500">{f.project?.customer?.name}</span>
-                    </TableCell>
-
-                    <TableCell className="text-right font-bold text-slate-900">
-                      {formatRupiah(f.amount)}
-                    </TableCell>
-
-                    <TableCell className="text-center">
-                      <Badge variant={f.payment_status === "PAID" ? "success" : "warning"}>
-                        {f.payment_status}
-                      </Badge>
-                      {f.paid_at && (
-                        <span className="text-[10px] text-slate-400 block mt-0.5">
-                          {formatDate(f.paid_at)}
-                        </span>
-                      )}
-                    </TableCell>
-
-                    <TableCell className="text-center">
-                      {f.payment_status === "UNPAID" ? (
-                        <Button
-                          size="sm"
-                          onClick={() => handleOpenPay(f)}
-                        >
-                          <CreditCard /> Bayar Fee
-                        </Button>
-                      ) : (
-                        <span className="text-xs text-emerald-600 font-medium flex items-center justify-center">
-                          <CheckCircle2 className="h-3.5 w-3.5 mr-1" /> Lunas
-                        </span>
-                      )}
+              </TableHeader>
+              <TableBody>
+                {(!fees?.data || fees.data.length === 0) ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center py-8 text-slate-400">
+                      Belum ada data rekaman gaji MUA.
                     </TableCell>
                   </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </div>
+                ) : (
+                  (fees?.data || []).map((f) => (
+                    <TableRow key={f.id}>
+                      <TableCell className="font-bold text-slate-900">
+                        <div className="flex items-center gap-1.5">
+                          <Sparkles className="h-4 w-4 text-amber-500 shrink-0" />
+                          <span>{f.mua?.name}</span>
+                        </div>
+                      </TableCell>
+
+                      <TableCell>
+                        <span className="font-semibold text-slate-900 block">{f.project?.project_name}</span>
+                        <span className="text-xs text-slate-500">{f.project?.customer?.name}</span>
+                      </TableCell>
+
+                      <TableCell className="text-right font-bold text-slate-900">
+                        {formatRupiah(f.amount)}
+                      </TableCell>
+
+                      <TableCell className="text-center">
+                        <Badge variant={f.payment_status === "PAID" ? "success" : "warning"}>
+                          {f.payment_status === "PAID" ? "Lunas" : "Belum Bayar"}
+                        </Badge>
+                        {f.paid_at && (
+                          <span className="text-[10px] text-slate-400 block mt-0.5">
+                            {formatDate(f.paid_at)}
+                          </span>
+                        )}
+                      </TableCell>
+
+                      <TableCell className="text-center">
+                        {f.payment_status === "UNPAID" ? (
+                          <Button
+                            size="sm"
+                            className="gap-1.5 text-xs font-semibold"
+                            onClick={() => handleOpenPay(f)}
+                          >
+                            <CreditCard className="h-3.5 w-3.5" />
+                            <span>Bayar Gaji</span>
+                          </Button>
+                        ) : (
+                          <span className="text-xs text-emerald-600 font-medium flex items-center justify-center gap-1">
+                            <CheckCircle2 className="h-3.5 w-3.5" />
+                            <span>Lunas</span>
+                          </span>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </div>
         )}
 
         {/* Modal Pay MUA */}
         <Dialog open={payModalOpen} onOpenChange={setPayModalOpen}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Konfirmasi Pembayaran Fee MUA</DialogTitle>
+              <DialogTitle>Konfirmasi Pembayaran Gaji MUA</DialogTitle>
             </DialogHeader>
 
             <form onSubmit={handleConfirmPay} className="space-y-4 py-2">
@@ -206,12 +209,14 @@ export default function MuaFees({ fees = { data: [] }, filters = {}, unpaidTotal
                 />
               </div>
 
-              <DialogFooter>
+              <DialogFooter className="gap-2">
                 <Button type="button" variant="outline" onClick={() => setPayModalOpen(false)}>
-                  <X /> Batal
+                  <X />
+                  <span>Batal</span>
                 </Button>
                 <Button type="submit">
-                  <CheckCircle2 /> Konfirmasi Pembayaran
+                  <CheckCircle2 />
+                  <span>Konfirmasi Pembayaran</span>
                 </Button>
               </DialogFooter>
             </form>

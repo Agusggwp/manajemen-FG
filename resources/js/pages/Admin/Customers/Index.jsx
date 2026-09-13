@@ -126,8 +126,9 @@ export default function Index({ customers, filters }) {
               Database pelanggan ARTDEVATA beserta kontak dan alamat pemotretan.
             </p>
           </div>
-          <Button onClick={handleOpenCreate}>
-            <Plus /> Tambah Pelanggan
+          <Button onClick={handleOpenCreate} size="sm" className="font-semibold gap-1.5 text-xs w-full sm:w-auto shrink-0">
+            <Plus className="h-4 w-4" />
+            <span>Tambah Pelanggan</span>
           </Button>
         </div>
 
@@ -220,16 +221,16 @@ export default function Index({ customers, filters }) {
                         <DropdownMenuContent align="end" className="w-36 shadow-md">
                           <DropdownMenuItem
                             onClick={() => handleOpenEdit(c)}
-                            className="cursor-pointer text-xs"
+                            className="cursor-pointer text-xs flex items-center gap-2"
                           >
-                            <Edit3 className="mr-2 h-3.5 w-3.5 text-slate-600" />
+                            <Edit3 className="h-3.5 w-3.5 text-slate-600" />
                             <span>Edit Data</span>
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() => handleDeleteClick(c)}
-                            className="cursor-pointer text-xs text-red-600 focus:text-red-600 focus:bg-red-50"
+                            className="cursor-pointer text-xs text-red-600 focus:text-red-600 focus:bg-red-50 flex items-center gap-2"
                           >
-                            <Trash2 className="mr-2 h-3.5 w-3.5 text-red-600" />
+                            <Trash2 className="h-3.5 w-3.5 text-red-600" />
                             <span>Hapus</span>
                           </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -245,75 +246,90 @@ export default function Index({ customers, filters }) {
 
         {/* Modal Create/Edit Customer */}
         <Dialog open={modalOpen} onOpenChange={setModalOpen}>
-          <DialogContent className="max-w-md">
+          <DialogContent className="max-w-[95vw] sm:max-w-md max-h-[90vh] overflow-y-auto p-4 sm:p-6 rounded-2xl">
             <DialogHeader>
-              <DialogTitle>
+              <DialogTitle className="text-base sm:text-lg font-bold text-slate-900">
                 {editingCustomer ? "Edit Data Pelanggan" : "Tambah Pelanggan Baru"}
               </DialogTitle>
             </DialogHeader>
 
-            <form onSubmit={handleSubmit} className="space-y-4 py-2">
+            <form onSubmit={handleSubmit} className="space-y-3.5 sm:space-y-4 py-2">
               <div className="space-y-1.5">
-                <Label htmlFor="name">Nama Lengkap *</Label>
+                <Label htmlFor="name" className="text-xs sm:text-sm font-semibold text-slate-700">Nama Lengkap *</Label>
                 <Input
                   id="name"
                   required
                   value={form.data.name}
                   onChange={(e) => form.setData("name", e.target.value)}
+                  className="text-xs sm:text-sm h-9 sm:h-10"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="phone">Nomor Telepon / WhatsApp *</Label>
+                <Label htmlFor="phone" className="text-xs sm:text-sm font-semibold text-slate-700">Nomor Telepon / WhatsApp *</Label>
                 <Input
                   id="phone"
                   required
                   placeholder="08123456789"
                   value={form.data.phone}
                   onChange={(e) => form.setData("phone", e.target.value)}
+                  className="text-xs sm:text-sm h-9 sm:h-10"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email" className="text-xs sm:text-sm font-semibold text-slate-700">Email</Label>
                 <Input
                   id="email"
                   type="email"
                   placeholder="nama@email.com"
                   value={form.data.email}
                   onChange={(e) => form.setData("email", e.target.value)}
+                  className="text-xs sm:text-sm h-9 sm:h-10"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="address">Alamat Pemotretan / Domisili</Label>
+                <Label htmlFor="address" className="text-xs sm:text-sm font-semibold text-slate-700">Alamat Pemotretan / Domisili</Label>
                 <Textarea
                   id="address"
                   rows={2}
                   placeholder="Alamat lengkap..."
                   value={form.data.address}
                   onChange={(e) => form.setData("address", e.target.value)}
+                  className="text-xs sm:text-sm"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="notes">Catatan Tambahan</Label>
+                <Label htmlFor="notes" className="text-xs sm:text-sm font-semibold text-slate-700">Catatan Tambahan</Label>
                 <Textarea
                   id="notes"
                   rows={2}
                   placeholder="Preferensi pelanggan, catatan khusus..."
                   value={form.data.notes}
                   onChange={(e) => form.setData("notes", e.target.value)}
+                  className="text-xs sm:text-sm"
                 />
               </div>
 
-              <DialogFooter className="pt-2">
-                <Button type="button" variant="outline" onClick={() => setModalOpen(false)}>
-                  <X /> Batal
+              <DialogFooter className="pt-2 flex flex-col-reverse sm:flex-row gap-2 sm:justify-end">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setModalOpen(false)}
+                  className="w-full sm:w-auto font-semibold text-xs sm:text-sm h-10"
+                >
+                  <X />
+                  <span>Batal</span>
                 </Button>
-                <Button type="submit" disabled={form.processing}>
+                <Button
+                  type="submit"
+                  disabled={form.processing}
+                  className="w-full sm:w-auto font-semibold text-xs sm:text-sm h-10 shadow-xs"
+                >
                   <Save />
-                  {form.processing ? "Menyimpan..." : "Simpan Pelanggan"}
+                  <span>{form.processing ? "Menyimpan..." : "Simpan Pelanggan"}</span>
                 </Button>
               </DialogFooter>
             </form>

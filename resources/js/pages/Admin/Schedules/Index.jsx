@@ -118,7 +118,7 @@ export default function Index({ schedules, existingAssignments, filters, custome
   const handlePackageChange = (packageId) => {
     const pkg = packages.find((p) => String(p.id) === String(packageId));
     setSelectedPackage(pkg || null);
-    
+
     let defaultMuaFee = form.data.mua_fee;
     let selectedMuaIds = form.data.mua_ids;
     if (pkg) {
@@ -297,17 +297,14 @@ export default function Index({ schedules, existingAssignments, filters, custome
                   <CardContent className="p-4 space-y-3">
                     <div className="flex items-center justify-between">
                       <Badge variant={
-                        s.status === "COMPLETED"  ? "success"     :
-                        s.status === "SHOOTING"   ? "warning"     :
-                        s.status === "SCHEDULED"  ? "info"        :
-                        s.status === "CANCELLED"  ? "destructive" :
-                        "secondary"
+                        s.status === "COMPLETED" ? "success" :
+                          s.status === "SHOOTING" ? "warning" :
+                            s.status === "SCHEDULED" ? "info" :
+                              s.status === "CANCELLED" ? "destructive" :
+                                "secondary"
                       }>
                         {getStatusLabel(s.status)}
                       </Badge>
-                      <span className="text-xs font-mono text-slate-500 flex items-center gap-1">
-                        <Clock className="h-3 w-3" /> {s.start_time?.substring(0, 5)} - {s.end_time?.substring(0, 5)}
-                      </span>
                     </div>
 
                     <div>
@@ -330,32 +327,32 @@ export default function Index({ schedules, existingAssignments, filters, custome
                       <p className="text-[11px] text-slate-500 line-clamp-1">{s.location_address}</p>
                     </div>
 
-                    <div className="flex items-center justify-between pt-2.5 border-t border-slate-100 gap-2">
-                      <span className="text-xs font-semibold text-slate-700 truncate">{formatDate(s.date)}</span>
-                      <div className="flex items-center gap-1.5 shrink-0">
-                        <Button
-                          variant={s.reminder_sent_at ? "outline" : "secondary"}
-                          size="sm"
-                          onClick={() => {
-                            setSelectedScheduleId(s.id);
-                            setReminderOpen(true);
-                          }}
-                          className={`${
-                            s.reminder_sent_at ? "text-emerald-700 border-emerald-300 bg-emerald-50/50 hover:bg-emerald-100" : "text-slate-700 hover:text-slate-900"
+                    <div className="grid grid-cols-2 gap-2 border-t pt-2">
+                      <span className="text-xs font-mono text-slate-500 flex items-center gap-1"><Calendar className="h-3 w-3" />{formatDate(s.date)}</span>
+                      <span className="text-xs font-mono text-slate-500 flex items-center gap-1">
+                        <Clock className="h-3 w-3" /> {s.start_time?.substring(0, 5)} - {s.end_time?.substring(0, 5)}
+                      </span>
+                      <Button
+                        variant={s.reminder_sent_at ? "outline" : "secondary"}
+                        size="sm"
+                        onClick={() => {
+                          setSelectedScheduleId(s.id);
+                          setReminderOpen(true);
+                        }}
+                        className={`${s.reminder_sent_at ? "text-emerald-700 border-emerald-300 bg-emerald-50/50 hover:bg-emerald-100" : "text-slate-700 hover:text-slate-900"
                           }`}
-                          title={s.reminder_sent_at ? `Email Peringatan Terkirim (${formatDate(s.reminder_sent_at)}) - Klik untuk kirim ulang` : "Kirim Email Peringatan H-1"}
-                        >
-                          <Mail className="h-3.5 w-3.5" />
-                          <span className="hidden sm:inline">{s.reminder_sent_at ? "Email Terkirim" : "Kirim Email"}</span>
-                          <span className="sm:hidden">{s.reminder_sent_at ? "Terkirim" : "Email"}</span>
-                        </Button>
+                        title={s.reminder_sent_at ? `Email Peringatan Terkirim (${formatDate(s.reminder_sent_at)}) - Klik untuk kirim ulang` : "Kirim Email Peringatan H-1"}
+                      >
+                        <Mail className={`h-3.5 w-3.5 ${s.reminder_sent_at ? "text-emerald-600" : ""}`} />
+                        <span className="hidden sm:inline">{s.reminder_sent_at ? "Email Terkirim" : "Kirim Email"}</span>
+                        <span className="sm:hidden">{s.reminder_sent_at ? "Terkirim" : "Email"}</span>
+                      </Button>
+                      <Button size="sm" variant="outline" asChild>
                         <Link href={`/admin/schedules/${s.id}`}>
-                          <Button size="sm" variant="outline" className="h-8 px-2.5 text-xs font-medium flex items-center gap-1">
-                            <span>Detail</span>
-                            <Eye className="h-3.5 w-3.5" />
-                          </Button>
+                          <span>Detail</span>
+                          <Eye className="h-3.5 w-3.5" />
                         </Link>
-                      </div>
+                      </Button>
                     </div>
                   </CardContent>
                 </Card>
@@ -368,128 +365,130 @@ export default function Index({ schedules, existingAssignments, filters, custome
           <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden w-full">
             <div className="overflow-x-auto w-full">
               <Table className="min-w-[800px]">
-              <TableHeader className="bg-slate-50">
-                <TableRow>
-                  <TableHead className="font-semibold text-slate-700">Tanggal & Waktu</TableHead>
-                  <TableHead className="font-semibold text-slate-700">Pelanggan</TableHead>
-                  <TableHead className="font-semibold text-slate-700">Paket Foto</TableHead>
-                  <TableHead className="font-semibold text-slate-700">Lokasi Pemotretan (Wajib)</TableHead>
-                  <TableHead className="font-semibold text-slate-700">Tim Bertugas</TableHead>
-                  <TableHead className="font-semibold text-slate-700 text-center">Status</TableHead>
-                  <TableHead className="font-semibold text-slate-700 text-center">Aksi</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {safeSchedules.data.length === 0 ? (
+                <TableHeader className="bg-slate-50">
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center py-8 text-slate-400">
-                      Tidak ada jadwal pemotretan ditemukan.
-                    </TableCell>
+                    <TableHead className="font-semibold text-slate-700">Tanggal & Waktu</TableHead>
+                    <TableHead className="font-semibold text-slate-700">Pelanggan</TableHead>
+                    <TableHead className="font-semibold text-slate-700">Paket Foto</TableHead>
+                    <TableHead className="font-semibold text-slate-700">Lokasi Pemotretan (Wajib)</TableHead>
+                    <TableHead className="font-semibold text-slate-700">Tim Bertugas</TableHead>
+                    <TableHead className="font-semibold text-slate-700 text-center">Status</TableHead>
+                    <TableHead className="font-semibold text-slate-700 text-center">Aksi</TableHead>
                   </TableRow>
-                ) : (
-                  safeSchedules.data.map((s) => (
-                    <TableRow key={s.id}>
-                      <TableCell className="font-medium text-slate-900 whitespace-nowrap">
-                        {formatDate(s.date)} <br />
-                        <span className="text-xs text-slate-400 flex items-center gap-1 mt-0.5">
-                          <Clock className="h-3 w-3" /> {s.start_time?.substring(0, 5)} - {s.end_time?.substring(0, 5)}
-                        </span>
-                        {Number(s.overtime_hours) > 0 && (
-                          <Badge variant="outline" className="text-[10px] bg-amber-50 text-amber-800 border-amber-300 font-medium block w-max mt-1">
-                            +{s.overtime_hours} Jam Overtime
-                          </Badge>
-                        )}
-                      </TableCell>
-
-                      <TableCell className="font-semibold text-slate-900">
-                        {s.customer?.name}
-                      </TableCell>
-
-                      <TableCell className="font-medium text-slate-800">
-                        <div>{s.photo_package?.name || s.project?.package_name || "-"}</div>
-                        {Number(s.overtime_fee) > 0 && (
-                          <div className="text-[11px] text-amber-700 font-medium">
-                            Overtime: +{formatRupiah(s.overtime_fee)}
-                          </div>
-                        )}
-                      </TableCell>
-
-                      <TableCell className="max-w-xs">
-                        <div className="font-semibold text-slate-900 flex items-center gap-1">
-                          <MapPin className="h-3.5 w-3.5 text-rose-500 shrink-0" />
-                          <span className="truncate">{s.location_name}</span>
-                        </div>
-                        <span className="text-xs text-slate-400 truncate block">{s.location_address}</span>
-                        <span className="text-[10px] text-slate-500 font-mono">
-                          Radius GPS: {s.location_radius}m
-                        </span>
-                      </TableCell>
-
-                      <TableCell className="text-xs">
-                        <div className="space-y-1">
-                          {s.project?.photographers?.map((p) => (
-                            <div key={p.id} className="flex items-center space-x-1 text-slate-800 font-medium">
-                              <Camera className="h-3 w-3 text-slate-400" />
-                              <span>{p.name}</span>
-                            </div>
-                          ))}
-                          {s.project?.muas?.map((m) => (
-                            <div key={m.id} className="flex items-center space-x-1 text-amber-700 font-medium">
-                              <Sparkles className="h-3 w-3 text-amber-500" />
-                              <span>{m.name}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </TableCell>
-
-                      <TableCell className="text-center">
-                        <Badge
-                          variant={
-                            s.status === "COMPLETED"  ? "success"     :
-                            s.status === "SHOOTING"   ? "warning"     :
-                            s.status === "SCHEDULED"  ? "info"        :
-                            s.status === "CANCELLED"  ? "destructive" :
-                            "secondary"
-                          }
-                        >
-                          {getStatusLabel(s.status)}
-                        </Badge>
-                      </TableCell>
-
-                      <TableCell className="text-center">
-                        <div className="flex items-center justify-center space-x-1">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => {
-                              setSelectedScheduleId(s.id);
-                              setReminderOpen(true);
-                            }}
-                            title={s.reminder_sent_at ? `Email Peringatan Terkirim (${formatDate(s.reminder_sent_at)}) - Klik untuk kirim ulang` : "Kirim Email Peringatan H-1"}
-                          >
-                            <Mail className={`h-4 w-4 ${s.reminder_sent_at ? "text-emerald-600 font-bold" : "text-slate-600"}`} />
-                          </Button>
-                          <Link href={`/admin/schedules/${s.id}`}>
-                            <Button variant="ghost" size="icon" title="Lihat Detail">
-                              <Eye className="h-4 w-4 text-slate-600" />
-                            </Button>
-                          </Link>
-                        </div>
+                </TableHeader>
+                <TableBody>
+                  {safeSchedules.data.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={7} className="text-center py-8 text-slate-400">
+                        Tidak ada jadwal pemotretan ditemukan.
                       </TableCell>
                     </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
+                  ) : (
+                    safeSchedules.data.map((s) => (
+                      <TableRow key={s.id}>
+                        <TableCell className="font-medium text-slate-900 whitespace-nowrap">
+                          {formatDate(s.date)} <br />
+                          <span className="text-xs text-slate-400 flex items-center gap-1 mt-0.5">
+                            <Clock className="h-3 w-3" /> {s.start_time?.substring(0, 5)} - {s.end_time?.substring(0, 5)}
+                          </span>
+                          {Number(s.overtime_hours) > 0 && (
+                            <Badge variant="outline" className="text-[10px] bg-amber-50 text-amber-800 border-amber-300 font-medium block w-max mt-1">
+                              +{s.overtime_hours} Jam Overtime
+                            </Badge>
+                          )}
+                        </TableCell>
+
+                        <TableCell className="font-semibold text-slate-900">
+                          {s.customer?.name}
+                        </TableCell>
+
+                        <TableCell className="font-medium text-slate-800">
+                          <div>{s.photo_package?.name || s.project?.package_name || "-"}</div>
+                          {Number(s.overtime_fee) > 0 && (
+                            <div className="text-[11px] text-amber-700 font-medium">
+                              Overtime: +{formatRupiah(s.overtime_fee)}
+                            </div>
+                          )}
+                        </TableCell>
+
+                        <TableCell className="max-w-xs">
+                          <div className="font-semibold text-slate-900 flex items-center gap-1">
+                            <MapPin className="h-3.5 w-3.5 text-rose-500 shrink-0" />
+                            <span className="truncate">{s.location_name}</span>
+                          </div>
+                          <span className="text-xs text-slate-400 truncate block">{s.location_address}</span>
+                          <span className="text-[10px] text-slate-500 font-mono">
+                            Radius GPS: {s.location_radius}m
+                          </span>
+                        </TableCell>
+
+                        <TableCell className="text-xs">
+                          <div className="space-y-1">
+                            {s.project?.photographers?.map((p) => (
+                              <div key={p.id} className="flex items-center space-x-1 text-slate-800 font-medium">
+                                <Camera className="h-3 w-3 text-slate-400" />
+                                <span>{p.name}</span>
+                              </div>
+                            ))}
+                            {s.project?.muas?.map((m) => (
+                              <div key={m.id} className="flex items-center space-x-1 text-amber-700 font-medium">
+                                <Sparkles className="h-3 w-3 text-amber-500" />
+                                <span>{m.name}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </TableCell>
+
+                        <TableCell className="text-center">
+                          <Badge
+                            variant={
+                              s.status === "COMPLETED" ? "success" :
+                                s.status === "SHOOTING" ? "warning" :
+                                  s.status === "SCHEDULED" ? "info" :
+                                    s.status === "CANCELLED" ? "destructive" :
+                                      "secondary"
+                            }
+                          >
+                            {getStatusLabel(s.status)}
+                          </Badge>
+                        </TableCell>
+
+                        <TableCell className="text-center">
+                          <div className="flex items-center justify-center space-x-1">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => {
+                                setSelectedScheduleId(s.id);
+                                setReminderOpen(true);
+                              }}
+                              title={s.reminder_sent_at ? `Email Peringatan Terkirim (${formatDate(s.reminder_sent_at)}) - Klik untuk kirim ulang` : "Kirim Email Peringatan H-1"}
+                            >
+                              <Mail className={`h-4 w-4 ${s.reminder_sent_at ? "text-emerald-600 font-bold" : "text-slate-600"}`} />
+                            </Button>
+                            <Link href={`/admin/schedules/${s.id}`}>
+                              <Button variant="ghost" size="icon" title="Lihat Detail">
+                                <Eye className="h-4 w-4 text-slate-600" />
+                              </Button>
+                            </Link>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
             </div>
           </div>
         )}
 
         {/* Modal Create Schedule */}
         <Dialog open={modalOpen} onOpenChange={setModalOpen}>
-          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-[95vw] sm:max-w-3xl max-h-[90vh] overflow-y-auto p-4 sm:p-6 rounded-2xl">
             <DialogHeader>
-              <DialogTitle>Buat Jadwal Pemotretan Baru</DialogTitle>
+              <DialogTitle className="text-base sm:text-lg font-bold text-slate-900">
+                Buat Jadwal Pemotretan Baru
+              </DialogTitle>
             </DialogHeader>
 
             <form onSubmit={handleSubmit} className="space-y-5 py-2">
@@ -725,10 +724,10 @@ export default function Index({ schedules, existingAssignments, filters, custome
                               : ""
                           }
                           className={`p-2.5 rounded-lg border text-xs flex flex-col justify-between transition-colors ${isBusy
-                              ? "bg-rose-50/80 border-rose-200 text-rose-500 cursor-not-allowed opacity-80"
-                              : isSelected
-                                ? "bg-slate-900 text-white border-slate-900 cursor-pointer"
-                                : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50 cursor-pointer"
+                            ? "bg-rose-50/80 border-rose-200 text-rose-500 cursor-not-allowed opacity-80"
+                            : isSelected
+                              ? "bg-slate-900 text-white border-slate-900 cursor-pointer"
+                              : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50 cursor-pointer"
                             }`}
                         >
                           <div className="flex items-center space-x-2">
@@ -790,13 +789,23 @@ export default function Index({ schedules, existingAssignments, filters, custome
                 />
               </div>
 
-              <DialogFooter>
-                <Button type="button" variant="outline" onClick={() => setModalOpen(false)}>
-                  <X /> Batal
+              <DialogFooter className="pt-2 flex flex-col-reverse sm:flex-row gap-2 sm:justify-end">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setModalOpen(false)}
+                  className="w-full sm:w-auto font-semibold text-xs sm:text-sm h-10"
+                >
+                  <X />
+                  <span>Batal</span>
                 </Button>
-                <Button type="submit" disabled={form.processing}>
+                <Button
+                  type="submit"
+                  disabled={form.processing}
+                  className="w-full sm:w-auto font-semibold text-xs sm:text-sm h-10 shadow-xs"
+                >
                   <Plus />
-                  {form.processing ? "Memproses..." : "Buat Jadwal & Project"}
+                  <span>{form.processing ? "Memproses..." : "Buat Jadwal & Project"}</span>
                 </Button>
               </DialogFooter>
             </form>

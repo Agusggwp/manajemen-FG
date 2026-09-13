@@ -265,10 +265,10 @@ export default function Index({ settings }) {
                   variant="outline"
                   onClick={handleTestDiscord}
                   disabled={testingDiscord || !form.data.discord_webhook_url}
-                  className="bg-white border-indigo-200 text-indigo-700 hover:bg-indigo-50 shrink-0"
+                  className="bg-white border-indigo-200 text-indigo-700 hover:bg-indigo-50 shrink-0 gap-1.5"
                 >
-                  <Send className="h-4 w-4 mr-1.5" />
-                  {testingDiscord ? "Menguji..." : "Uji Coba Webhook"}
+                  <Send className="h-4 w-4" />
+                  <span>{testingDiscord ? "Menguji..." : "Uji Coba Webhook"}</span>
                 </Button>
               </div>
               <p className="text-[11px] text-slate-500">

@@ -197,7 +197,7 @@ export default function Index({ muas, filters }) {
                     )}
                     <div className="flex items-center space-x-2">
                       <Wallet className="h-3.5 w-3.5 text-slate-400 shrink-0" />
-                      <span>Fee: <strong className="text-slate-900">{formatRupiah(mua.default_fee || 0)}</strong></span>
+                      <span>Gaji: <strong className="text-slate-900">{formatRupiah(mua.default_fee || 0)}</strong></span>
                     </div>
                   </div>
 
@@ -218,24 +218,24 @@ export default function Index({ muas, filters }) {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="w-36 shadow-md">
                         <DropdownMenuItem asChild>
-                          <Link href={`/admin/muas/${mua.id}`} className="cursor-pointer text-xs flex items-center">
-                            <Eye className="mr-2 h-3.5 w-3.5 text-slate-600" />
+                          <Link href={`/admin/muas/${mua.id}`} className="cursor-pointer text-xs flex items-center gap-2">
+                            <Eye className="h-3.5 w-3.5 text-slate-600" />
                             <span>Lihat Detail</span>
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => handleOpenEdit(mua)}
-                          className="cursor-pointer text-xs"
+                          className="cursor-pointer text-xs flex items-center gap-2"
                         >
-                          <Edit3 className="mr-2 h-3.5 w-3.5 text-slate-600" />
+                          <Edit3 className="h-3.5 w-3.5 text-slate-600" />
                           <span>Edit Data</span>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
                           onClick={() => handleDeleteClick(mua)}
-                          className="cursor-pointer text-xs text-red-600 focus:text-red-600 focus:bg-red-50"
+                          className="cursor-pointer text-xs text-red-600 focus:text-red-600 focus:bg-red-50 flex items-center gap-2"
                         >
-                          <Trash2 className="mr-2 h-3.5 w-3.5 text-red-600" />
+                          <Trash2 className="h-3.5 w-3.5 text-red-600" />
                           <span>Hapus</span>
                         </DropdownMenuItem>
                       </DropdownMenuContent>
@@ -249,108 +249,126 @@ export default function Index({ muas, filters }) {
 
         {/* Modal Form */}
         <Dialog open={modalOpen} onOpenChange={setModalOpen}>
-          <DialogContent>
+          <DialogContent className="max-w-[95vw] sm:max-w-lg max-h-[90vh] overflow-y-auto p-5 sm:p-6 rounded-2xl">
             <DialogHeader>
-              <DialogTitle>
+              <DialogTitle className="text-base sm:text-lg font-bold text-slate-900">
                 {editingMua ? "Edit Data MUA" : "Tambah MUA Baru"}
               </DialogTitle>
             </DialogHeader>
 
-            <form onSubmit={handleSubmit} className="space-y-4 py-2">
-              <div className="space-y-2">
-                <Label>Nama Lengkap MUA</Label>
+            <form onSubmit={handleSubmit} className="space-y-3.5 sm:space-y-4 py-2">
+              <div className="space-y-1.5 sm:space-y-2">
+                <Label className="text-xs sm:text-sm font-semibold text-slate-700">Nama Lengkap MUA</Label>
                 <Input
                   required
                   placeholder="misal: Sari MUA Bali"
                   value={form.data.name}
                   onChange={(e) => form.setData("name", e.target.value)}
+                  className="text-xs sm:text-sm h-9 sm:h-10"
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Nomor WhatsApp / HP</Label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                <div className="space-y-1.5 sm:space-y-2">
+                  <Label className="text-xs sm:text-sm font-semibold text-slate-700">Nomor WhatsApp / HP</Label>
                   <Input
                     required
                     placeholder="0812xxxx"
                     value={form.data.phone}
                     onChange={(e) => form.setData("phone", e.target.value)}
+                    className="text-xs sm:text-sm h-9 sm:h-10"
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label>Email (Opsional)</Label>
+                <div className="space-y-1.5 sm:space-y-2">
+                  <Label className="text-xs sm:text-sm font-semibold text-slate-700">Email (Opsional)</Label>
                   <Input
                     type="email"
                     placeholder="mua@email.com"
                     value={form.data.email}
                     onChange={(e) => form.setData("email", e.target.value)}
+                    className="text-xs sm:text-sm h-9 sm:h-10"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Spesialisasi Makeup</Label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                <div className="space-y-1.5 sm:space-y-2">
+                  <Label className="text-xs sm:text-sm font-semibold text-slate-700">Spesialisasi Makeup</Label>
                   <Input
                     placeholder="misal: Graduation, Bridal, Glam"
                     value={form.data.specialty}
                     onChange={(e) => form.setData("specialty", e.target.value)}
+                    className="text-xs sm:text-sm h-9 sm:h-10"
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label>Fee (Rp)</Label>
+                <div className="space-y-1.5 sm:space-y-2">
+                  <Label className="text-xs sm:text-sm font-semibold text-slate-700">Gaji Standar / Default (Rp)</Label>
                   <Input
                     type="number"
                     min="0"
                     placeholder="misal: 300000"
                     value={form.data.default_fee}
                     onChange={(e) => form.setData("default_fee", e.target.value)}
+                    className="text-xs sm:text-sm h-9 sm:h-10"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Alamat / Dominasi Area</Label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                <div className="space-y-1.5 sm:space-y-2">
+                  <Label className="text-xs sm:text-sm font-semibold text-slate-700">Alamat / Dominasi Area</Label>
                   <Input
                     placeholder="misal: Denpasar, Bali"
                     value={form.data.address}
                     onChange={(e) => form.setData("address", e.target.value)}
+                    className="text-xs sm:text-sm h-9 sm:h-10"
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label>Status</Label>
+                <div className="space-y-1.5 sm:space-y-2">
+                  <Label className="text-xs sm:text-sm font-semibold text-slate-700">Status</Label>
                   <Select
                     value={form.data.status || "ACTIVE"}
                     onValueChange={(val) => form.setData("status", val)}
                   >
-                    <SelectTrigger className="w-full bg-white">
+                    <SelectTrigger className="w-full bg-white text-xs sm:text-sm h-9 sm:h-10">
                       <SelectValue placeholder="Pilih Status" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="ACTIVE">ACTIVE</SelectItem>
-                      <SelectItem value="INACTIVE">INACTIVE</SelectItem>
+                      <SelectItem value="ACTIVE">Aktif (ACTIVE)</SelectItem>
+                      <SelectItem value="INACTIVE">Nonaktif (INACTIVE)</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label>Catatan Tambahan</Label>
+              <div className="space-y-1.5 sm:space-y-2">
+                <Label className="text-xs sm:text-sm font-semibold text-slate-700">Catatan Tambahan</Label>
                 <Textarea
                   placeholder="Catatan internal..."
                   value={form.data.notes}
                   onChange={(e) => form.setData("notes", e.target.value)}
+                  rows={2}
+                  className="text-xs sm:text-sm"
                 />
               </div>
 
-              <DialogFooter>
-                <Button type="button" variant="outline" onClick={() => setModalOpen(false)}>
-                  <X /> Batal
+              <DialogFooter className="pt-2 flex flex-col-reverse sm:flex-row gap-2 sm:justify-end">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setModalOpen(false)}
+                  className="w-full sm:w-auto font-semibold text-xs sm:text-sm h-10"
+                >
+                  <X />
+                  <span>Batal</span>
                 </Button>
-                <Button type="submit" disabled={form.processing}>
+                <Button
+                  type="submit"
+                  disabled={form.processing}
+                  className="w-full sm:w-auto font-semibold text-xs sm:text-sm h-10 shadow-xs"
+                >
                   <Save />
-                  {form.processing ? "Menyimpan..." : "Simpan MUA"}
+                  <span>{form.processing ? "Menyimpan..." : "Simpan MUA"}</span>
                 </Button>
               </DialogFooter>
             </form>
@@ -361,7 +379,7 @@ export default function Index({ muas, filters }) {
           open={deleteOpen}
           onOpenChange={setDeleteOpen}
           title="Hapus Data MUA"
-          description={`Apakah Anda yakin ingin menghapus MUA "${deleteTarget?.name}"? Seluruh riwayat fee yang terkait akan terhapus.`}
+          description={`Apakah Anda yakin ingin menghapus MUA "${deleteTarget?.name}"? Seluruh riwayat gaji yang terkait akan terhapus.`}
           confirmText="Hapus MUA"
           cancelText="Batal"
           variant="destructive"

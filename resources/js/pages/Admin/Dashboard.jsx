@@ -199,8 +199,9 @@ export default function Dashboard({
                 </p>
               </div>
               <Link href="/admin/proofs">
-                <Button size="sm" variant="outline">
-                  Lihat Semua Proof <ArrowRight />
+                <Button size="sm" variant="outline" className="gap-1.5 text-xs font-semibold">
+                  <span>Lihat Semua Proof</span>
+                  <ArrowRight className="h-3.5 w-3.5" />
                 </Button>
               </Link>
             </CardHeader>
@@ -224,8 +225,9 @@ export default function Dashboard({
                     </p>
                     <div className="pt-2 flex justify-end">
                       <Link href="/admin/proofs">
-                        <Button size="xs">
-                          <ShieldCheck /> Validasi Sekarang
+                        <Button size="xs" className="gap-1.5 font-semibold">
+                          <ShieldCheck className="h-3.5 w-3.5" />
+                          <span>Validasi Sekarang</span>
                         </Button>
                       </Link>
                     </div>
@@ -243,8 +245,9 @@ export default function Dashboard({
               Jadwal Terbaru
             </CardTitle>
             <Link href="/admin/schedules">
-              <Button size="sm" variant="outline">
-                Semua Jadwal <ArrowRight />
+              <Button size="sm" variant="outline" className="gap-1.5 text-xs font-semibold">
+                <span>Semua Jadwal</span>
+                <ArrowRight className="h-3.5 w-3.5" />
               </Button>
             </Link>
           </CardHeader>
