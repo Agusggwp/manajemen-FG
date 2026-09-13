@@ -9,6 +9,23 @@ import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 export default function Show({ schedule }) {
   const [reminderOpen, setReminderOpen] = useState(false);
+  const [isSendingReminder, setIsSendingReminder] = useState(false);
+
+  const handleSendReminder = () => {
+    if (!schedule?.id || isSendingReminder) return;
+    setIsSendingReminder(true);
+    router.post(
+      `/admin/schedules/${schedule.id}/send-reminder`,
+      {},
+      {
+        preserveScroll: true,
+        onFinish: () => {
+          setIsSendingReminder(false);
+          setReminderOpen(false);
+        },
+      }
+    );
+  };
 
   return (
     <>
