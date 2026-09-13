@@ -9,7 +9,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { AlertTriangle, Trash2, Check, X } from "lucide-react";
+import { AlertTriangle, Trash2, Check, X, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function ConfirmDialog({
@@ -19,12 +19,16 @@ export function ConfirmDialog({
   description = "Apakah Anda yakin ingin melanjutkan tindakan ini?",
   confirmText = "Ya, Lanjutkan",
   cancelText = "Batal",
+  loadingText,
   variant = "destructive",
   icon: IconComponent,
   confirmIcon: CustomConfirmIcon,
   onConfirm,
   disabled = false,
+  loading = false,
 }) {
+  const isBusy = disabled || loading;
+
   const getHeaderIcon = () => {
     if (IconComponent) return <IconComponent className="h-6 w-6 shrink-0" />;
     if (variant === "destructive") {
@@ -34,14 +38,24 @@ export function ConfirmDialog({
   };
 
   const getConfirmIcon = () => {
+    if (loading) return <Loader2 className="h-4 w-4 shrink-0 animate-spin" />;
     if (CustomConfirmIcon) return <CustomConfirmIcon className="h-4 w-4 shrink-0" />;
     if (IconComponent) return <IconComponent className="h-4 w-4 shrink-0" />;
     if (variant === "destructive") return <Trash2 className="h-4 w-4 shrink-0" />;
     return <Check className="h-4 w-4 shrink-0" />;
   };
 
+  const currentLoadingText = loadingText || (variant === "destructive" ? "Menghapus..." : "Memproses...");
+
   return (
-    <AlertDialog open={open} onOpenChange={onOpenChange}>
+    <AlertDialog
+      open={open}
+      onOpenChange={(val) => {
+        if (!isBusy && onOpenChange) {
+          onOpenChange(val);
+        }
+      }}
+    >
       <AlertDialogContent className="max-w-[92vw] sm:max-w-md p-6 rounded-2xl border-slate-200">
         <div className="flex flex-col items-center text-center">
           <div
@@ -65,7 +79,7 @@ export function ConfirmDialog({
         </div>
         <AlertDialogFooter className="mt-5 flex flex-col-reverse sm:flex-row gap-2.5 sm:gap-3 w-full sm:justify-center">
           <AlertDialogCancel
-            disabled={disabled}
+            disabled={isBusy}
             className="w-full sm:w-1/2 font-semibold text-xs sm:text-sm h-10 flex items-center justify-center gap-2"
           >
             <X className="h-4 w-4 shrink-0" />
@@ -73,15 +87,17 @@ export function ConfirmDialog({
           </AlertDialogCancel>
           <AlertDialogAction
             variant={variant}
-            disabled={disabled}
+            disabled={isBusy}
             onClick={(e) => {
               e.preventDefault();
-              onConfirm?.();
+              if (!isBusy) {
+                onConfirm?.();
+              }
             }}
             className="w-full sm:w-1/2 font-semibold text-xs sm:text-sm h-10 flex items-center justify-center gap-2 shadow-xs"
           >
             {getConfirmIcon()}
-            <span>{confirmText}</span>
+            <span>{loading ? currentLoadingText : confirmText}</span>
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
