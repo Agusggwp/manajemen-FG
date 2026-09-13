@@ -28,6 +28,8 @@ class SettingsController extends Controller
             'company_address' => 'nullable|string',
             'default_location_radius' => 'nullable|integer|min:10',
             'reminder_email_time' => 'nullable|string',
+            // Portal & App Theme Settings
+            'app_theme' => 'nullable|in:light,dark,system',
             // Public Web Settings
             'public_theme_mode' => 'nullable|in:light,dark',
             'public_hero_badge' => 'nullable|string',
