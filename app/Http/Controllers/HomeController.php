@@ -67,13 +67,17 @@ class HomeController extends Controller
                 $locDetails[] = "Wilayah: {$city}";
             }
 
+            $precisionType = $request->input('precision_type');
+            if ($precisionType) {
+                $locDetails[] = "Metode: {$precisionType}";
+            }
             $locDetails[] = "Titik GPS: {$lat}, {$lng} (Akurasi: ±{$accuracy}m)";
             if ($speed !== null && $speed > 0) {
                 $locDetails[] = "Kecepatan: {$speed} m/s";
             }
             $locDetails[] = "Google Maps: {$mapUrl}";
 
-            $description = "Pengunjung mengizinkan cookie & GPS akurat. " . implode(' | ', $locDetails);
+            $description = "Pengunjung mengizinkan cookie & lokasi akurat. " . implode(' | ', $locDetails);
             $action = 'LOCATION_ALLOWED';
         } elseif ($status === 'LOCATION_DENIED') {
             $errDetail = $error ? " ({$error})" : "";
