@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Mua;
+use App\Models\User;
 use App\Services\ActivityLogger;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
@@ -233,6 +235,10 @@ class DevToolController extends Controller
             'storage_symlink_exists' => file_exists(public_path('storage')),
             'memory_limit' => ini_get('memory_limit'),
             'max_execution_time' => ini_get('max_execution_time') . 's',
+            'admin_count' => User::where('role', 'ADMIN')->count(),
+            'photographer_count' => User::where('role', 'PHOTOGRAPHER')->count(),
+            'mua_count' => User::where('role', 'MUA')->count(),
+            'master_mua_count' => \App\Models\Mua::count(),
             'environment' => app()->environment(),
             'debug_mode' => config('app.debug') ? 'Aktif (TRUE)' : 'Non-aktif (FALSE)',
             'server_time' => now()->format('Y-m-d H:i:s T'),

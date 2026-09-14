@@ -13,9 +13,14 @@ class LoginController extends Controller
     public function showLoginForm()
     {
         if (Auth::check()) {
-            return Auth::user()->role === 'ADMIN'
-                ? redirect()->route('admin.dashboard')
-                : redirect()->route('photographer.dashboard');
+            $user = Auth::user();
+            if ($user->role === 'ADMIN') {
+                return redirect()->route('admin.dashboard');
+            }
+            if ($user->role === 'MUA') {
+                return redirect()->route('mua.dashboard');
+            }
+            return redirect()->route('photographer.dashboard');
         }
 
         return Inertia::render('Auth/Login');
@@ -74,6 +79,10 @@ class LoginController extends Controller
             $intended = session()->get('url.intended');
             if ($intended && str_contains($intended, '/admin')) {
                 session()->forget('url.intended');
+            }
+
+            if ($user->role === 'MUA') {
+                return redirect()->intended(route('mua.dashboard'));
             }
 
             return redirect()->intended(route('photographer.dashboard'));

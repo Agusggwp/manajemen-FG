@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Mail\PhotographerActivationMail;
+use App\Models\Mua;
 use App\Models\User;
 use App\Services\ActivityLogger;
 use Illuminate\Http\Request;
@@ -18,25 +19,31 @@ use Inertia\Inertia;
 class RegisterController extends Controller
 {
     /**
-     * Show the photographer registration form.
+     * Show the registration form.
      */
     public function showRegistrationForm()
     {
         if (Auth::check()) {
-            return Auth::user()->role === 'ADMIN'
-                ? redirect()->route('admin.dashboard')
-                : redirect()->route('photographer.dashboard');
+            $user = Auth::user();
+            if ($user->role === 'ADMIN') {
+                return redirect()->route('admin.dashboard');
+            }
+            if ($user->role === 'MUA') {
+                return redirect()->route('mua.dashboard');
+            }
+            return redirect()->route('photographer.dashboard');
         }
 
         return Inertia::render('Auth/Register');
     }
 
     /**
-     * Handle incoming registration request for photographer.
+     * Handle incoming registration request for photographer or MUA.
      */
     public function register(Request $request)
     {
         $validated = $request->validate([
+            'role' => ['required', 'in:PHOTOGRAPHER,MUA'],
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'confirmed', Password::min(6)],
@@ -45,16 +52,19 @@ class RegisterController extends Controller
             'address' => ['nullable', 'string'],
             'bio' => ['nullable', 'string'],
         ], [
+            'role.in' => 'Peran pendaftaran harus Fotografer atau MUA.',
             'email.unique' => 'Email ini sudah terdaftar dalam sistem.',
             'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
             'password.min' => 'Kata sandi minimal harus 6 karakter.',
         ]);
 
+        $role = $validated['role'];
+
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
-            'role' => 'PHOTOGRAPHER',
+            'role' => $role,
             'phone' => $validated['phone'] ?? null,
             'specialty' => $validated['specialty'] ?? null,
             'address' => $validated['address'] ?? null,
@@ -62,6 +72,19 @@ class RegisterController extends Controller
             'status' => 'PENDING',
             'email_verified_at' => null,
         ]);
+
+        if ($role === 'MUA') {
+            Mua::create([
+                'user_id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'phone' => $user->phone ?? '-',
+                'address' => $user->address,
+                'specialty' => $user->specialty,
+                'bio' => $user->bio,
+                'status' => 'INACTIVE', // Activated when admin approves
+            ]);
+        }
 
         // Generate temporary signed URL valid for 60 minutes
         $activationUrl = URL::temporarySignedRoute(
@@ -76,19 +99,21 @@ class RegisterController extends Controller
         try {
             Mail::to($user->email)->send(new PhotographerActivationMail($user, $activationUrl));
         } catch (\Throwable $e) {
-            Log::error("Gagal mengirim email aktivasi fotografer ke {$user->email}: " . $e->getMessage());
+            Log::error("Gagal mengirim email aktivasi ke {$user->email}: " . $e->getMessage());
         }
+
+        $roleLabel = $role === 'MUA' ? 'MUA (Make Up Artist)' : 'Fotografer';
 
         ActivityLogger::log(
             'REGISTER',
             'AUTH',
-            "Fotografer baru mendaftar: {$user->name} ({$user->email}). Menunggu verifikasi email dan aktivasi Admin.",
+            "{$roleLabel} baru mendaftar: {$user->name} ({$user->email}). Menunggu verifikasi email dan aktivasi Admin.",
             $user->id
         );
 
         return redirect()->route('login')->with(
             'success',
-            "Pendaftaran fotografer berhasil! Tautan verifikasi telah dikirim ke {$user->email}. Silakan periksa inbox atau folder spam email Anda untuk mengaktifkan akun."
+            "Pendaftaran {$roleLabel} berhasil! Tautan verifikasi telah dikirim ke {$user->email}. Silakan periksa inbox atau folder spam email Anda untuk mengaktifkan akun."
         );
     }
 
