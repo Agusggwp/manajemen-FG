@@ -82,8 +82,8 @@ export default function Galleries({
     <section
       id="portofolio"
       className={`py-16 md:py-20 relative z-10 border-t ${isDarkTheme
-          ? "bg-[#071f1b]/95 border-white/10"
-          : "bg-slate-100/60 border-slate-200/80"
+        ? "bg-[#071f1b]/95 border-white/10"
+        : "bg-slate-100/60 border-slate-200/80"
         }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
@@ -135,8 +135,8 @@ export default function Galleries({
             {/* DESCRIPTION CARD below photo */}
             <div
               className={`mt-4 flex-1 flex flex-col justify-center p-5 sm:p-6 rounded-2xl transition-all duration-500 ${isDarkTheme
-                  ? "bg-[#0e352f]/90 border border-white/10"
-                  : "bg-[#092722] border border-[#14433B]"
+                ? "bg-[#0e352f]/90 border border-white/10"
+                : "bg-[#092722] border border-[#14433B]"
                 }`}
             >
               <h3 className="text-base sm:text-lg font-black text-white tracking-tight leading-snug">
@@ -159,21 +159,9 @@ export default function Galleries({
               >
                 Slide Portofolio ({portfolioSlides.length})
               </span>
-              <button
-                type="button"
-                onClick={() => setIsAutoSlide(!isAutoSlide)}
-                className={`text-[11px] font-medium px-2 py-0.5 rounded transition-colors ${isAutoSlide
-                    ? "bg-[#21C9A4]/20 text-[#21C9A4]"
-                    : isDarkTheme
-                      ? "bg-slate-800 text-slate-400"
-                      : "bg-slate-200 text-slate-600"
-                  }`}
-              >
-                {isAutoSlide ? "Auto Slide: ON" : "Auto Slide: PAUSED"}
-              </button>
             </div>
 
-            <div className="space-y-3 flex flex-col max-h-[560px] overflow-y-auto pr-1">
+            <div className="space-y-3 flex flex-col">
               {portfolioSlides.map((slide, idx) => {
                 const isActive = idx === activeSlideIndex;
                 const itemImg = slide.image_url || slide.image || "/images/pawiwahan.jpeg";
@@ -191,16 +179,16 @@ export default function Galleries({
                     <div className="absolute top-0 right-1 z-20">
                       <div
                         className={`w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center transition-all duration-300 shadow-md ${isActive
-                            ? "bg-[#21C9A4] text-[#092722] shadow-[#21C9A4]/40 scale-105 ring-4 ring-[#071f1b]"
-                            : isDarkTheme
-                              ? "bg-slate-800 text-[#21C9A4] ring-4 ring-[#071f1b] group-hover:bg-[#21C9A4] group-hover:text-[#092722]"
-                              : "bg-slate-900 text-white ring-4 ring-slate-100/80 group-hover:bg-[#14433B]"
+                          ? "bg-[#21C9A4] text-[#092722] shadow-[#21C9A4]/40 scale-105 ring-4 ring-[#071f1b]"
+                          : isDarkTheme
+                            ? "bg-slate-800 text-[#21C9A4] ring-4 ring-[#071f1b] group-hover:bg-[#21C9A4] group-hover:text-[#092722]"
+                            : "bg-slate-900 text-white ring-4 ring-slate-100/80 group-hover:bg-[#14433B]"
                           }`}
                       >
                         <ArrowUpRight
                           className={`h-5 w-5 transition-transform duration-300 ${isActive
-                              ? "scale-110 stroke-[2.5]"
-                              : "group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                            ? "scale-110 stroke-[2.5]"
+                            : "group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                             }`}
                         />
                       </div>
@@ -209,10 +197,10 @@ export default function Galleries({
                     {/* MAIN NOTCHED CARD BODY */}
                     <div
                       className={`relative p-3.5 sm:p-4 rounded-3xl transition-all duration-300 flex items-center justify-between gap-3.5 border ${isActive
-                          ? "bg-[#092722] border-[#21C9A4] shadow-xl shadow-[#092722]/40 text-white ring-2 ring-[#21C9A4]/30"
-                          : isDarkTheme
-                            ? "bg-white/5 border-white/10 text-slate-300 hover:bg-white/10 hover:border-white/20"
-                            : "bg-white border-slate-200/90 text-slate-800 shadow-xs hover:border-slate-300 hover:bg-slate-50"
+                        ? "bg-[#092722] border-[#21C9A4] shadow-xl shadow-[#092722]/40 text-white ring-2 ring-[#21C9A4]/30"
+                        : isDarkTheme
+                          ? "bg-white/5 border-white/10 text-slate-300 hover:bg-white/10 hover:border-white/20"
+                          : "bg-white border-slate-200/90 text-slate-800 shadow-xs hover:border-slate-300 hover:bg-slate-50"
                         }`}
                     >
                       {/* Thumbnail */}
@@ -234,20 +222,20 @@ export default function Galleries({
                       <div className="flex-1 min-w-0 pr-10">
                         <p
                           className={`text-[10px] font-black uppercase tracking-wider truncate ${isActive
-                              ? "text-[#21C9A4]"
-                              : isDarkTheme
-                                ? "text-slate-400"
-                                : "text-slate-500"
+                            ? "text-[#21C9A4]"
+                            : isDarkTheme
+                              ? "text-slate-400"
+                              : "text-slate-500"
                             }`}
                         >
                           {slide.category}
                         </p>
                         <h4
                           className={`text-xs sm:text-sm font-bold truncate mt-1 ${isActive
-                              ? "text-white"
-                              : isDarkTheme
-                                ? "text-slate-100"
-                                : "text-slate-900"
+                            ? "text-white"
+                            : isDarkTheme
+                              ? "text-slate-100"
+                              : "text-slate-900"
                             }`}
                         >
                           {slide.title}
