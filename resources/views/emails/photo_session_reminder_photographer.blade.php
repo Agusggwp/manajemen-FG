@@ -181,13 +181,32 @@
 
             @if($schedule->project && $schedule->project->muas->count() > 0)
             <div class="card">
-                <div class="card-title">Tim MUA Pendamping</div>
+                <div class="card-title">Tim MUA & Persiapan Rias</div>
                 <div class="detail-row">
-                    <div class="detail-label">MUA:</div>
+                    <div class="detail-label">MUA Bertugas:</div>
                     <div class="detail-value">
                         {{ $schedule->project->muas->pluck('name')->implode(', ') }}
                     </div>
                 </div>
+                @if(!$schedule->mua_same_as_shooting_location && $schedule->mua_location_name)
+                <div class="detail-row">
+                    <div class="detail-label">Lokasi Rias:</div>
+                    <div class="detail-value">
+                        <strong>{{ $schedule->mua_location_name }}</strong>
+                        @if($schedule->mua_location_address)
+                        <br><span style="font-size: 12px; color: #64748b;">{{ $schedule->mua_location_address }}</span>
+                        @endif
+                    </div>
+                </div>
+                @if($schedule->mua_location_notes)
+                <div class="detail-row">
+                    <div class="detail-label">Catatan Rias:</div>
+                    <div class="detail-value" style="font-size: 12px; color: #475569;">
+                        {{ $schedule->mua_location_notes }}
+                    </div>
+                </div>
+                @endif
+                @endif
             </div>
             @endif
 

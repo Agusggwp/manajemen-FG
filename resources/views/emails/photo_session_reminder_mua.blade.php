@@ -154,13 +154,28 @@
                 </div>
 
                 <div class="detail-row">
-                    <div class="detail-label">Nama Lokasi:</div>
-                    <div class="detail-value">{{ $schedule->location_name }}</div>
+                    <div class="detail-label">Lokasi Rias (MUA):</div>
+                    <div class="detail-value">
+                        <strong>{{ $schedule->mua_same_as_shooting_location ? $schedule->location_name : ($schedule->mua_location_name ?: $schedule->location_name) }}</strong>
+                        <div style="font-size: 12px; color: #64748b; margin-top: 2px;">
+                            {{ $schedule->mua_same_as_shooting_location ? $schedule->location_address : ($schedule->mua_location_address ?: $schedule->location_address) }}
+                        </div>
+                        @if(!$schedule->mua_same_as_shooting_location && $schedule->mua_location_notes)
+                        <div style="font-size: 11px; color: #b45309; margin-top: 3px;">
+                            <em>Catatan Rias: {{ $schedule->mua_location_notes }}</em>
+                        </div>
+                        @endif
+                    </div>
                 </div>
 
                 <div class="detail-row">
-                    <div class="detail-label">Alamat Lokasi:</div>
-                    <div class="detail-value">{{ $schedule->location_address }}</div>
+                    <div class="detail-label">Lokasi Pemotretan:</div>
+                    <div class="detail-value">
+                        <strong>{{ $schedule->location_name }}</strong>
+                        <div style="font-size: 12px; color: #64748b; margin-top: 2px;">
+                            {{ $schedule->location_address }}
+                        </div>
+                    </div>
                 </div>
 
                 @if($schedule->notes)
@@ -170,10 +185,14 @@
                 </div>
                 @endif
 
-                @if($schedule->latitude && $schedule->longitude)
+                @php
+                    $targetLat = (!$schedule->mua_same_as_shooting_location && $schedule->mua_latitude) ? $schedule->mua_latitude : $schedule->latitude;
+                    $targetLng = (!$schedule->mua_same_as_shooting_location && $schedule->mua_longitude) ? $schedule->mua_longitude : $schedule->longitude;
+                @endphp
+                @if($targetLat && $targetLng)
                 <div style="margin-top: 15px;">
-                    <a href="https://maps.google.com/?q={{ $schedule->latitude }},{{ $schedule->longitude }}" target="_blank" class="btn-map">
-                        📍 Navigasi Peta Lokasi (Google Maps)
+                    <a href="https://maps.google.com/?q={{ $targetLat }},{{ $targetLng }}" target="_blank" class="btn-map">
+                        📍 Navigasi Peta Lokasi Rias (Google Maps)
                     </a>
                 </div>
                 @endif

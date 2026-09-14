@@ -1,7 +1,7 @@
 import React from "react";
 import { formatDate, getStatusLabel } from "@/lib/utils";
 import { Head, Link } from "@inertiajs/react";
-import { ArrowLeft, MapPin, Clock, Camera, CheckCircle2, AlertCircle, PlayCircle, StopCircle, Lock } from "lucide-react";
+import { ArrowLeft, MapPin, Clock, Camera, CheckCircle2, AlertCircle, PlayCircle, StopCircle, Lock, Sparkles } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -185,6 +185,24 @@ export default function Show({ schedule }) {
                 Radius Validasi GPS: {schedule.location_radius} Meter
               </div>
             </div>
+
+            {/* If MUA location is distinct, inform photographer */}
+            {!schedule.mua_same_as_shooting_location && schedule.mua_location_name && (
+              <div className="p-3.5 bg-pink-50/60 dark:bg-pink-950/20 border border-pink-200 dark:border-pink-900/40 rounded-lg space-y-1 text-xs">
+                <div className="flex items-center space-x-1.5 font-bold text-pink-900 dark:text-pink-300">
+                  <Sparkles className="h-3.5 w-3.5 text-pink-600 dark:text-pink-400" />
+                  <span>Lokasi Persiapan Rias (MUA): {schedule.mua_location_name}</span>
+                </div>
+                {schedule.mua_location_address && (
+                  <p className="text-slate-600 dark:text-slate-400 pl-5">{schedule.mua_location_address}</p>
+                )}
+                {schedule.mua_location_notes && (
+                  <p className="text-pink-700 dark:text-pink-400 pl-5 italic text-[11px]">
+                    Catatan: {schedule.mua_location_notes}
+                  </p>
+                )}
+              </div>
+            )}
 
             {schedule.notes && (
               <div className="p-3 bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 rounded-lg">

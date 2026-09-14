@@ -126,20 +126,61 @@ export default function Show({ schedule }) {
                 </div>
               )}
 
-              {/* Location Detail Section */}
-              <div className="p-3.5 sm:p-4 bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 rounded-lg space-y-2">
-                <div className="flex items-center space-x-2 text-slate-900 dark:text-white font-bold">
-                  <MapPin className="h-4 w-4 text-rose-600 dark:text-rose-400 shrink-0" />
-                  <span className="text-sm">{schedule.location_name}</span>
+              {/* Shooting Location Detail Section */}
+              <div className="p-3.5 sm:p-4 bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-200/70 dark:border-indigo-900/50 rounded-lg space-y-2">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2 text-indigo-950 dark:text-indigo-200 font-bold">
+                    <Camera className="h-4 w-4 text-indigo-600 dark:text-indigo-400 shrink-0" />
+                    <span className="text-sm">1. Lokasi Pemotretan (Shooting): {schedule.location_name}</span>
+                  </div>
+                  <Badge variant="outline" className="text-[10px] bg-indigo-100/60 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 border-indigo-300 dark:border-indigo-800">
+                    Sesi Foto
+                  </Badge>
                 </div>
                 {schedule.location_address && (
                   <p className="text-xs text-slate-600 dark:text-slate-300 pl-6">{schedule.location_address}</p>
+                )}
+                {schedule.location_notes && (
+                  <p className="text-xs text-amber-700 dark:text-amber-400 pl-6 font-medium italic">
+                    Catatan: {schedule.location_notes}
+                  </p>
                 )}
                 <div className="pl-6 pt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-slate-500 dark:text-slate-400 font-mono">
                   <span>Lat: {schedule.latitude}</span>
                   <span>Long: {schedule.longitude}</span>
                   <span>Radius GPS: {schedule.location_radius}m</span>
                 </div>
+              </div>
+
+              {/* MUA Location Detail Section */}
+              <div className="p-3.5 sm:p-4 bg-pink-50/50 dark:bg-pink-950/20 border border-pink-200/70 dark:border-pink-900/50 rounded-lg space-y-2">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2 text-pink-950 dark:text-pink-200 font-bold">
+                    <Sparkles className="h-4 w-4 text-pink-600 dark:text-pink-400 shrink-0" />
+                    <span className="text-sm">
+                      2. Lokasi Rias (MUA): {schedule.mua_same_as_shooting_location ? schedule.location_name : (schedule.mua_location_name || schedule.location_name)}
+                    </span>
+                  </div>
+                  <Badge variant="outline" className="text-[10px] bg-pink-100/60 dark:bg-pink-900/40 text-pink-700 dark:text-pink-300 border-pink-300 dark:border-pink-800">
+                    {schedule.mua_same_as_shooting_location ? "Sama dg Pemotretan" : "Lokasi Khusus MUA"}
+                  </Badge>
+                </div>
+                <p className="text-xs text-slate-600 dark:text-slate-300 pl-6">
+                  {schedule.mua_same_as_shooting_location
+                    ? schedule.location_address
+                    : (schedule.mua_location_address || schedule.location_address)}
+                </p>
+                {(!schedule.mua_same_as_shooting_location && schedule.mua_location_notes) && (
+                  <p className="text-xs text-amber-700 dark:text-amber-400 pl-6 font-medium italic">
+                    Catatan MUA: {schedule.mua_location_notes}
+                  </p>
+                )}
+                {!schedule.mua_same_as_shooting_location && schedule.mua_latitude && (
+                  <div className="pl-6 pt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-slate-500 dark:text-slate-400 font-mono">
+                    <span>Lat MUA: {schedule.mua_latitude}</span>
+                    <span>Long MUA: {schedule.mua_longitude}</span>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>

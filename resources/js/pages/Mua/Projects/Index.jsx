@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { formatDate, getStatusLabel, formatRupiah } from "@/lib/utils";
 import { Head, Link, router } from "@inertiajs/react";
-import { FolderKanban, Search, Calendar, MapPin, Eye, Sparkles } from "lucide-react";
+import { FolderKanban, Search, Calendar, MapPin, Eye, Sparkles, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -11,26 +11,77 @@ import { usePageLoading, CardGridSkeleton } from "@/components/loading/PageSkele
 export default function Index({ projects = { data: [] }, filters = {} }) {
   const safeFilters = filters || {};
   const isNavigating = usePageLoading();
+  const [isFiltering, setIsFiltering] = useState(false);
   const [search, setSearch] = useState(safeFilters.search || "");
   const [status, setStatus] = useState(safeFilters.status || "");
 
-  const handleFilter = (e) => {
-    e.preventDefault();
+  const searchTimeoutRef = useRef(null);
+
+  useEffect(() => {
+    setSearch(safeFilters.search || "");
+    setStatus(safeFilters.status || "");
+  }, [safeFilters.search, safeFilters.status]);
+
+  const applyFilters = (overrides = {}) => {
+    const qSearch = overrides.search !== undefined ? overrides.search : search;
+    const qStatus = overrides.status !== undefined ? overrides.status : status;
+
+    setIsFiltering(true);
     router.get(
       "/mua/projects",
       {
-        search: search || undefined,
-        status: status || undefined,
+        search: qSearch || undefined,
+        status: qStatus || undefined,
       },
-      { preserveState: true }
+      {
+        preserveState: true,
+        preserveScroll: true,
+        replace: true,
+        onFinish: () => setIsFiltering(false),
+      }
     );
   };
 
+  const handleSearchChange = (e) => {
+    const val = e.target.value;
+    setSearch(val);
+    if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
+    searchTimeoutRef.current = setTimeout(() => {
+      applyFilters({ search: val });
+    }, 350);
+  };
+
+  const handleStatusChange = (e) => {
+    const val = e.target.value;
+    setStatus(val);
+    applyFilters({ status: val });
+  };
+
   const handleReset = () => {
+    if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
     setSearch("");
     setStatus("");
-    router.get("/mua/projects", {}, { preserveState: true });
+    setIsFiltering(true);
+    router.get(
+      "/mua/projects",
+      {},
+      {
+        preserveState: true,
+        preserveScroll: true,
+        replace: true,
+        onFinish: () => setIsFiltering(false),
+      }
+    );
   };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
+    applyFilters();
+  };
+
+  const hasActiveFilters = Boolean(search || status);
+  const isLoading = isNavigating || isFiltering;
 
   return (
     <>
@@ -49,7 +100,7 @@ export default function Index({ projects = { data: [] }, filters = {} }) {
         {/* Filter Bar */}
         <Card className="border-slate-200 dark:border-slate-800 bg-card dark:bg-slate-900 shadow-2xs">
           <CardContent className="p-4">
-            <form onSubmit={handleFilter} className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-3 items-end">
+            <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-3 items-end">
               <div className="space-y-1 sm:col-span-2">
                 <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">Cari Kode / Nama / Klien</label>
                 <div className="relative">
@@ -58,7 +109,7 @@ export default function Index({ projects = { data: [] }, filters = {} }) {
                     type="text"
                     placeholder="Ketik kode project, nama klien..."
                     value={search}
-                    onChange={(e) => setSearch(e.target.value)}
+                    onChange={handleSearchChange}
                     className="pl-8 bg-white dark:bg-slate-950 text-xs h-9"
                   />
                 </div>
@@ -68,7 +119,7 @@ export default function Index({ projects = { data: [] }, filters = {} }) {
                 <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">Status Project</label>
                 <select
                   value={status}
-                  onChange={(e) => setStatus(e.target.value)}
+                  onChange={handleStatusChange}
                   className="w-full h-9 rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 px-3 text-xs text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-1 focus:ring-pink-500"
                 >
                   <option value="">Semua Status</option>
@@ -83,20 +134,36 @@ export default function Index({ projects = { data: [] }, filters = {} }) {
                 </select>
               </div>
 
-              <div className="flex gap-2">
-                <Button type="submit" size="sm" className="bg-pink-600 hover:bg-pink-700 text-white flex-1 h-9 text-xs">
-                  Filter
-                </Button>
-                <Button type="button" variant="outline" size="sm" onClick={handleReset} className="h-9 text-xs">
-                  Reset
-                </Button>
+              <div className="flex items-end">
+                {hasActiveFilters ? (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={handleReset}
+                    className="w-full h-9 text-xs text-rose-600 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/40 border-rose-200 dark:border-rose-900/50 gap-1.5 font-medium transition-all"
+                  >
+                    <RotateCcw className="h-3.5 w-3.5" />
+                    Reset Filter
+                  </Button>
+                ) : (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    disabled
+                    className="w-full h-9 text-xs text-slate-400 border-dashed border-slate-200 dark:border-slate-800 opacity-60 cursor-default"
+                  >
+                    Filter Otomatis Aktif
+                  </Button>
+                )}
               </div>
             </form>
           </CardContent>
         </Card>
 
         {/* Project List */}
-        {isNavigating ? (
+        {isLoading ? (
           <CardGridSkeleton count={4} />
         ) : !projects?.data || projects.data.length === 0 ? (
           <div className="text-center py-16 bg-card dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 text-slate-400 dark:text-slate-500">

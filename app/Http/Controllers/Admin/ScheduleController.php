@@ -77,12 +77,21 @@ class ScheduleController extends Controller
             'start_time' => 'required',
             'end_time' => 'required',
             // Mandatory Location
+            // Mandatory Shooting Location
             'location_name' => 'required|string|max:255',
             'location_address' => 'required|string',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
             'location_radius' => 'required|integer|min:10|max:5000',
             'location_notes' => 'nullable|string',
+            // MUA Location
+            'mua_same_as_shooting_location' => 'nullable|boolean',
+            'mua_location_name' => 'nullable|string|max:255',
+            'mua_location_address' => 'nullable|string',
+            'mua_latitude' => 'nullable|numeric',
+            'mua_longitude' => 'nullable|numeric',
+            'mua_location_radius' => 'nullable|integer|min:10|max:5000',
+            'mua_location_notes' => 'nullable|string',
             'notes' => 'nullable|string',
             'photographer_ids' => 'required|array|min:1',
             'photographer_ids.*' => 'exists:users,id',
@@ -96,6 +105,14 @@ class ScheduleController extends Controller
 
         $overtimeHours = (int) ($validated['overtime_hours'] ?? 0);
         $overtimeFee = (float) ($validated['overtime_fee'] ?? 0);
+
+        $muaSame = $request->boolean('mua_same_as_shooting_location', true);
+        $muaLocationName = $muaSame ? $validated['location_name'] : ($validated['mua_location_name'] ?? $validated['location_name']);
+        $muaLocationAddress = $muaSame ? $validated['location_address'] : ($validated['mua_location_address'] ?? $validated['location_address']);
+        $muaLatitude = $muaSame ? $validated['latitude'] : ($validated['mua_latitude'] ?? $validated['latitude']);
+        $muaLongitude = $muaSame ? $validated['longitude'] : ($validated['mua_longitude'] ?? $validated['longitude']);
+        $muaLocationRadius = $muaSame ? $validated['location_radius'] : ($validated['mua_location_radius'] ?? $validated['location_radius']);
+        $muaLocationNotes = $muaSame ? ($validated['location_notes'] ?? null) : ($validated['mua_location_notes'] ?? null);
 
         // Validate Photographer availability (check for overlapping schedules)
         foreach ($validated['photographer_ids'] as $photographerId) {
@@ -153,6 +170,13 @@ class ScheduleController extends Controller
             'longitude' => $validated['longitude'],
             'location_radius' => $validated['location_radius'],
             'location_notes' => $validated['location_notes'] ?? null,
+            'mua_same_as_shooting_location' => $muaSame,
+            'mua_location_name' => $muaLocationName,
+            'mua_location_address' => $muaLocationAddress,
+            'mua_latitude' => $muaLatitude,
+            'mua_longitude' => $muaLongitude,
+            'mua_location_radius' => $muaLocationRadius,
+            'mua_location_notes' => $muaLocationNotes,
             'notes' => $validated['notes'] ?? null,
             'status' => 'SCHEDULED',
         ]);
@@ -177,6 +201,13 @@ class ScheduleController extends Controller
             'latitude' => $validated['latitude'],
             'longitude' => $validated['longitude'],
             'location_radius' => $validated['location_radius'],
+            'mua_same_as_shooting_location' => $muaSame,
+            'mua_location_name' => $muaLocationName,
+            'mua_location_address' => $muaLocationAddress,
+            'mua_latitude' => $muaLatitude,
+            'mua_longitude' => $muaLongitude,
+            'mua_location_radius' => $muaLocationRadius,
+            'mua_location_notes' => $muaLocationNotes,
             'status' => 'SCHEDULED',
             'work_start_time' => $validated['start_time'],
             'work_end_time' => $validated['end_time'],
@@ -242,15 +273,33 @@ class ScheduleController extends Controller
             'end_time' => 'required',
             'overtime_hours' => 'nullable|integer|min:0|max:24',
             'overtime_fee' => 'nullable|numeric|min:0',
+            // Mandatory Shooting Location
             'location_name' => 'required|string|max:255',
             'location_address' => 'required|string',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
             'location_radius' => 'required|integer|min:10|max:5000',
             'location_notes' => 'nullable|string',
+            // MUA Location
+            'mua_same_as_shooting_location' => 'nullable|boolean',
+            'mua_location_name' => 'nullable|string|max:255',
+            'mua_location_address' => 'nullable|string',
+            'mua_latitude' => 'nullable|numeric',
+            'mua_longitude' => 'nullable|numeric',
+            'mua_location_radius' => 'nullable|integer|min:10|max:5000',
+            'mua_location_notes' => 'nullable|string',
             'notes' => 'nullable|string',
             'status' => 'required|in:SCHEDULED,SHOOTING,COMPLETED,CANCELLED',
         ]);
+
+        $muaSame = $request->boolean('mua_same_as_shooting_location', true);
+        $validated['mua_same_as_shooting_location'] = $muaSame;
+        $validated['mua_location_name'] = $muaSame ? $validated['location_name'] : ($validated['mua_location_name'] ?? $validated['location_name']);
+        $validated['mua_location_address'] = $muaSame ? $validated['location_address'] : ($validated['mua_location_address'] ?? $validated['location_address']);
+        $validated['mua_latitude'] = $muaSame ? $validated['latitude'] : ($validated['mua_latitude'] ?? $validated['latitude']);
+        $validated['mua_longitude'] = $muaSame ? $validated['longitude'] : ($validated['mua_longitude'] ?? $validated['longitude']);
+        $validated['mua_location_radius'] = $muaSame ? $validated['location_radius'] : ($validated['mua_location_radius'] ?? $validated['location_radius']);
+        $validated['mua_location_notes'] = $muaSame ? ($validated['location_notes'] ?? null) : ($validated['mua_location_notes'] ?? null);
 
         $schedule->update($validated);
 
@@ -269,6 +318,13 @@ class ScheduleController extends Controller
                 'latitude' => $validated['latitude'],
                 'longitude' => $validated['longitude'],
                 'location_radius' => $validated['location_radius'],
+                'mua_same_as_shooting_location' => $muaSame,
+                'mua_location_name' => $validated['mua_location_name'],
+                'mua_location_address' => $validated['mua_location_address'],
+                'mua_latitude' => $validated['mua_latitude'],
+                'mua_longitude' => $validated['mua_longitude'],
+                'mua_location_radius' => $validated['mua_location_radius'],
+                'mua_location_notes' => $validated['mua_location_notes'],
                 'work_start_time' => $validated['start_time'],
                 'work_end_time' => $validated['end_time'],
                 'overtime_hours' => $validated['overtime_hours'] ?? 0,

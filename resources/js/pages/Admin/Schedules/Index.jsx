@@ -74,13 +74,21 @@ export default function Index({ schedules, existingAssignments, filters, custome
     end_time: "10:00",
     overtime_hours: 0,
     overtime_fee: 0,
-    // Mandatory location fields
+    // Mandatory photo shooting location fields
     location_name: "",
     location_address: "",
     latitude: -8.671234,
     longitude: 115.215678,
     location_radius: 100,
     location_notes: "",
+    // MUA location fields
+    mua_same_as_shooting_location: true,
+    mua_location_name: "",
+    mua_location_address: "",
+    mua_latitude: -8.671234,
+    mua_longitude: 115.215678,
+    mua_location_radius: 100,
+    mua_location_notes: "",
     notes: "",
     photographer_ids: [],
     mua_ids: [],
@@ -169,13 +177,34 @@ export default function Index({ schedules, existingAssignments, filters, custome
   };
 
   const handleLocationSelect = ({ lat, lng, address, name }) => {
-    form.setData({
-      ...form.data,
-      latitude: lat,
-      longitude: lng,
-      location_address: address ? address : form.data.location_address,
-      location_name: form.data.location_name ? form.data.location_name : (name || form.data.location_name),
+    form.setData((prev) => {
+      const nextData = {
+        ...prev,
+        latitude: lat,
+        longitude: lng,
+        location_address: address ? address : prev.location_address,
+        location_name: prev.location_name ? prev.location_name : (name || prev.location_name),
+      };
+
+      if (prev.mua_same_as_shooting_location) {
+        nextData.mua_latitude = lat;
+        nextData.mua_longitude = lng;
+        nextData.mua_location_address = address ? address : prev.location_address;
+        nextData.mua_location_name = prev.location_name ? prev.location_name : (name || prev.location_name);
+      }
+
+      return nextData;
     });
+  };
+
+  const handleMuaLocationSelect = ({ lat, lng, address, name }) => {
+    form.setData((prev) => ({
+      ...prev,
+      mua_latitude: lat,
+      mua_longitude: lng,
+      mua_location_address: address || prev.mua_location_address,
+      mua_location_name: prev.mua_location_name || name || prev.mua_location_name,
+    }));
   };
 
   const handlePhotographerCheckbox = (id) => {
@@ -628,17 +657,21 @@ export default function Index({ schedules, existingAssignments, filters, custome
                 </p>
               </div>
 
-              {/* MANDATORY LOCATION SECTION */}
-              <div className="border-t border-slate-200 pt-3 space-y-3">
+              {/* SECTION 1: LOKASI PEMOTRETAN (SHOOTING) */}
+              <div className="border-t border-slate-200 dark:border-slate-800 pt-4 space-y-3">
                 <div className="flex items-center justify-between">
-                  <p className="text-xs font-bold uppercase text-slate-700 tracking-wider flex items-center gap-1.5">
-                    <MapPin className="h-4 w-4 text-rose-600" /> Informasi Lokasi (Pilih di Peta atau Isi Manual)
+                  <p className="text-xs font-bold uppercase text-slate-800 dark:text-slate-200 tracking-wider flex items-center gap-1.5">
+                    <Camera className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+                    <span>1. Lokasi Pemotretan (Shooting)</span>
                   </p>
+                  <span className="text-[10px] font-semibold uppercase px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-300">
+                    Wajib Lokasi
+                  </span>
                 </div>
 
-                {/* Interactive Leaflet Map Picker */}
+                {/* Interactive Leaflet Map Picker for Shooting */}
                 <div className="space-y-1">
-                  <Label className="text-xs font-semibold text-slate-700">Peta Pemilihan Lokasi</Label>
+                  <Label className="text-xs font-semibold text-slate-700 dark:text-slate-300">Peta Pemilihan Lokasi Pemotretan</Label>
                   <LocationPickerMap
                     latitude={form.data.latitude}
                     longitude={form.data.longitude}
@@ -648,7 +681,7 @@ export default function Index({ schedules, existingAssignments, filters, custome
                 </div>
 
                 <div>
-                  <Label>Nama Lokasi</Label>
+                  <Label>Nama Lokasi Pemotretan</Label>
                   <Input
                     required
                     placeholder="misal: Kampus Sudirman Unud / Pantai Sanur"
@@ -658,17 +691,7 @@ export default function Index({ schedules, existingAssignments, filters, custome
                 </div>
 
                 <div>
-                  <Label>Radius Validasi GPS (Meter)</Label>
-                  <Input
-                    type="number"
-                    required
-                    value={form.data.location_radius}
-                    onChange={(e) => form.setData("location_radius", e.target.value)}
-                  />
-                </div>
-
-                <div>
-                  <Label>Alamat Lengkap Lokasi</Label>
+                  <Label>Alamat Lengkap Lokasi Pemotretan</Label>
                   <Input
                     required
                     placeholder="misal: Jl. PB Sudirman, Denpasar Barat, Bali"
@@ -677,7 +700,7 @@ export default function Index({ schedules, existingAssignments, filters, custome
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <div>
                     <Label>Latitude GPS</Label>
                     <Input
@@ -700,7 +723,144 @@ export default function Index({ schedules, existingAssignments, filters, custome
                       onChange={(e) => form.setData("longitude", e.target.value)}
                     />
                   </div>
+                  <div>
+                    <Label>Radius GPS (Meter)</Label>
+                    <Input
+                      type="number"
+                      required
+                      value={form.data.location_radius}
+                      onChange={(e) => form.setData("location_radius", e.target.value)}
+                    />
+                  </div>
                 </div>
+
+                <div>
+                  <Label>Catatan Akses Lokasi Pemotretan (Opsional)</Label>
+                  <Input
+                    placeholder="misal: Parkir di gate timur, kumpul di gazebo"
+                    value={form.data.location_notes || ""}
+                    onChange={(e) => form.setData("location_notes", e.target.value)}
+                  />
+                </div>
+              </div>
+
+              {/* SECTION 2: LOKASI MUA / MAKEUP */}
+              <div className="border-t border-slate-200 dark:border-slate-800 pt-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <p className="text-xs font-bold uppercase text-pink-700 dark:text-pink-400 tracking-wider flex items-center gap-1.5">
+                    <Sparkles className="h-4 w-4 text-pink-600 dark:text-pink-400" />
+                    <span>2. Lokasi Rias / Make Up (MUA)</span>
+                  </p>
+                  <span className="text-[10px] font-semibold uppercase px-2 py-0.5 rounded bg-pink-50 text-pink-700 dark:bg-pink-950/40 dark:text-pink-300">
+                    Khusus Rias
+                  </span>
+                </div>
+
+                {/* Checkbox Same as shooting location */}
+                <label className="flex items-center space-x-2.5 p-3 rounded-lg border border-pink-200 dark:border-pink-900/50 bg-pink-50/60 dark:bg-pink-950/20 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={form.data.mua_same_as_shooting_location}
+                    onChange={(e) => {
+                      const checked = e.target.checked;
+                      form.setData((prev) => ({
+                        ...prev,
+                        mua_same_as_shooting_location: checked,
+                        ...(checked
+                          ? {
+                              mua_location_name: prev.location_name,
+                              mua_location_address: prev.location_address,
+                              mua_latitude: prev.latitude,
+                              mua_longitude: prev.longitude,
+                              mua_location_radius: prev.location_radius,
+                              mua_location_notes: prev.location_notes,
+                            }
+                          : {}),
+                      }));
+                    }}
+                    className="rounded border-pink-300 text-pink-600 focus:ring-pink-500 h-4 w-4 cursor-pointer"
+                  />
+                  <div className="text-xs font-semibold text-pink-900 dark:text-pink-200">
+                    Lokasi rias MUA sama dengan lokasi pemotretan
+                  </div>
+                </label>
+
+                {form.data.mua_same_as_shooting_location ? (
+                  <div className="p-3 bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-lg text-xs text-slate-600 dark:text-slate-400 flex items-center gap-2">
+                    <MapPin className="h-4 w-4 text-emerald-600 shrink-0" />
+                    <span>
+                      Lokasi rias MUA otomatis mengikuti lokasi pemotretan:{" "}
+                      <strong className="text-slate-900 dark:text-white">
+                        {form.data.location_name || "(Mengikuti lokasi pemotretan di atas)"}
+                      </strong>
+                    </span>
+                  </div>
+                ) : (
+                  <div className="space-y-3 p-3.5 rounded-xl border border-pink-200 dark:border-pink-900/60 bg-pink-50/30 dark:bg-pink-950/10">
+                    {/* Interactive Leaflet Map Picker for MUA */}
+                    <div className="space-y-1">
+                      <Label className="text-xs font-semibold text-pink-900 dark:text-pink-200">Peta Pemilihan Lokasi MUA</Label>
+                      <LocationPickerMap
+                        latitude={form.data.mua_latitude || form.data.latitude}
+                        longitude={form.data.mua_longitude || form.data.longitude}
+                        radius={form.data.mua_location_radius || form.data.location_radius}
+                        onLocationSelect={handleMuaLocationSelect}
+                      />
+                    </div>
+
+                    <div>
+                      <Label className="text-xs font-semibold">Nama Lokasi Rias / Salon MUA</Label>
+                      <Input
+                        required={!form.data.mua_same_as_shooting_location}
+                        placeholder="misal: Studio MUA Sari / Rumah Klien / Hotel Aston Kamar 302"
+                        value={form.data.mua_location_name || ""}
+                        onChange={(e) => form.setData("mua_location_name", e.target.value)}
+                      />
+                    </div>
+
+                    <div>
+                      <Label className="text-xs font-semibold">Alamat Lengkap Lokasi Rias</Label>
+                      <Input
+                        required={!form.data.mua_same_as_shooting_location}
+                        placeholder="misal: Jl. Tukad Yeh Aya No. 88, Renon, Denpasar"
+                        value={form.data.mua_location_address || ""}
+                        onChange={(e) => form.setData("mua_location_address", e.target.value)}
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <Label className="text-xs font-semibold">Latitude GPS MUA</Label>
+                        <Input
+                          type="number"
+                          step="any"
+                          placeholder="-8.671234"
+                          value={form.data.mua_latitude || ""}
+                          onChange={(e) => form.setData("mua_latitude", e.target.value)}
+                        />
+                      </div>
+                      <div>
+                        <Label className="text-xs font-semibold">Longitude GPS MUA</Label>
+                        <Input
+                          type="number"
+                          step="any"
+                          placeholder="115.215678"
+                          value={form.data.mua_longitude || ""}
+                          onChange={(e) => form.setData("mua_longitude", e.target.value)}
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <Label className="text-xs font-semibold">Catatan Khusus Sesi Rias (Opsional)</Label>
+                      <Input
+                        placeholder="misal: Masuk dari lobi utama, mulai makeup jam 06:00 pagi"
+                        value={form.data.mua_location_notes || ""}
+                        onChange={(e) => form.setData("mua_location_notes", e.target.value)}
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Assignment Section */}

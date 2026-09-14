@@ -149,14 +149,25 @@
                 </div>
 
                 <div class="detail-row">
-                    <div class="detail-label">Nama Lokasi:</div>
-                    <div class="detail-value">{{ $schedule->location_name }}</div>
+                    <div class="detail-label">Lokasi Pemotretan:</div>
+                    <div class="detail-value">
+                        <strong>{{ $schedule->location_name }}</strong>
+                        <div style="font-size: 12px; color: #64748b; margin-top: 2px;">{{ $schedule->location_address }}</div>
+                    </div>
                 </div>
 
+                @if(!$schedule->mua_same_as_shooting_location && $schedule->mua_location_name)
                 <div class="detail-row">
-                    <div class="detail-label">Alamat Lengkap:</div>
-                    <div class="detail-value">{{ $schedule->location_address }}</div>
+                    <div class="detail-label">Lokasi Rias (MUA):</div>
+                    <div class="detail-value">
+                        <strong>{{ $schedule->mua_location_name }}</strong>
+                        <div style="font-size: 12px; color: #64748b; margin-top: 2px;">{{ $schedule->mua_location_address }}</div>
+                        @if($schedule->mua_location_notes)
+                        <div style="font-size: 11px; color: #b45309; margin-top: 2px;"><em>Catatan: {{ $schedule->mua_location_notes }}</em></div>
+                        @endif
+                    </div>
                 </div>
+                @endif
 
                 @if($schedule->notes)
                 <div class="detail-row">
