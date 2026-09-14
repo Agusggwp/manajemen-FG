@@ -211,22 +211,24 @@ export default function Index({ systemInfo: initialSystemInfo }) {
             </CardContent>
           </Card>
 
-          {/* Server & Environment */}
+          {/* Role Accounts Summary */}
           <Card className="border-slate-200 shadow-2xs w-full min-w-0">
             <CardContent className="p-4 flex items-center justify-between gap-2">
               <div className="min-w-0 flex-1">
                 <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                  Sistem & Memory
+                  Pengguna & Role
                 </p>
-                <p className="text-lg font-bold text-slate-900 mt-1 font-mono truncate">
-                  {systemInfo?.memory_limit}
-                </p>
-                <p className="text-xs text-slate-500 mt-0.5 truncate" title={systemInfo?.os}>
-                  OS: {systemInfo?.os?.split(" ")[0]}
+                <div className="flex items-center gap-1.5 mt-1 text-xs font-bold text-slate-900">
+                  <span className="text-indigo-600 font-mono">{systemInfo?.admin_count || 1} Adm</span> •
+                  <span className="text-emerald-600 font-mono">{systemInfo?.photographer_count || 0} FG</span> •
+                  <span className="text-pink-600 font-mono">{systemInfo?.mua_count || 0} MUA</span>
+                </div>
+                <p className="text-xs text-slate-500 mt-0.5 truncate">
+                  Total {systemInfo?.master_mua_count || 0} profil MUA terdaftar
                 </p>
               </div>
-              <div className="p-3 bg-amber-50 text-amber-600 rounded-xl shrink-0">
-                <Server className="h-6 w-6" />
+              <div className="p-3 bg-pink-50 text-pink-600 rounded-xl shrink-0">
+                <Sparkles className="h-6 w-6" />
               </div>
             </CardContent>
           </Card>
@@ -265,42 +267,54 @@ export default function Index({ systemInfo: initialSystemInfo }) {
           {/* Left Column: Command Categories */}
           <div className="w-full min-w-0 space-y-6">
             {/* Tabs Selector */}
-            <div className="flex border border-border dark:border-slate-800 bg-card dark:bg-slate-900 rounded-xl p-1 shadow-2xs w-full">
+            <div className="flex border border-border dark:border-slate-800 bg-card dark:bg-slate-900 rounded-xl p-1 shadow-2xs w-full overflow-x-auto">
               <button
                 type="button"
                 onClick={() => setActiveTab("database")}
-                className={`flex-1 py-2.5 px-2 sm:px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
+                className={`flex-1 py-2.5 px-2 sm:px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 whitespace-nowrap ${
                   activeTab === "database"
                     ? "bg-slate-900 dark:bg-slate-800 text-white shadow-xs"
                     : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/60"
                 }`}
               >
                 <Database className="h-4 w-4 shrink-0" />
-                <span className="truncate">Database & Migrasi</span>
+                <span>Database</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab("accounts")}
+                className={`flex-1 py-2.5 px-2 sm:px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 whitespace-nowrap ${
+                  activeTab === "accounts"
+                    ? "bg-slate-900 dark:bg-slate-800 text-white shadow-xs"
+                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/60"
+                }`}
+              >
+                <Sparkles className="h-4 w-4 shrink-0" />
+                <span>Akun & Role</span>
               </button>
               <button
                 type="button"
                 onClick={() => setActiveTab("packages")}
-                className={`flex-1 py-2.5 px-2 sm:px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
+                className={`flex-1 py-2.5 px-2 sm:px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 whitespace-nowrap ${
                   activeTab === "packages"
                     ? "bg-slate-900 dark:bg-slate-800 text-white shadow-xs"
                     : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/60"
                 }`}
               >
                 <Box className="h-4 w-4 shrink-0" />
-                <span className="truncate">Dependensi</span>
+                <span>Dependensi</span>
               </button>
               <button
                 type="button"
                 onClick={() => setActiveTab("cache")}
-                className={`flex-1 py-2.5 px-2 sm:px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
+                className={`flex-1 py-2.5 px-2 sm:px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 whitespace-nowrap ${
                   activeTab === "cache"
                     ? "bg-slate-900 dark:bg-slate-800 text-white shadow-xs"
                     : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/60"
                 }`}
               >
                 <Zap className="h-4 w-4 shrink-0" />
-                <span className="truncate">Maintenance</span>
+                <span>Maintenance</span>
               </button>
             </div>
 
@@ -461,7 +475,148 @@ export default function Index({ systemInfo: initialSystemInfo }) {
               </Card>
             )}
 
-            {/* TAB 2: PACKAGES & DEPENDENCIES */}
+            {/* TAB 2: ACCOUNTS & ROLES TESTING */}
+            {activeTab === "accounts" && (
+              <Card className="border-border dark:border-slate-800 bg-card dark:bg-slate-900 shadow-2xs w-full min-w-0">
+                <CardHeader className="bg-slate-50/50 dark:bg-slate-800/40 border-b border-border dark:border-slate-800 pb-3">
+                  <CardTitle className="text-base font-semibold flex items-center gap-2 text-slate-900 dark:text-white">
+                    <Sparkles className="h-5 w-5 text-pink-600 dark:text-pink-400 shrink-0" /> Akun Uji Coba Multi-Role
+                  </CardTitle>
+                  <CardDescription className="text-xs text-slate-500 dark:text-slate-400">
+                    Kredensial bawaan sistem (seeder) untuk pengujian autentikasi dan simulasi hak akses per role.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="p-4 space-y-3">
+                  {/* Admin Account */}
+                  <div className="p-3.5 border border-indigo-200 dark:border-indigo-900/60 rounded-xl bg-indigo-50/30 dark:bg-indigo-950/20 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Badge className="bg-indigo-600 text-white text-[10px]">ADMIN</Badge>
+                        <span className="font-bold text-slate-900 dark:text-white text-xs">Administrator Studio</span>
+                      </div>
+                      <span className="text-[11px] text-indigo-600 dark:text-indigo-400 font-semibold">/admin/dashboard</span>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-mono">
+                      <div className="p-2 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                        <span className="text-slate-600 dark:text-slate-300">admin@artdevata.com</span>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="h-5 w-5"
+                          onClick={() => {
+                            navigator.clipboard.writeText("admin@artdevata.com");
+                            addLog("info", "Kredensial email Admin disalin ke clipboard.");
+                          }}
+                          title="Salin Email"
+                        >
+                          <Copy className="h-3 w-3" />
+                        </Button>
+                      </div>
+                      <div className="p-2 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                        <span className="text-slate-600 dark:text-slate-300">Pass: password</span>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="h-5 w-5"
+                          onClick={() => {
+                            navigator.clipboard.writeText("password");
+                            addLog("info", "Password 'password' disalin ke clipboard.");
+                          }}
+                          title="Salin Password"
+                        >
+                          <Copy className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* MUA Accounts */}
+                  <div className="p-3.5 border border-pink-200 dark:border-pink-900/60 rounded-xl bg-pink-50/30 dark:bg-pink-950/20 space-y-2.5">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Badge className="bg-pink-600 text-white text-[10px]">MUA</Badge>
+                        <span className="font-bold text-slate-900 dark:text-white text-xs">Make Up Artist Portal</span>
+                      </div>
+                      <span className="text-[11px] text-pink-600 dark:text-pink-400 font-semibold">/mua/dashboard</span>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <div className="p-2 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs font-mono">
+                        <div>
+                          <span className="font-bold text-slate-800 dark:text-slate-200 font-sans block text-[11px]">Sari Makeup Artistry</span>
+                          <span className="text-slate-500">sari@artdevata.com</span>
+                        </div>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-7 text-[11px] gap-1 text-pink-600 border-pink-200 dark:border-pink-900"
+                          onClick={() => {
+                            navigator.clipboard.writeText("sari@artdevata.com");
+                            addLog("info", "Email sari@artdevata.com disalin.");
+                          }}
+                        >
+                          <Copy className="h-3 w-3" />
+                          <span>Salin</span>
+                        </Button>
+                      </div>
+
+                      <div className="p-2 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs font-mono">
+                        <div>
+                          <span className="font-bold text-slate-800 dark:text-slate-200 font-sans block text-[11px]">Dewi Bridal Makeup</span>
+                          <span className="text-slate-500">dewi@artdevata.com</span>
+                        </div>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-7 text-[11px] gap-1 text-pink-600 border-pink-200 dark:border-pink-900"
+                          onClick={() => {
+                            navigator.clipboard.writeText("dewi@artdevata.com");
+                            addLog("info", "Email dewi@artdevata.com disalin.");
+                          }}
+                        >
+                          <Copy className="h-3 w-3" />
+                          <span>Salin</span>
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Photographer Accounts */}
+                  <div className="p-3.5 border border-emerald-200 dark:border-emerald-900/60 rounded-xl bg-emerald-50/30 dark:bg-emerald-950/20 space-y-2.5">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Badge className="bg-emerald-600 text-white text-[10px]">FOTOGRAFER</Badge>
+                        <span className="font-bold text-slate-900 dark:text-white text-xs">Fotografer Portal</span>
+                      </div>
+                      <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold">/photographer/dashboard</span>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <div className="p-2 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs font-mono">
+                        <div>
+                          <span className="font-bold text-slate-800 dark:text-slate-200 font-sans block text-[11px]">Agus Photography</span>
+                          <span className="text-slate-500">agus@artdevata.com</span>
+                        </div>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-7 text-[11px] gap-1 text-emerald-600 border-emerald-200 dark:border-emerald-900"
+                          onClick={() => {
+                            navigator.clipboard.writeText("agus@artdevata.com");
+                            addLog("info", "Email agus@artdevata.com disalin.");
+                          }}
+                        >
+                          <Copy className="h-3 w-3" />
+                          <span>Salin</span>
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* TAB 3: PACKAGES & DEPENDENCIES */}
             {activeTab === "packages" && (
               <Card className="border-border dark:border-slate-800 bg-card dark:bg-slate-900 shadow-2xs w-full min-w-0">
                 <CardHeader className="bg-slate-50/50 dark:bg-slate-800/40 border-b border-border dark:border-slate-800 pb-3">

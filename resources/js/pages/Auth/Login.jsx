@@ -94,16 +94,16 @@ export default function Login() {
                   Mode Developer (Quick Role):
                 </CardDescription>
               </CardHeader>
-              <CardContent className="p-3 pt-0 grid grid-cols-2 gap-2">
+              <CardContent className="p-3 pt-0 grid grid-cols-3 gap-2">
                 <Button
                   type="button"
                   variant="outline"
                   size="sm"
                   disabled={processing}
                   onClick={() => handleQuickRole("admin@artdevata.com", "password", "Admin")}
-                  className="w-full gap-1.5 font-semibold text-xs"
+                  className="w-full gap-1 font-semibold text-xs px-2"
                 >
-                  <ShieldCheck className="text-emerald-600 h-4 w-4" />
+                  <ShieldCheck className="text-indigo-600 h-3.5 w-3.5" />
                   <span>Admin</span>
                 </Button>
                 <Button
@@ -112,10 +112,21 @@ export default function Login() {
                   size="sm"
                   disabled={processing}
                   onClick={() => handleQuickRole("agus@artdevata.com", "password", "Fotografer")}
-                  className="w-full gap-1.5 font-semibold text-xs"
+                  className="w-full gap-1 font-semibold text-xs px-2"
                 >
-                  <Camera className="text-emerald-600 h-4 w-4" />
+                  <Camera className="text-emerald-600 h-3.5 w-3.5" />
                   <span>Fotografer</span>
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  disabled={processing}
+                  onClick={() => handleQuickRole("sari@artdevata.com", "password", "MUA")}
+                  className="w-full gap-1 font-semibold text-xs px-2"
+                >
+                  <Sparkles className="text-pink-600 h-3.5 w-3.5" />
+                  <span>MUA</span>
                 </Button>
               </CardContent>
             </Card>
@@ -221,12 +232,12 @@ export default function Login() {
 
             {/* Register Link */}
             <div className="mt-5 text-center text-xs text-muted-foreground">
-              Belum memiliki akun fotografer?{" "}
+              Belum memiliki akun?{" "}
               <Link
                 href="/register"
                 className="font-semibold text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 underline underline-offset-4"
               >
-                Daftar sebagai Fotografer
+                Daftar sebagai Fotografer / MUA
               </Link>
             </div>
           </div>
