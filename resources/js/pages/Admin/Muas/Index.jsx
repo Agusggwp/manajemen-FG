@@ -49,6 +49,7 @@ export default function Index({ muas, filters }) {
   const form = useForm({
     name: "",
     email: "",
+    password: "",
     phone: "",
     address: "",
     specialty: "",
@@ -61,6 +62,7 @@ export default function Index({ muas, filters }) {
   const handleOpenCreate = () => {
     setEditingMua(null);
     form.reset();
+    form.setData("password", "");
     setModalOpen(true);
   };
 
@@ -69,6 +71,7 @@ export default function Index({ muas, filters }) {
     form.setData({
       name: mua.name,
       email: mua.email || "",
+      password: "",
       phone: mua.phone,
       address: mua.address || "",
       specialty: mua.specialty || "",
@@ -226,6 +229,15 @@ export default function Index({ muas, filters }) {
                             <span>Lihat Detail</span>
                           </Link>
                         </DropdownMenuItem>
+                        {mua.status !== "ACTIVE" && (
+                          <DropdownMenuItem
+                            onClick={() => router.patch(`/admin/muas/${mua.id}/activate`)}
+                            className="cursor-pointer text-xs flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-semibold"
+                          >
+                            <Sparkles className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+                            <span>Aktivasi Akun</span>
+                          </DropdownMenuItem>
+                        )}
                         <DropdownMenuItem
                           onClick={() => handleOpenEdit(mua)}
                           className="cursor-pointer text-xs flex items-center gap-2"
@@ -283,7 +295,7 @@ export default function Index({ muas, filters }) {
                   />
                 </div>
                 <div className="space-y-1.5 sm:space-y-2">
-                  <Label className="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">Email (Opsional)</Label>
+                  <Label className="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">Email (Untuk Login)</Label>
                   <Input
                     type="email"
                     placeholder="mua@email.com"
@@ -292,6 +304,19 @@ export default function Index({ muas, filters }) {
                     className="text-xs sm:text-sm h-9 sm:h-10"
                   />
                 </div>
+              </div>
+
+              <div className="space-y-1.5 sm:space-y-2">
+                <Label className="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">
+                  Kata Sandi Login {editingMua && "(Kosongkan jika tidak diubah)"}
+                </Label>
+                <Input
+                  type="password"
+                  placeholder={editingMua ? "Kosongkan jika tetap" : "Minimal 6 karakter (default: password)"}
+                  value={form.data.password}
+                  onChange={(e) => form.setData("password", e.target.value)}
+                  className="text-xs sm:text-sm h-9 sm:h-10"
+                />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
