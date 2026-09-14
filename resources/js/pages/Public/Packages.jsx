@@ -14,6 +14,7 @@ import FeaturesSection from "./components/FeaturesSection";
 import FaqSection from "./components/FaqSection";
 import FooterSection from "./components/FooterSection";
 import FloatingActions from "./components/FloatingActions";
+import LocationConsentBanner from "./components/LocationConsentBanner";
 import Galleries from "@/components/Galleries";
 
 export default function Packages({ packages, categories, portfolios, settings, auth }) {
@@ -266,6 +267,12 @@ export default function Packages({ packages, categories, portfolios, settings, a
         isDarkTheme={isDarkTheme}
         showScrollTop={showScrollTop}
         waNumber={waNumber}
+        companyName={companyName}
+      />
+
+      {/* COOKIE & LOCATION CONSENT BANNER */}
+      <LocationConsentBanner
+        isDarkTheme={isDarkTheme}
         companyName={companyName}
       />
     </div>

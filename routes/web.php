@@ -30,6 +30,7 @@ use Illuminate\Support\Facades\Route;
 
 // Public Root Route (Photo Packages Catalog)
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::post('/public/log-consent', [HomeController::class, 'logConsent'])->name('public.log-consent');
 
 // Authentication Routes
 Route::redirect('/admin/login', '/login');

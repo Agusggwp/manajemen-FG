@@ -81,20 +81,18 @@ export default function Galleries({
   return (
     <section
       id="portofolio"
-      className={`py-16 md:py-20 relative z-10 border-t ${
-        isDarkTheme
+      className={`py-16 md:py-20 relative z-10 border-t ${isDarkTheme
           ? "bg-[#071f1b]/95 border-white/10"
           : "bg-slate-100/60 border-slate-200/80"
-      }`}
+        }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h2
-              className={`text-2xl sm:text-3xl font-black tracking-tight flex items-center gap-2 ${
-                isDarkTheme ? "text-white" : "text-slate-900"
-              }`}
+              className={`text-2xl sm:text-3xl font-black tracking-tight flex items-center gap-2 ${isDarkTheme ? "text-white" : "text-slate-900"
+                }`}
             >
               <span>{sectionTitle || "Galeri Portofolio & Perlengkapan Studio"}</span>
             </h2>
@@ -136,11 +134,10 @@ export default function Galleries({
 
             {/* DESCRIPTION CARD below photo */}
             <div
-              className={`mt-4 flex-1 flex flex-col justify-center p-5 sm:p-6 rounded-2xl transition-all duration-500 ${
-                isDarkTheme
+              className={`mt-4 flex-1 flex flex-col justify-center p-5 sm:p-6 rounded-2xl transition-all duration-500 ${isDarkTheme
                   ? "bg-[#0e352f]/90 border border-white/10"
                   : "bg-[#092722] border border-[#14433B]"
-              }`}
+                }`}
             >
               <h3 className="text-base sm:text-lg font-black text-white tracking-tight leading-snug">
                 {currentSlide.title}
@@ -157,22 +154,20 @@ export default function Galleries({
           <div className="lg:col-span-5 flex flex-col space-y-3">
             <div className="px-1 flex items-center justify-between">
               <span
-                className={`text-xs font-black uppercase tracking-wider ${
-                  isDarkTheme ? "text-slate-300" : "text-slate-600"
-                }`}
+                className={`text-xs font-black uppercase tracking-wider ${isDarkTheme ? "text-slate-300" : "text-slate-600"
+                  }`}
               >
                 Slide Portofolio ({portfolioSlides.length})
               </span>
               <button
                 type="button"
                 onClick={() => setIsAutoSlide(!isAutoSlide)}
-                className={`text-[11px] font-medium px-2 py-0.5 rounded transition-colors ${
-                  isAutoSlide
+                className={`text-[11px] font-medium px-2 py-0.5 rounded transition-colors ${isAutoSlide
                     ? "bg-[#21C9A4]/20 text-[#21C9A4]"
                     : isDarkTheme
-                    ? "bg-slate-800 text-slate-400"
-                    : "bg-slate-200 text-slate-600"
-                }`}
+                      ? "bg-slate-800 text-slate-400"
+                      : "bg-slate-200 text-slate-600"
+                  }`}
               >
                 {isAutoSlide ? "Auto Slide: ON" : "Auto Slide: PAUSED"}
               </button>
@@ -195,33 +190,30 @@ export default function Galleries({
                     {/* FLOATING TOP-RIGHT CIRCULAR ARROW BUTTON */}
                     <div className="absolute top-0 right-1 z-20">
                       <div
-                        className={`w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center transition-all duration-300 shadow-md ${
-                          isActive
+                        className={`w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center transition-all duration-300 shadow-md ${isActive
                             ? "bg-[#21C9A4] text-[#092722] shadow-[#21C9A4]/40 scale-105 ring-4 ring-[#071f1b]"
                             : isDarkTheme
-                            ? "bg-slate-800 text-[#21C9A4] ring-4 ring-[#071f1b] group-hover:bg-[#21C9A4] group-hover:text-[#092722]"
-                            : "bg-slate-900 text-white ring-4 ring-slate-100/80 group-hover:bg-[#14433B]"
-                        }`}
+                              ? "bg-slate-800 text-[#21C9A4] ring-4 ring-[#071f1b] group-hover:bg-[#21C9A4] group-hover:text-[#092722]"
+                              : "bg-slate-900 text-white ring-4 ring-slate-100/80 group-hover:bg-[#14433B]"
+                          }`}
                       >
                         <ArrowUpRight
-                          className={`h-5 w-5 transition-transform duration-300 ${
-                            isActive
+                          className={`h-5 w-5 transition-transform duration-300 ${isActive
                               ? "scale-110 stroke-[2.5]"
                               : "group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                          }`}
+                            }`}
                         />
                       </div>
                     </div>
 
                     {/* MAIN NOTCHED CARD BODY */}
                     <div
-                      className={`relative p-3.5 sm:p-4 rounded-3xl transition-all duration-300 flex items-center justify-between gap-3.5 border ${
-                        isActive
+                      className={`relative p-3.5 sm:p-4 rounded-3xl transition-all duration-300 flex items-center justify-between gap-3.5 border ${isActive
                           ? "bg-[#092722] border-[#21C9A4] shadow-xl shadow-[#092722]/40 text-white ring-2 ring-[#21C9A4]/30"
                           : isDarkTheme
-                          ? "bg-white/5 border-white/10 text-slate-300 hover:bg-white/10 hover:border-white/20"
-                          : "bg-white border-slate-200/90 text-slate-800 shadow-xs hover:border-slate-300 hover:bg-slate-50"
-                      }`}
+                            ? "bg-white/5 border-white/10 text-slate-300 hover:bg-white/10 hover:border-white/20"
+                            : "bg-white border-slate-200/90 text-slate-800 shadow-xs hover:border-slate-300 hover:bg-slate-50"
+                        }`}
                     >
                       {/* Thumbnail */}
                       <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-2xl overflow-hidden shrink-0 border border-black/10 bg-slate-900">
@@ -241,24 +233,22 @@ export default function Galleries({
                       {/* Content Info */}
                       <div className="flex-1 min-w-0 pr-10">
                         <p
-                          className={`text-[10px] font-black uppercase tracking-wider truncate ${
-                            isActive
+                          className={`text-[10px] font-black uppercase tracking-wider truncate ${isActive
                               ? "text-[#21C9A4]"
                               : isDarkTheme
-                              ? "text-slate-400"
-                              : "text-slate-500"
-                          }`}
+                                ? "text-slate-400"
+                                : "text-slate-500"
+                            }`}
                         >
                           {slide.category}
                         </p>
                         <h4
-                          className={`text-xs sm:text-sm font-bold truncate mt-1 ${
-                            isActive
+                          className={`text-xs sm:text-sm font-bold truncate mt-1 ${isActive
                               ? "text-white"
                               : isDarkTheme
-                              ? "text-slate-100"
-                              : "text-slate-900"
-                          }`}
+                                ? "text-slate-100"
+                                : "text-slate-900"
+                            }`}
                         >
                           {slide.title}
                         </h4>

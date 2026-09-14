@@ -164,14 +164,22 @@ class ActivityLogger
                 'CREATED' => 65280,          // Emerald Green
                 'LOGIN' => 65280,            // Emerald Green
                 'VALIDATE' => 65280,         // Emerald Green
+                'VALIDATED' => 65280,        // Emerald Green
+                'LOCATION_ALLOWED' => 65280, // Emerald Green
+                'COOKIE_ACCEPTED' => 65280,  // Emerald Green
+                'PAID' => 65280,             // Emerald Green
+                'RESET_PASSWORD_SUCCESS' => 65280,
                 'UPDATED' => 16750592,       // Amber / Yellow
                 'SETTINGS' => 16750592,      // Amber / Yellow
                 'DEV_TOOL_EXEC' => 10181046, // Purple
                 'DELETED' => 15744000,       // Red
                 'LOGOUT' => 15744000,        // Red
                 'DEV_TOOL_ERROR' => 15744000,// Red
+                'LOCATION_DENIED' => 15744000, // Red
+                'COOKIE_REJECTED' => 15744000, // Red
                 'FORGOT_PASSWORD_REQUEST' => 3885046,
-                'RESET_PASSWORD_SUCCESS' => 65280,
+                'VIEW' => 3447003,           // Ocean Blue
+                'PUBLIC_CATALOG' => 3447003, // Ocean Blue
             ];
 
             $actionUpper = strtoupper($log->action);
