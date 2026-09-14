@@ -97,32 +97,80 @@ class DatabaseSeeder extends Seeder
             'status' => 'ACTIVE',
         ]);
 
-        // 2. Create MUAs
+        // 2. Create MUAs (and their User login accounts)
+        $userMuaSari = User::create([
+            'name' => 'Sari Makeup Artistry',
+            'email' => 'sari@artdevata.com',
+            'password' => Hash::make('password'),
+            'role' => 'MUA',
+            'phone' => '087890123456',
+            'address' => 'Jl. Tukad Yeh Aya No. 88, Renon, Denpasar',
+            'specialty' => 'Graduation & Soft Glam Makeup',
+            'bio' => 'Professional Makeup Artist specializing in graduation, photoshoot, and prewedding looks.',
+            'status' => 'ACTIVE',
+            'email_verified_at' => now(),
+        ]);
+
         $muaSari = Mua::create([
+            'user_id' => $userMuaSari->id,
             'name' => 'Sari Makeup Artistry',
             'email' => 'sari@artdevata.com',
             'phone' => '087890123456',
             'address' => 'Jl. Tukad Yeh Aya No. 88, Renon, Denpasar',
             'specialty' => 'Graduation & Soft Glam Makeup',
+            'bio' => 'Professional Makeup Artist specializing in graduation, photoshoot, and prewedding looks.',
             'status' => 'ACTIVE',
+            'default_fee' => 250000,
+        ]);
+
+        $userMuaDewi = User::create([
+            'name' => 'Dewi Bridal Makeup',
+            'email' => 'dewi@artdevata.com',
+            'password' => Hash::make('password'),
+            'role' => 'MUA',
+            'phone' => '087812345678',
+            'address' => 'Jl. Sunset Road No. 102, Kuta, Badung',
+            'specialty' => 'Traditional Bali & International Bridal',
+            'bio' => 'Senior Bridal & Wedding MUA with 10+ years experience in Bali.',
+            'status' => 'ACTIVE',
+            'email_verified_at' => now(),
         ]);
 
         $muaDewi = Mua::create([
+            'user_id' => $userMuaDewi->id,
             'name' => 'Dewi Bridal Makeup',
             'email' => 'dewi@artdevata.com',
             'phone' => '087812345678',
             'address' => 'Jl. Sunset Road No. 102, Kuta, Badung',
             'specialty' => 'Traditional Bali & International Bridal',
+            'bio' => 'Senior Bridal & Wedding MUA with 10+ years experience in Bali.',
             'status' => 'ACTIVE',
+            'default_fee' => 450000,
+        ]);
+
+        $userMuaNia = User::create([
+            'name' => 'Nia Beauty Studio',
+            'email' => 'nia@artdevata.com',
+            'password' => Hash::make('password'),
+            'role' => 'MUA',
+            'phone' => '087823456789',
+            'address' => 'Jl. Raya Ubud No. 45, Gianyar',
+            'specialty' => 'Natural Outdoor & High Fashion Makeup',
+            'bio' => 'Editorial & Natural Sun-Kissed Makeup Artist.',
+            'status' => 'ACTIVE',
+            'email_verified_at' => now(),
         ]);
 
         $muaNia = Mua::create([
+            'user_id' => $userMuaNia->id,
             'name' => 'Nia Beauty Studio',
             'email' => 'nia@artdevata.com',
             'phone' => '087823456789',
             'address' => 'Jl. Raya Ubud No. 45, Gianyar',
             'specialty' => 'Natural Outdoor & High Fashion Makeup',
+            'bio' => 'Editorial & Natural Sun-Kissed Makeup Artist.',
             'status' => 'ACTIVE',
+            'default_fee' => 300000,
         ]);
 
         // 3. Create Master Photo Packages
