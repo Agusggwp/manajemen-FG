@@ -10,7 +10,8 @@ const appName = import.meta.env.VITE_APP_NAME || 'ARTDEVATA Photography';
 createInertiaApp({
     title: (title) => title ? `${title} - ${appName}` : appName,
     resolve: async (name) => {
-        const page = await resolvePageComponent(`./pages/${name}.jsx`, import.meta.glob('./pages/**/*.jsx'));
+        const pages = import.meta.glob('./pages/**/*.jsx');
+        const page = await resolvePageComponent(`./pages/${name}.jsx`, pages);
         
         // Auto-assign default persistent layout if not explicitly defined on the page
         if (page.default.layout === undefined) {
