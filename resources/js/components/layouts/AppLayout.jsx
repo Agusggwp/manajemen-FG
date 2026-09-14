@@ -35,8 +35,10 @@ export default function AppLayout({ children, title }) {
   };
 
   const currentPath = typeof window !== "undefined" ? window.location.pathname : "";
+  const isMua =
+    currentPath.startsWith("/mua") || user?.role === "MUA" || user?.role === "mua";
   const isPhotographer =
-    currentPath.startsWith("/photographer") || user?.role === "photographer";
+    (!isMua && (currentPath.startsWith("/photographer") || user?.role === "PHOTOGRAPHER" || user?.role === "photographer"));
 
   const routeTitles = {
     // Admin routes
@@ -53,6 +55,7 @@ export default function AppLayout({ children, title }) {
     "/admin/payments/mua-fees": "Pembayaran Gaji MUA",
     "/admin/reports/package-profit": "Laporan Keuntungan Paket Foto",
     "/admin/activity-logs": "Log Aktivitas Sistem",
+    "/admin/dev-tools": "Developer Tools",
     "/admin/settings": "Pengaturan Sistem & Web Publik",
     // Photographer routes
     "/photographer/dashboard": "Dashboard Fotografer",
@@ -61,13 +64,20 @@ export default function AppLayout({ children, title }) {
     "/photographer/gallery": "Galeri Foto",
     "/photographer/salary": "Gaji Saya",
     "/photographer/proof": "Unggah Bukti Presensi",
+    // MUA routes
+    "/mua/dashboard": "Dashboard MUA",
+    "/mua/schedules": "Jadwal Rias Makeup",
+    "/mua/projects": "Project Rias MUA",
+    "/mua/fees": "Fee & Pendapatan MUA",
   };
 
   const getFallbackTitle = () => {
     for (const [route, name] of Object.entries(routeTitles)) {
       if (currentPath.startsWith(route)) return name;
     }
-    return isPhotographer ? "Portal Fotografer" : "Dashboard Admin";
+    if (isMua) return "Portal Make Up Artist";
+    if (isPhotographer) return "Portal Fotografer";
+    return "Dashboard Admin";
   };
 
   const activeTitle = title || pageTitle || children?.props?.title || getFallbackTitle();

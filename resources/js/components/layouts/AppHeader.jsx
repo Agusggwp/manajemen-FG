@@ -14,6 +14,7 @@ import {
   History,
   Camera,
   DollarSign,
+  Calendar,
   Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -60,6 +61,10 @@ const ROUTE_LABELS = {
   proof: "Kirim Presensi Foto",
   gallery: "Galeri & Klien",
   salary: "Gaji Saya",
+
+  // MUA
+  mua: "MUA",
+  fees: "Fee Saya",
 };
 
 export default function AppHeader({
@@ -71,10 +76,18 @@ export default function AppHeader({
 }) {
   const { url } = usePage();
   const currentRoute = url ? url.split("?")[0] : (typeof window !== "undefined" ? window.location.pathname : "");
+  
+  const isMua =
+    currentRoute.startsWith("/mua") || user?.role === "MUA" || user?.role === "mua";
   const isPhotographer =
-    currentRoute.startsWith("/photographer") || user?.role === "photographer";
+    (!isMua && (currentRoute.startsWith("/photographer") || user?.role === "PHOTOGRAPHER" || user?.role === "photographer"));
 
-  const userBadge = isPhotographer ? "FOTOGRAFER" : "ADMIN";
+  let userBadge = "ADMIN";
+  if (isMua) {
+    userBadge = "MUA";
+  } else if (isPhotographer) {
+    userBadge = "FOTOGRAFER";
+  }
   const [logoutOpen, setLogoutOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
@@ -100,11 +113,11 @@ export default function AppHeader({
   const breadcrumbs = useMemo(() => {
     const segments = currentRoute.split("/").filter(Boolean);
     if (segments.length === 0) {
-      return [{ label: "Dashboard", href: isPhotographer ? "/photographer/dashboard" : "/admin/dashboard", isCurrent: true }];
+      return [{ label: "Dashboard", href: isMua ? "/mua/dashboard" : isPhotographer ? "/photographer/dashboard" : "/admin/dashboard", isCurrent: true }];
     }
 
-    const rootPrefix = segments[0] === "photographer" ? "photographer" : "admin";
-    const rootLabel = rootPrefix === "photographer" ? "Fotografer" : "Admin";
+    const rootPrefix = segments[0] === "mua" ? "mua" : segments[0] === "photographer" ? "photographer" : "admin";
+    const rootLabel = rootPrefix === "mua" ? "MUA" : rootPrefix === "photographer" ? "Fotografer" : "Admin";
     const rootHref = `/${rootPrefix}/dashboard`;
 
     const crumbs = [{ label: rootLabel, href: rootHref }];
@@ -139,7 +152,7 @@ export default function AppHeader({
     }
 
     return crumbs;
-  }, [currentRoute, title, isPhotographer]);
+  }, [currentRoute, title, isPhotographer, isMua]);
 
   return (
     <header className="sticky top-0 z-20 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 h-16 px-4 flex items-center justify-between shadow-2xs shrink-0 transition-colors">
@@ -202,7 +215,7 @@ export default function AppHeader({
         {/* Mobile Header Title */}
         <div className="flex items-center space-x-2 truncate sm:hidden">
           <span className="font-bold text-slate-900 dark:text-white tracking-tight text-base truncate">
-            {title || (isPhotographer ? "Portal Fotografer" : "Dashboard Admin")}
+            {title || (isMua ? "Portal MUA" : isPhotographer ? "Portal Fotografer" : "Dashboard Admin")}
           </span>
         </div>
       </div>
@@ -245,14 +258,35 @@ export default function AppHeader({
                 </Avatar>
                 <div className="flex flex-col space-y-0.5 overflow-hidden min-w-0">
                   <p className="text-sm font-semibold text-slate-900 dark:text-white leading-none truncate">{user?.name}</p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 leading-none truncate">{user?.email || (isPhotographer ? "Portal Fotografer" : "Administrator")}</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 leading-none truncate">{user?.email || (isMua ? "Portal Make Up Artist" : isPhotographer ? "Portal Fotografer" : "Administrator")}</p>
                 </div>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator className="dark:bg-slate-800" />
 
             {/* Quick Navigation Items */}
-            {isPhotographer ? (
+            {isMua ? (
+              <>
+                <DropdownMenuItem asChild>
+                  <Link
+                    href="/mua/schedules"
+                    className="flex items-center cursor-pointer text-xs font-medium text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white py-1.5"
+                  >
+                    <Calendar className="mr-2 h-4 w-4 text-slate-500 dark:text-slate-400" />
+                    <span>Jadwal Makeup</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link
+                    href="/mua/fees"
+                    className="flex items-center cursor-pointer text-xs font-medium text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white py-1.5"
+                  >
+                    <DollarSign className="mr-2 h-4 w-4 text-slate-500 dark:text-slate-400" />
+                    <span>Fee Saya</span>
+                  </Link>
+                </DropdownMenuItem>
+              </>
+            ) : isPhotographer ? (
               <>
                 <DropdownMenuItem asChild>
                   <Link

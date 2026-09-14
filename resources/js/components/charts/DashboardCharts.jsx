@@ -516,3 +516,117 @@ export function PhotographerEarningsChart({ data = [] }) {
     </Card>
   );
 }
+
+/**
+ * 5. MUA Monthly Fee Earnings Chart (Shadcn Stacked BarChart)
+ */
+export function MuaEarningsChart({ data = [] }) {
+  const safeData = data && data.length > 0 ? data : [
+    { month: "Jan", paid: 0, unpaid: 0, total: 0 },
+    { month: "Feb", paid: 0, unpaid: 0, total: 0 },
+    { month: "Mar", paid: 0, unpaid: 0, total: 0 },
+    { month: "Apr", paid: 0, unpaid: 0, total: 0 },
+    { month: "Mei", paid: 0, unpaid: 0, total: 0 },
+    { month: "Jun", paid: 0, unpaid: 0, total: 0 },
+  ];
+
+  const chartConfig = {
+    paid: {
+      label: "Fee Diterima",
+      color: "#10b981", // Emerald 500
+    },
+    unpaid: {
+      label: "Menunggu Pencairan",
+      color: "#f59e0b", // Amber 500
+    },
+  };
+
+  const totalEarnings = safeData.reduce((acc, c) => acc + (c.paid || 0) + (c.unpaid || 0), 0);
+
+  return (
+    <Card className="border-slate-200 dark:border-slate-800 shadow-2xs bg-card text-card-foreground">
+      <CardHeader className="pb-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+        <div>
+          <div className="flex items-center gap-2">
+            <DollarSign className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+            <CardTitle className="text-base font-bold text-slate-900 dark:text-slate-100">
+              Tren Fee Make Up (6 Bulan)
+            </CardTitle>
+          </div>
+          <CardDescription className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            Perbandingan honor/fee yang sudah cair vs menunggu pencairan
+          </CardDescription>
+        </div>
+
+        <div className="flex items-center gap-3 text-xs">
+          <div className="flex items-center gap-1.5">
+            <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
+            <span className="text-slate-600 dark:text-slate-400">Sudah Cair</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="h-2.5 w-2.5 rounded-full bg-amber-500" />
+            <span className="text-slate-600 dark:text-slate-400">Menunggu</span>
+          </div>
+        </div>
+      </CardHeader>
+
+      <CardContent className="pt-2">
+        <ChartContainer config={chartConfig} className="h-56 sm:h-64 w-full aspect-auto">
+          <BarChart data={safeData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-slate-200 dark:stroke-slate-800" />
+            <XAxis
+              dataKey="month"
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+              fontSize={11}
+              className="text-slate-500"
+            />
+            <YAxis
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+              fontSize={10}
+              tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`}
+              className="text-slate-500"
+            />
+            <ChartTooltip
+              content={
+                <ChartTooltipContent
+                  formatter={(value, name) => (
+                    <div className="flex items-center justify-between gap-4 w-full">
+                      <span className="text-slate-500 font-medium">
+                        {chartConfig[name]?.label || name}:
+                      </span>
+                      <span className="font-bold text-slate-900 dark:text-white">{formatRupiah(value)}</span>
+                    </div>
+                  )}
+                />
+              }
+            />
+            <Bar
+              dataKey="paid"
+              stackId="fees"
+              fill="#10b981"
+              radius={[0, 0, 4, 4]}
+              name="paid"
+            />
+            <Bar
+              dataKey="unpaid"
+              stackId="fees"
+              fill="#f59e0b"
+              radius={[4, 4, 0, 0]}
+              name="unpaid"
+            />
+          </BarChart>
+        </ChartContainer>
+
+        <div className="flex items-center justify-between pt-3 text-xs text-slate-500 dark:text-slate-400 border-t border-slate-100 dark:border-slate-800 mt-2">
+          <span>Akumulasi Total 6 Bulan:</span>
+          <span className="font-bold text-slate-900 dark:text-white text-sm">{formatRupiah(totalEarnings)}</span>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+

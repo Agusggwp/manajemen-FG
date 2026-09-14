@@ -47,8 +47,11 @@ export default function AppSidebar({
   const currentRoute = window.location.pathname;
   const isActive = (path) => currentRoute.startsWith(path);
 
+  const isMua =
+    currentRoute.startsWith("/mua") || user?.role === "MUA" || user?.role === "mua";
+
   const isPhotographer =
-    currentRoute.startsWith("/photographer") || user?.role === "photographer";
+    (!isMua && (currentRoute.startsWith("/photographer") || user?.role === "PHOTOGRAPHER" || user?.role === "photographer"));
 
   const adminNavigation = [
     {
@@ -106,9 +109,31 @@ export default function AppSidebar({
     },
   ];
 
-  const navigation = isPhotographer ? photographerNavigation : adminNavigation;
-  const portalSubtitle = isPhotographer ? "Portal Fotografer" : "Sistem Fotografi";
-  const portalBadge = isPhotographer ? "FOTOGRAFER" : "ADMIN";
+  const muaNavigation = [
+    {
+      group: "MENU UTAMA",
+      items: [
+        { name: "Dashboard", href: "/mua/dashboard", icon: LayoutDashboard },
+        { name: "Jadwal", href: "/mua/schedules", icon: Calendar },
+        { name: "Project", href: "/mua/projects", icon: FolderKanban },
+        { name: "Fee Saya", href: "/mua/fees", icon: DollarSign },
+      ],
+    },
+  ];
+
+  let navigation = adminNavigation;
+  let portalSubtitle = "Sistem Fotografi";
+  let portalBadge = "ADMIN";
+
+  if (isMua) {
+    navigation = muaNavigation;
+    portalSubtitle = "Portal Make Up Artist";
+    portalBadge = "MUA";
+  } else if (isPhotographer) {
+    navigation = photographerNavigation;
+    portalSubtitle = "Portal Fotografer";
+    portalBadge = "FOTOGRAFER";
+  }
 
   return (
     <>
