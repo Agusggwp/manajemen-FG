@@ -44,6 +44,10 @@ export default function Index({ photographers, filters }) {
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
+  const [activateTarget, setActivateTarget] = useState(null);
+  const [activateOpen, setActivateOpen] = useState(false);
+  const [isActivating, setIsActivating] = useState(false);
+
   const form = useForm({
     name: "",
     email: "",
@@ -97,11 +101,40 @@ export default function Index({ photographers, filters }) {
     clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
       setIsSearching(true);
-      router.get("/admin/photographers", { search: val }, {
+      router.get("/admin/photographers", { search: val, status: safeFilters.status || "" }, {
         preserveState: true,
         onFinish: () => setIsSearching(false),
       });
     }, 500);
+  };
+
+  const handleStatusFilterChange = (val) => {
+    setIsSearching(true);
+    router.get(
+      "/admin/photographers",
+      { search, status: val === "ALL" ? "" : val },
+      {
+        preserveState: true,
+        onFinish: () => setIsSearching(false),
+      }
+    );
+  };
+
+  const handleActivateClick = (photographer) => {
+    setActivateTarget(photographer);
+    setActivateOpen(true);
+  };
+
+  const handleConfirmActivate = () => {
+    if (!activateTarget || isActivating) return;
+    setIsActivating(true);
+    router.patch(`/admin/photographers/${activateTarget.id}/activate`, {}, {
+      onSuccess: () => {
+        setActivateOpen(false);
+        setActivateTarget(null);
+      },
+      onFinish: () => setIsActivating(false),
+    });
   };
 
   const handleDeleteClick = (photographer) => {
@@ -133,7 +166,7 @@ export default function Index({ photographers, filters }) {
               Manajemen Fotografer
             </h1>
             <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
-              Kelola tim fotografer internal ARTDEVATA dan kredensial login portal.
+              Kelola tim fotografer internal ARTDEVATA dan persetujuan pendaftaran akun.
             </p>
           </div>
           <Button onClick={handleOpenCreate} size="sm" className="font-semibold gap-1.5 text-xs w-full sm:w-auto shrink-0">
@@ -143,8 +176,8 @@ export default function Index({ photographers, filters }) {
         </div>
 
         <Card className="border-border dark:border-slate-800 bg-card dark:bg-slate-900 shadow-2xs">
-          <CardContent className="p-3 sm:p-4">
-            <div className="relative w-full">
+          <CardContent className="p-3 sm:p-4 flex flex-col sm:flex-row gap-3">
+            <div className="relative flex-1">
               <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400 dark:text-slate-500" />
               <Input
                 placeholder="Cari nama, email, atau spesialisasi fotografer..."
@@ -152,6 +185,22 @@ export default function Index({ photographers, filters }) {
                 onChange={handleSearchChange}
                 className="pl-9 text-xs sm:text-sm"
               />
+            </div>
+            <div className="w-full sm:w-56">
+              <Select
+                value={safeFilters.status || "ALL"}
+                onValueChange={handleStatusFilterChange}
+              >
+                <SelectTrigger className="text-xs sm:text-sm">
+                  <SelectValue placeholder="Semua Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="ALL">Semua Status</SelectItem>
+                  <SelectItem value="ACTIVE">Aktif (ACTIVE)</SelectItem>
+                  <SelectItem value="PENDING">Menunggu Persetujuan</SelectItem>
+                  <SelectItem value="INACTIVE">Nonaktif (INACTIVE)</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </CardContent>
         </Card>
@@ -178,10 +227,26 @@ export default function Index({ photographers, filters }) {
                         <p className="text-xs text-slate-500 dark:text-slate-400">{p.specialty || "Fotografer Umum"}</p>
                       </div>
                     </div>
-                    <Badge variant={p.status === "ACTIVE" ? "success" : "secondary"}>
-                      {getStatusLabel(p.status)}
+                    <Badge variant={p.status === "ACTIVE" ? "success" : p.status === "PENDING" ? "warning" : "secondary"}>
+                      {p.status === "PENDING" ? "Menunggu Persetujuan" : getStatusLabel(p.status)}
                     </Badge>
                   </div>
+
+                  {p.status === "PENDING" && (
+                    <div className="p-2.5 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-between gap-2 text-xs">
+                      <span className="text-amber-800 dark:text-amber-300 font-medium">
+                        Pendaftaran baru
+                      </span>
+                      <Button
+                        size="sm"
+                        className="h-7 px-2.5 text-xs bg-emerald-600 hover:bg-emerald-700 text-white font-semibold gap-1 shrink-0"
+                        onClick={() => handleActivateClick(p)}
+                      >
+                        <UserCheck className="h-3.5 w-3.5" />
+                        <span>Setujui Akun</span>
+                      </Button>
+                    </div>
+                  )}
 
                   <div className="space-y-1 text-xs text-slate-600 dark:text-slate-300 border-t border-border dark:border-slate-800 pt-3">
                     <div className="flex items-center space-x-2">
@@ -211,7 +276,16 @@ export default function Index({ photographers, filters }) {
                           <MoreVertical className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="w-36 shadow-md">
+                      <DropdownMenuContent align="end" className="w-40 shadow-md">
+                        {p.status !== "ACTIVE" && (
+                          <DropdownMenuItem
+                            onClick={() => handleActivateClick(p)}
+                            className="cursor-pointer text-xs text-emerald-600 dark:text-emerald-400 focus:text-emerald-600 focus:bg-emerald-50 dark:focus:bg-emerald-950/40 flex items-center gap-2"
+                          >
+                            <UserCheck className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+                            <span>Setujui / Aktifkan</span>
+                          </DropdownMenuItem>
+                        )}
                         <DropdownMenuItem
                           onClick={() => handleOpenEdit(p)}
                           className="cursor-pointer text-xs flex items-center gap-2"
@@ -313,6 +387,7 @@ export default function Index({ photographers, filters }) {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="ACTIVE">Aktif (ACTIVE)</SelectItem>
+                    <SelectItem value="PENDING">Menunggu Persetujuan (PENDING)</SelectItem>
                     <SelectItem value="INACTIVE">Nonaktif (INACTIVE)</SelectItem>
                   </SelectContent>
                 </Select>
@@ -341,6 +416,21 @@ export default function Index({ photographers, filters }) {
             </form>
           </DialogContent>
         </Dialog>
+
+        {/* Confirm Activation Dialog */}
+        <ConfirmDialog
+          open={activateOpen}
+          onOpenChange={(val) => { if (!isActivating) setActivateOpen(val); }}
+          title="Setujui & Aktifkan Akun Fotografer"
+          description={`Apakah Anda yakin ingin menyetujui akun fotografer "${activateTarget?.name}"? Akun akan langsung aktif dan fotografer dapat login ke portal penugasan.`}
+          confirmText="Setujui & Aktifkan"
+          cancelText="Batal"
+          variant="default"
+          loading={isActivating}
+          disabled={isActivating}
+          onConfirm={handleConfirmActivate}
+        />
+
         {/* Confirm Delete Dialog */}
         <ConfirmDialog
           open={deleteOpen}

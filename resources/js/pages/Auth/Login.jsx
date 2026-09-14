@@ -13,6 +13,8 @@ import {
   Sparkles,
   PieChart as PieChartIcon,
   Loader2,
+  AlertCircle,
+  CheckCircle2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -118,6 +120,26 @@ export default function Login() {
               </CardContent>
             </Card>
 
+            {/* Flash & Status Messages */}
+            {flash?.success && (
+              <div className="mb-5 p-3.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-700 dark:text-emerald-400 flex items-start gap-2.5">
+                <CheckCircle2 className="h-4 w-4 shrink-0 mt-0.5 text-emerald-600 dark:text-emerald-400" />
+                <div className="leading-relaxed">{flash.success}</div>
+              </div>
+            )}
+            {flash?.error && (
+              <div className="mb-5 p-3.5 rounded-lg bg-destructive/10 border border-destructive/20 text-xs text-destructive flex items-start gap-2.5">
+                <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
+                <div className="leading-relaxed">{flash.error}</div>
+              </div>
+            )}
+            {errors.email && (errors.email.includes('menunggu') || errors.email.includes('diverifikasi') || errors.email.includes('nonaktif')) && (
+              <div className="mb-5 p-3.5 rounded-lg bg-amber-500/10 border border-amber-500/30 text-xs text-amber-800 dark:text-amber-400 flex items-start gap-2.5">
+                <Clock className="h-4 w-4 shrink-0 mt-0.5 text-amber-600 dark:text-amber-400" />
+                <div className="leading-relaxed font-medium">{errors.email}</div>
+              </div>
+            )}
+
             {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
@@ -135,7 +157,7 @@ export default function Login() {
                     required
                   />
                 </div>
-                {errors.email && (
+                {errors.email && !errors.email.includes('menunggu') && !errors.email.includes('diverifikasi') && !errors.email.includes('nonaktif') && (
                   <p className="text-xs text-destructive font-medium">{errors.email}</p>
                 )}
               </div>
@@ -196,6 +218,17 @@ export default function Login() {
                 )}
               </Button>
             </form>
+
+            {/* Register Link */}
+            <div className="mt-5 text-center text-xs text-muted-foreground">
+              Belum memiliki akun fotografer?{" "}
+              <Link
+                href="/register"
+                className="font-semibold text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 underline underline-offset-4"
+              >
+                Daftar sebagai Fotografer
+              </Link>
+            </div>
           </div>
 
           <div className="mt-8 pt-4">

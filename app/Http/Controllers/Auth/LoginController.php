@@ -32,6 +32,28 @@ class LoginController extends Controller
             $request->session()->regenerate();
             $user = Auth::user();
 
+            if ($user->role === 'PHOTOGRAPHER') {
+                if (is_null($user->email_verified_at)) {
+                    Auth::logout();
+                    $request->session()->invalidate();
+                    $request->session()->regenerateToken();
+
+                    return back()->withErrors([
+                        'email' => 'Email akun Anda belum diverifikasi. Silakan periksa inbox atau folder spam email Anda untuk mengaktifkannya.',
+                    ]);
+                }
+
+                if ($user->status === 'PENDING') {
+                    Auth::logout();
+                    $request->session()->invalidate();
+                    $request->session()->regenerateToken();
+
+                    return back()->withErrors([
+                        'email' => 'Email Anda telah terverifikasi, namun akun Anda masih menunggu persetujuan dan aktivasi oleh Admin ARTDEVATA.',
+                    ]);
+                }
+            }
+
             if ($user->status !== 'ACTIVE') {
                 Auth::logout();
                 $request->session()->invalidate();

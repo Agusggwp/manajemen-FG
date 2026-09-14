@@ -49,7 +49,7 @@ class PhotographerController extends Controller
             'address' => 'nullable|string',
             'specialty' => 'nullable|string',
             'bio' => 'nullable|string',
-            'status' => 'required|in:ACTIVE,INACTIVE',
+            'status' => 'required|in:ACTIVE,INACTIVE,PENDING',
         ]);
 
         $validated['role'] = 'PHOTOGRAPHER';
@@ -72,7 +72,7 @@ class PhotographerController extends Controller
             'address' => 'nullable|string',
             'specialty' => 'nullable|string',
             'bio' => 'nullable|string',
-            'status' => 'required|in:ACTIVE,INACTIVE',
+            'status' => 'required|in:ACTIVE,INACTIVE,PENDING',
         ]);
 
         if (! empty($validated['password'])) {
@@ -86,6 +86,23 @@ class PhotographerController extends Controller
         ActivityLogger::log('UPDATED', 'PHOTOGRAPHER', "Data photographer '{$photographer->name}' diperbarui.", $photographer->id);
 
         return back()->with('success', "Data photographer '{$photographer->name}' berhasil diperbarui.");
+    }
+
+    public function activate(User $photographer)
+    {
+        $photographer->update([
+            'status' => 'ACTIVE',
+            'email_verified_at' => $photographer->email_verified_at ?? now(),
+        ]);
+
+        ActivityLogger::log(
+            'ACTIVATED',
+            'PHOTOGRAPHER',
+            "Akun fotografer '{$photographer->name}' ({$photographer->email}) disetujui & diaktifkan oleh Admin.",
+            $photographer->id
+        );
+
+        return back()->with('success', "Akun fotografer '{$photographer->name}' berhasil disetujui dan diaktifkan!");
     }
 
     public function destroy(User $photographer)

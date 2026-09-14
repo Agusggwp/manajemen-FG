@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\DevToolController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Photographer\DashboardController as PhotographerDashboardController;
 use App\Http\Controllers\Photographer\GalleryController as PhotographerGalleryController;
@@ -37,6 +38,11 @@ Route::redirect('/admin/login', '/login');
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+// Photographer Registration & Email Verification Routes
+Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register', [RegisterController::class, 'register']);
+Route::get('/email/verify/{id}/{hash}', [RegisterController::class, 'verifyEmail'])->name('verification.verify');
 
 // Forgot & Reset Password Routes
 Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
@@ -63,6 +69,7 @@ Route::middleware(['auth', 'role.admin'])->prefix('admin')->as('admin.')->group(
     Route::resource('muas', MuaController::class)->except(['create', 'edit']);
 
     // Master Photographers
+    Route::patch('/photographers/{photographer}/activate', [PhotographerController::class, 'activate'])->name('photographers.activate');
     Route::resource('photographers', PhotographerController::class)->except(['create', 'edit']);
 
     // Master Customers
