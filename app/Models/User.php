@@ -55,6 +55,11 @@ class User extends Authenticatable
         return $query->where('role', 'PHOTOGRAPHER');
     }
 
+    public function scopeMua($query)
+    {
+        return $query->where('role', 'MUA');
+    }
+
     public function scopeAdmin($query)
     {
         return $query->where('role', 'ADMIN');
@@ -63,6 +68,11 @@ class User extends Authenticatable
     public function scopeActive($query)
     {
         return $query->where('status', 'ACTIVE');
+    }
+
+    public function mua()
+    {
+        return $this->hasOne(Mua::class, 'user_id');
     }
 
     public function projectSalaries()

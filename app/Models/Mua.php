@@ -13,6 +13,7 @@ class Mua extends Model
     protected $table = 'muas';
 
     protected $fillable = [
+        'user_id',
         'name',
         'email',
         'phone',
@@ -24,6 +25,11 @@ class Mua extends Model
         'notes',
         'default_fee',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 
     public function scopeActive($query)
     {
