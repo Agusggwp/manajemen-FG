@@ -14,7 +14,7 @@ createInertiaApp({
         
         // Auto-assign default persistent layout if not explicitly defined on the page
         if (page.default.layout === undefined) {
-            if (name.startsWith('Admin/') || name.startsWith('Photographer/')) {
+            if (name.startsWith('Admin/') || name.startsWith('Photographer/') || name.startsWith('Mua/')) {
                 page.default.layout = (children) => <AppLayout>{children}</AppLayout>;
             }
         }

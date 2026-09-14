@@ -26,6 +26,10 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Photographer\ProofController as PhotographerProofController;
 use App\Http\Controllers\Photographer\SalaryController as PhotographerSalaryController;
 use App\Http\Controllers\Photographer\ScheduleController as PhotographerScheduleController;
+use App\Http\Controllers\Mua\DashboardController as MuaDashboardController;
+use App\Http\Controllers\Mua\ScheduleController as MuaScheduleController;
+use App\Http\Controllers\Mua\ProjectController as MuaProjectController;
+use App\Http\Controllers\Mua\FeeController as MuaFeeController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -66,6 +70,7 @@ Route::middleware(['auth', 'role.admin'])->prefix('admin')->as('admin.')->group(
     Route::resource('portfolios', PortfolioController::class)->except(['create', 'edit', 'show']);
 
     // Master MUA
+    Route::patch('/muas/{mua}/activate', [MuaController::class, 'activate'])->name('muas.activate');
     Route::resource('muas', MuaController::class)->except(['create', 'edit']);
 
     // Master Photographers
@@ -135,4 +140,19 @@ Route::middleware(['auth', 'role.photographer'])->prefix('photographer')->as('ph
     Route::post('/projects/{project}/gallery', [PhotographerGalleryController::class, 'store'])->name('gallery.store');
 
     Route::get('/salary', [PhotographerSalaryController::class, 'index'])->name('salary.index');
+});
+
+// MUA (MAKE UP ARTIST) ROUTES
+Route::middleware(['auth', 'role.mua'])->prefix('mua')->as('mua.')->group(function () {
+    Route::get('/dashboard', [MuaDashboardController::class, 'index'])->name('dashboard');
+
+    // Own Schedules & Projects
+    Route::get('/schedules', [MuaScheduleController::class, 'index'])->name('schedules.index');
+    Route::get('/schedules/{schedule}', [MuaScheduleController::class, 'show'])->name('schedules.show');
+
+    Route::get('/projects', [MuaProjectController::class, 'index'])->name('projects.index');
+    Route::get('/projects/{project}', [MuaProjectController::class, 'show'])->name('projects.show');
+
+    // Fee Saya
+    Route::get('/fees', [MuaFeeController::class, 'index'])->name('fees.index');
 });
