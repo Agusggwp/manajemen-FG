@@ -16,6 +16,7 @@ export default function PublicHero({
 
   return (
     <section
+      id="beranda"
       className={`relative pt-16 pb-20 md:pt-24 md:pb-28 overflow-hidden z-10 border-b ${
         isDarkTheme ? "border-white/10" : "border-slate-200/80 bg-white"
       }`}

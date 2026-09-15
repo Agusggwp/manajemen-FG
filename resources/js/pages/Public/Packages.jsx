@@ -129,6 +129,7 @@ export default function Packages({ packages, categories, portfolios, settings, a
         waNumber={waNumber}
         auth={auth}
         dashboardUrl={dashboardUrl}
+        showPortfolio={settings?.public_portfolio_show !== "false"}
       />
 
       {/* HERO SECTION */}

@@ -75,6 +75,11 @@
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+  }
+
   * {
     border-color: hsl(var(--border));
   }
@@ -84,4 +89,24 @@
     color: hsl(var(--foreground));
     font-feature-settings: "rlig" 1, "calt" 1;
   }
+}
+
+@keyframes section-arrive {
+  0% {
+    box-shadow: 0 0 0 0 rgba(33, 201, 164, 0.45);
+    transform: scale(0.998);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(33, 201, 164, 0.2);
+    transform: scale(1.002);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(33, 201, 164, 0);
+    transform: scale(1);
+  }
+}
+
+.section-highlight {
+  animation: section-arrive 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transition: all 0.3s ease-in-out;
 }
