@@ -88,7 +88,7 @@ export default function Login() {
             </div>
 
             {/* Developer Mode Quick Role */}
-            <Card className="mb-6 bg-muted/50 border-dashed">
+            {/* <Card className="mb-6 bg-muted/50 border-dashed">
               <CardHeader className="p-3 pb-2">
                 <CardDescription className="text-[10px] font-bold uppercase tracking-wider">
                   Mode Developer (Quick Role):
@@ -129,7 +129,7 @@ export default function Login() {
                   <span>MUA</span>
                 </Button>
               </CardContent>
-            </Card>
+            </Card> */}
 
             {/* Flash & Status Messages */}
             {flash?.success && (
