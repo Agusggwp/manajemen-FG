@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "@inertiajs/react";
-import { Camera, Phone, LayoutDashboard, Menu, X, Sparkles } from "lucide-react";
+import { Phone, LayoutDashboard, Menu, X, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function PublicNavbar({
@@ -114,15 +114,11 @@ export default function PublicNavbar({
           onClick={(e) => handleNavClick(e, "#beranda", "beranda")}
           className="flex items-center space-x-3 group cursor-pointer"
         >
-          <div
-            className={`h-10 w-10 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 ${
-              isDarkTheme
-                ? "bg-gradient-to-br from-[#21C9A4]/25 to-[#0D9488]/35 border border-[#21C9A4]/50 shadow-sm shadow-[#21C9A4]/20"
-                : "bg-[#14433B] shadow-md shadow-[#14433B]/20"
-            }`}
-          >
-            <Camera className="h-5 w-5 text-[#21C9A4] transition-transform duration-300 group-hover:scale-105" />
-          </div>
+          <img
+            src="/logo.svg"
+            alt={companyName || "ARTDEVATA Logo"}
+            className="h-10 w-10 object-contain shrink-0 transition-transform duration-300 group-hover:scale-105"
+          />
           <div>
             <span
               className={`text-lg font-black tracking-wider flex items-center gap-1.5 leading-none transition-colors duration-200 ${

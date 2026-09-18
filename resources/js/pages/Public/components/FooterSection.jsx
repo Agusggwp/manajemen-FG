@@ -79,8 +79,8 @@ export default function FooterSection({ isDarkTheme, ctaTitle, companyName, waNu
           {/* Brand Info */}
           <div className="md:col-span-5 space-y-4">
             <div className="flex items-center space-x-3">
-              <img src="/logo.svg" alt="ArtDevata" className="h-9 w-9 object-contain shrink-0" />
-              <span className="text-2xl font-bold text-white tracking-tight">ArtDevata</span>
+              <img src="/logo.svg" alt={companyName || "ArtDevata"} className="h-9 w-9 object-contain shrink-0" />
+              <span className="text-2xl font-bold text-white tracking-tight">{companyName || "ArtDevata"}</span>
             </div>
             <p className="text-xs sm:text-sm leading-relaxed text-[#a3bbb5] max-w-sm">
               Kami menyediakan solusi IT terpadu dari pengembangan website, hosting &amp; domain, instalasi CCTV, hingga IT support untuk mendukung transformasi digital bisnis Anda.
