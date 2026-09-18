@@ -117,19 +117,27 @@ export default function Packages({ packages, categories, portfolios, settings, a
         <meta name="author" content={companyName} />
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
 
-        {/* Open Graph / Facebook */}
+        {/* Open Graph / Facebook / WhatsApp */}
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content={companyName} />
         <meta property="og:title" content={`Katalog Paket Foto & MUA - ${companyName}`} />
         <meta property="og:description" content={heroSubtitle} />
-        <meta property="og:image" content="/logo.svg" />
+        <meta property="og:image" content="/og-image.jpg" />
+        <meta property="og:image:type" content="image/jpeg" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image" content="/logo.png" />
+        <meta property="og:image:type" content="image/png" />
+        <meta property="og:image:width" content="600" />
+        <meta property="og:image:height" content="600" />
         <meta property="og:locale" content="id_ID" />
+        <link rel="image_src" href="/og-image.jpg" />
 
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={`Katalog Paket Foto & MUA - ${companyName}`} />
         <meta name="twitter:description" content={heroSubtitle} />
-        <meta name="twitter:image" content="/logo.svg" />
+        <meta name="twitter:image" content="/og-image.jpg" />
 
         {/* Structured Data (Schema.org JSON-LD for LocalBusiness & Photography Services) */}
         <script type="application/ld+json">
@@ -138,7 +146,7 @@ export default function Packages({ packages, categories, portfolios, settings, a
             "@type": "LocalBusiness",
             "name": companyName,
             "description": heroSubtitle,
-            "image": "/logo.svg",
+            "image": "/og-image.jpg",
             "telephone": waNumber,
             "address": {
               "@type": "PostalAddress",
