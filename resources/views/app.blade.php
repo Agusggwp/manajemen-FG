@@ -2,9 +2,45 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <title inertia>{{ config('app.name', 'ARTDEVATA Photography') }}</title>
+
+        <!-- Primary SEO Meta Tags -->
+        <meta name="description" content="Layanan jasa fotografi dan MUA profesional di Bali. Abadikan momen wisuda, wedding, prewedding, event, dan komersial terbaik dengan fotografer berpengalaman dari ARTDEVATA Photography.">
+        <meta name="keywords" content="fotografer bali, jasa fotografi bali, prewedding bali, wedding photography bali, fotografer wisuda bali, mua bali, paket foto bali, sewa fotografer bali, studio foto bali, artdevata photography">
+        <meta name="author" content="ARTDEVATA Photography">
+        <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+        <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+        <link rel="canonical" href="{{ url()->current() }}">
+
+        <!-- Theme Color & Mobile Settings -->
+        <meta name="theme-color" content="#092722" media="(prefers-color-scheme: dark)">
+        <meta name="theme-color" content="#14433B" media="(prefers-color-scheme: light)">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+        <meta name="apple-mobile-web-app-title" content="ARTDEVATA">
+
+        <!-- Open Graph / Facebook Meta Tags -->
+        <meta property="og:type" content="website">
+        <meta property="og:locale" content="id_ID">
+        <meta property="og:site_name" content="ARTDEVATA Photography">
+        <meta property="og:title" content="{{ config('app.name', 'ARTDEVATA Photography') }} - Jasa Fotografer & MUA Profesional Bali">
+        <meta property="og:description" content="Layanan fotografi dan MUA profesional di Bali untuk momen wisuda, prewedding, wedding, dan event berharga Anda bersama ARTDEVATA Photography.">
+        <meta property="og:url" content="{{ url()->current() }}">
+        <meta property="og:image" content="{{ asset('logo.svg') }}">
+        <meta property="og:image:secure_url" content="{{ asset('logo.svg') }}">
+        <meta property="og:image:type" content="image/svg+xml">
+        <meta property="og:image:alt" content="ARTDEVATA Photography Logo">
+
+        <!-- Twitter Card Meta Tags -->
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="{{ config('app.name', 'ARTDEVATA Photography') }} - Jasa Fotografer & MUA Profesional Bali">
+        <meta name="twitter:description" content="Layanan fotografi dan MUA profesional di Bali untuk momen wisuda, prewedding, wedding, dan event berharga Anda bersama ARTDEVATA Photography.">
+        <meta name="twitter:image" content="{{ asset('logo.svg') }}">
+        <meta name="twitter:image:alt" content="ARTDEVATA Photography Logo">
 
         <!-- Favicon / Logo -->
         <link rel="icon" type="image/svg+xml" href="{{ asset('logo.svg') }}">

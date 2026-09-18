@@ -66,7 +66,10 @@ export default function Register() {
 
   return (
     <>
-      <Head title={`Registrasi ${isMua ? "MUA" : "Fotografer"} - ARTDEVATA`} />
+      <Head>
+        <title>{`Registrasi ${isMua ? "MUA" : "Fotografer"} - ARTDEVATA`}</title>
+        <meta name="robots" content="noindex, nofollow" />
+      </Head>
       <div className="min-h-screen bg-muted/40 flex items-center justify-center p-4 md:p-8 font-sans">
         <Card className="w-full max-w-5xl shadow-xl overflow-hidden grid grid-cols-1 lg:grid-cols-12 p-0 border-border">
           

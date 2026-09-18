@@ -104,7 +104,68 @@ export default function Packages({ packages, categories, portfolios, settings, a
           : "bg-slate-50/50 text-slate-900 selection:text-white"
       }`}
     >
-      <Head title={`Katalog Paket Foto & MUA - ${companyName}`} />
+      <Head>
+        <title>{`Katalog Paket Foto & MUA - ${companyName}`}</title>
+        <meta
+          name="description"
+          content={`${heroSubtitle} Dapatkan penawaran terbaik untuk paket foto wisuda, prewedding, pernikahan, dan MUA di Bali bersama fotografer profesional ${companyName}.`}
+        />
+        <meta
+          name="keywords"
+          content={`fotografer bali, jasa foto bali, ${safeCategories.join(", ")}, prewedding bali, wedding photography bali, paket foto wisuda bali, mua bali, make up artist bali, ${companyName.toLowerCase()}`}
+        />
+        <meta name="author" content={companyName} />
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content={companyName} />
+        <meta property="og:title" content={`Katalog Paket Foto & MUA - ${companyName}`} />
+        <meta property="og:description" content={heroSubtitle} />
+        <meta property="og:image" content="/logo.svg" />
+        <meta property="og:locale" content="id_ID" />
+
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={`Katalog Paket Foto & MUA - ${companyName}`} />
+        <meta name="twitter:description" content={heroSubtitle} />
+        <meta name="twitter:image" content="/logo.svg" />
+
+        {/* Structured Data (Schema.org JSON-LD for LocalBusiness & Photography Services) */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "LocalBusiness",
+            "name": companyName,
+            "description": heroSubtitle,
+            "image": "/logo.svg",
+            "telephone": waNumber,
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Denpasar",
+              "addressRegion": "Bali",
+              "addressCountry": "ID",
+            },
+            "priceRange": "$$",
+            "hasOfferCatalog": {
+              "@type": "OfferCatalog",
+              "name": "Katalog Paket Foto & MUA",
+              "itemListElement": safePackages.slice(0, 15).map((pkg, idx) => ({
+                "@type": "Offer",
+                "position": idx + 1,
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": pkg.name,
+                  "category": pkg.category,
+                  "description": pkg.description || `Paket foto profesional ${pkg.name}`,
+                },
+                "price": pkg.price,
+                "priceCurrency": "IDR",
+              })),
+            },
+          })}
+        </script>
+      </Head>
 
       {/* DYNAMIC BACKGROUND ANIMATIONS & GLOWS */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useForm, usePage, Link } from "@inertiajs/react";
+import { Head, useForm, usePage, Link } from "@inertiajs/react";
 import {
   Camera,
   Lock,
@@ -61,6 +61,10 @@ export default function Login() {
 
   return (
     <div className="min-h-screen bg-muted/40 flex items-center justify-center p-4 md:p-8 font-sans">
+      <Head>
+        <title>Masuk - ARTDEVATA Photography</title>
+        <meta name="robots" content="noindex, nofollow" />
+      </Head>
       <Card className="w-full max-w-5xl shadow-xl overflow-hidden grid grid-cols-1 lg:grid-cols-12 p-0 border-border">
         
         {/* Left Column: Form Area */}

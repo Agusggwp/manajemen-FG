@@ -42,7 +42,10 @@ export default function ResetPassword({ token, email: initialEmail }) {
 
   return (
     <>
-      <Head title="Reset Password" />
+      <Head>
+        <title>Reset Password - ARTDEVATA Photography</title>
+        <meta name="robots" content="noindex, nofollow" />
+      </Head>
 
       <div className="min-h-screen bg-muted/40 flex items-center justify-center p-4 md:p-8 font-sans">
         <Card className="w-full max-w-md shadow-xl overflow-hidden p-6 sm:p-8 border-border bg-card">

@@ -1,2 +1,13 @@
 User-agent: *
-Disallow:
+Allow: /
+Allow: /logo.svg
+Allow: /images/
+Disallow: /admin/
+Disallow: /login
+Disallow: /register
+Disallow: /forgot-password
+Disallow: /reset-password
+Disallow: /public/log-consent
+
+# Crawl Delay
+Crawl-delay: 10
