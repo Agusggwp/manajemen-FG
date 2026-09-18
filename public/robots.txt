@@ -1,6 +1,10 @@
 User-agent: *
 Allow: /
+Allow: /sitemap.xml
 Allow: /logo.svg
+Allow: /logo.png
+Allow: /og-image.jpg
+Allow: /og-image.png
 Allow: /images/
 Disallow: /admin/
 Disallow: /login
@@ -11,3 +15,6 @@ Disallow: /public/log-consent
 
 # Crawl Delay
 Crawl-delay: 10
+
+# Sitemap
+Sitemap: https://evermore.artdevata.net/sitemap.xml

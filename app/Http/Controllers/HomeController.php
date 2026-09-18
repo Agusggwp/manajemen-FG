@@ -103,4 +103,20 @@ class HomeController extends Controller
             'log_id' => $log->id,
         ]);
     }
+
+    /**
+     * Generate dynamic sitemap.xml for search engines.
+     */
+    public function sitemap()
+    {
+        $packages = PhotoPackage::active()->latest('updated_at')->get();
+        $lastMod = $packages->first()?->updated_at?->toAtomString() ?? now()->toAtomString();
+
+        return response()
+            ->view('sitemap', [
+                'packages' => $packages,
+                'lastMod' => $lastMod,
+            ])
+            ->header('Content-Type', 'application/xml; charset=utf-8');
+    }
 }
