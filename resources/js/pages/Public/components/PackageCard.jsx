@@ -20,6 +20,10 @@ export default function PackageCard({
   onDetailClick,
   onWhatsAppClick,
 }) {
+  const isMuaOnly =
+    pkg.category === "MUA Only" ||
+    (Number(pkg.number_of_photographers) === 0 && Boolean(pkg.includes_mua));
+
   return (
     <Card
       className={`transition-all duration-300 flex flex-col justify-between overflow-hidden group rounded-3xl relative border ${
@@ -36,7 +40,7 @@ export default function PackageCard({
       {isFeatured && (
         <div className="absolute top-0 right-0 z-10">
           <div className="bg-gradient-to-l from-[#21C9A4] to-[#0D9488] text-[#092722] text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-bl-xl shadow-xs flex items-center gap-1">
-            <Sparkles className="h-3 w-3 fill-[#092722]" /> Recommended
+            <Sparkles className="h-3.5 w-3.5 fill-[#092722]" /> Recommended
           </div>
         </div>
       )}
@@ -48,14 +52,29 @@ export default function PackageCard({
             variant="outline"
             className={`text-xs font-bold rounded-xl px-3 py-1 ${
               isDarkTheme
-                ? "border-[#21C9A4]/40 text-[#21C9A4] bg-[#21C9A4]/10"
+                ? isMuaOnly
+                  ? "border-pink-400/40 text-pink-300 bg-pink-500/10"
+                  : "border-[#21C9A4]/40 text-[#21C9A4] bg-[#21C9A4]/10"
+                : isMuaOnly
+                ? "border-pink-300 text-pink-700 bg-pink-50"
                 : "border-[#14433B]/20 text-[#14433B] bg-[#14433B]/5"
             }`}
           >
             {pkg.category}
           </Badge>
 
-          {pkg.includes_mua ? (
+          {isMuaOnly ? (
+            <Badge
+              className={`gap-1.5 text-xs font-bold rounded-xl px-3 py-1 ${
+                isDarkTheme
+                  ? "bg-pink-500/20 text-pink-300 border border-pink-500/40"
+                  : "bg-pink-50 text-pink-700 border border-pink-200"
+              }`}
+            >
+              <Sparkles className="h-3.5 w-3.5 text-pink-400" />
+              {pkg.mua?.name ? `MUA: ${pkg.mua.name}` : "Khusus Layanan MUA"}
+            </Badge>
+          ) : pkg.includes_mua ? (
             <Badge
               className={`gap-1.5 text-xs font-bold rounded-xl px-3 py-1 ${
                 isDarkTheme
@@ -89,7 +108,7 @@ export default function PackageCard({
               {formatRupiah(pkg.price)}
             </span>
             <span className={`text-xs font-semibold ${isDarkTheme ? "text-[#829A94]" : "text-slate-500"}`}>
-              / sesi
+              {isMuaOnly ? "/ rias" : "/ sesi"}
             </span>
           </div>
         </div>
@@ -108,19 +127,19 @@ export default function PackageCard({
           </div>
           <div className="flex items-center space-x-2 font-medium">
             <ImageIcon className="h-4 w-4 text-[#21C9A4] shrink-0" />
-            <span>{pkg.number_of_photos} File Foto</span>
+            <span>{isMuaOnly ? "Tanpa Sesi Foto" : `${pkg.number_of_photos} File Foto`}</span>
           </div>
           <div className="flex items-center space-x-2 font-medium">
             <Users className="h-4 w-4 text-[#21C9A4] shrink-0" />
-            <span>{pkg.number_of_photographers} FG Bertugas</span>
+            <span>{isMuaOnly ? "Tanpa Fotografer" : `${pkg.number_of_photographers} FG Bertugas`}</span>
           </div>
           <div className="flex items-center space-x-2 font-medium truncate">
             <Sparkles className="h-4 w-4 text-[#21C9A4] shrink-0" />
             <span className="truncate">
-              {pkg.mua?.name || (pkg.includes_mua ? "Mitra MUA Pro" : "Tanpa MUA")}
+              {pkg.mua?.name || (isMuaOnly ? "Layanan MUA Pro" : pkg.includes_mua ? "Mitra MUA Pro" : "Tanpa MUA")}
             </span>
           </div>
-        </div>
+        </div>v>
 
         {/* Description */}
         {pkg.description && (

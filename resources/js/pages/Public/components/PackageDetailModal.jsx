@@ -31,6 +31,10 @@ export default function PackageDetailModal({
 }) {
   if (!activePackage) return null;
 
+  const isMuaOnly =
+    activePackage.category === "MUA Only" ||
+    (Number(activePackage.number_of_photographers) === 0 && Boolean(activePackage.includes_mua));
+
   return (
     <Dialog open={Boolean(activePackage)} onOpenChange={(open) => !open && onClose()}>
       <DialogContent
@@ -52,33 +56,46 @@ export default function PackageDetailModal({
             <Badge
               className={`text-xs font-bold px-3 py-1 rounded-xl ${
                 isDarkTheme
-                  ? "bg-[#21C9A4]/20 text-[#21C9A4] border border-[#21C9A4]/40"
+                  ? isMuaOnly
+                    ? "bg-pink-500/20 text-pink-300 border border-pink-500/40"
+                    : "bg-[#21C9A4]/20 text-[#21C9A4] border border-[#21C9A4]/40"
+                  : isMuaOnly
+                  ? "bg-pink-500 text-white border border-pink-400"
                   : "bg-white/20 text-[#21C9A4] border border-white/30"
               }`}
             >
               {activePackage.category}
             </Badge>
 
-            {activePackage.includes_mua && (
+            {isMuaOnly ? (
+              <Badge className="bg-pink-500 text-white font-black text-xs px-3 py-1 rounded-xl gap-1">
+                <Sparkles className="h-3.5 w-3.5" />
+                {activePackage.mua?.name ? `MUA: ${activePackage.mua.name}` : "Khusus Layanan MUA"}
+              </Badge>
+            ) : activePackage.includes_mua ? (
               <Badge className="bg-[#21C9A4] text-[#092722] font-black text-xs px-3 py-1 rounded-xl gap-1">
                 <Sparkles className="h-3.5 w-3.5" />
                 {activePackage.mua?.name ? `MUA: ${activePackage.mua.name}` : "Termasuk MUA"}
               </Badge>
-            )}
+            ) : null}
           </div>
 
           <DialogTitle className="text-2xl sm:text-3xl font-black tracking-tight text-white">
             {activePackage.name}
           </DialogTitle>
           <DialogDescription className="text-xs sm:text-sm text-[#B8C8C4] mt-1">
-            Detail rincian fasilitas dan penawaran paket resmi pemotretan.
+            {isMuaOnly
+              ? "Detail rincian fasilitas layanan rias & hairdo profesional MUA."
+              : "Detail rincian fasilitas dan penawaran paket resmi pemotretan."}
           </DialogDescription>
 
           <div className="mt-4 flex items-baseline gap-2">
             <span className="text-3xl sm:text-4xl font-black text-[#21C9A4]">
               {formatRupiah(activePackage.price)}
             </span>
-            <span className="text-xs text-[#B8C8C4] font-medium">/ Sesi foto</span>
+            <span className="text-xs text-[#B8C8C4] font-medium">
+              {isMuaOnly ? "/ Sesi rias" : "/ Sesi foto"}
+            </span>
           </div>
         </div>
 
@@ -108,9 +125,11 @@ export default function PackageDetailModal({
               }`}
             >
               <ImageIcon className="h-4 w-4 text-[#21C9A4] mx-auto" />
-              <div className="text-xs font-bold">{activePackage.number_of_photos} Photos</div>
+              <div className="text-xs font-bold">
+                {isMuaOnly ? "Tanpa Foto" : `${activePackage.number_of_photos} Photos`}
+              </div>
               <div className={`text-[10px] ${isDarkTheme ? "text-[#829A94]" : "text-slate-500"}`}>
-                Hasil Foto
+                {isMuaOnly ? "Dokumentasi" : "Hasil Foto"}
               </div>
             </div>
 
@@ -122,9 +141,11 @@ export default function PackageDetailModal({
               }`}
             >
               <Users className="h-4 w-4 text-[#21C9A4] mx-auto" />
-              <div className="text-xs font-bold">{activePackage.number_of_photographers} FG</div>
+              <div className="text-xs font-bold">
+                {isMuaOnly ? "Tanpa FG" : `${activePackage.number_of_photographers} FG`}
+              </div>
               <div className={`text-[10px] ${isDarkTheme ? "text-[#829A94]" : "text-slate-500"}`}>
-                Fotografer
+                {isMuaOnly ? "Layanan MUA" : "Fotografer"}
               </div>
             </div>
 
@@ -137,7 +158,11 @@ export default function PackageDetailModal({
             >
               <Sparkles className="h-4 w-4 text-[#21C9A4] mx-auto" />
               <div className="text-xs font-bold truncate">
-                {activePackage.includes_mua ? "MUA Terfasilitasi" : "Tanpa MUA"}
+                {isMuaOnly
+                  ? activePackage.mua?.name || "MUA Professional"
+                  : activePackage.includes_mua
+                  ? "MUA Terfasilitasi"
+                  : "Tanpa MUA"}
               </div>
               <div className={`text-[10px] ${isDarkTheme ? "text-[#829A94]" : "text-slate-500"}`}>
                 Layanan MUA

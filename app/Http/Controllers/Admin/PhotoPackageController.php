@@ -63,7 +63,7 @@ class PhotoPackageController extends Controller
                 'sort' => (string) $request->input('sort', 'created_at'),
                 'direction' => (string) $request->input('direction', 'desc'),
             ],
-            'categories' => ['Wedding', 'Graduation', 'Portrait', 'Product', 'Event', 'Prewedding', 'Commercial', 'Other'],
+            'categories' => ['Wedding', 'Graduation', 'Portrait', 'Product', 'Event', 'Prewedding', 'Commercial', 'MUA Only', 'Other'],
             'muas' => Mua::active()->get(['id', 'name', 'specialty', 'default_fee']),
         ]);
     }
@@ -76,7 +76,7 @@ class PhotoPackageController extends Controller
             'price' => 'required|numeric|min:0',
             'duration_minutes' => 'required|integer|min:1',
             'number_of_photos' => 'required|integer|min:0',
-            'number_of_photographers' => 'required|integer|min:1',
+            'number_of_photographers' => 'required|integer|min:0',
             'includes_mua' => 'required|boolean',
             'mua_id' => 'nullable|exists:muas,id',
             'estimated_photographer_cost' => 'required|numeric|min:0',
@@ -86,6 +86,10 @@ class PhotoPackageController extends Controller
             'features' => 'nullable|array',
             'status' => 'required|in:ACTIVE,INACTIVE',
         ]);
+
+        if ($validated['category'] === 'MUA Only') {
+            $validated['includes_mua'] = true;
+        }
 
         $package = PhotoPackage::create($validated);
 
@@ -102,7 +106,7 @@ class PhotoPackageController extends Controller
             'price' => 'required|numeric|min:0',
             'duration_minutes' => 'required|integer|min:1',
             'number_of_photos' => 'required|integer|min:0',
-            'number_of_photographers' => 'required|integer|min:1',
+            'number_of_photographers' => 'required|integer|min:0',
             'includes_mua' => 'required|boolean',
             'mua_id' => 'nullable|exists:muas,id',
             'estimated_photographer_cost' => 'required|numeric|min:0',
@@ -112,6 +116,10 @@ class PhotoPackageController extends Controller
             'features' => 'nullable|array',
             'status' => 'required|in:ACTIVE,INACTIVE',
         ]);
+
+        if ($validated['category'] === 'MUA Only') {
+            $validated['includes_mua'] = true;
+        }
 
         $package->update($validated);
 

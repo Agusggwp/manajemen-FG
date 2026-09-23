@@ -82,7 +82,7 @@ class ReportController extends Controller
                 'end_date' => (string) $request->input('end_date', ''),
                 'category' => (string) $request->input('category', ''),
             ],
-            'categories' => ['Wedding', 'Graduation', 'Portrait', 'Product', 'Event', 'Prewedding', 'Commercial', 'Other'],
+            'categories' => ['Wedding', 'Graduation', 'Portrait', 'Product', 'Event', 'Prewedding', 'Commercial', 'MUA Only', 'Other'],
         ]);
     }
 

@@ -870,7 +870,16 @@ export default function Index({ schedules, existingAssignments, filters, custome
                 </p>
 
                 <div>
-                  <Label className="mb-2 block">Pilih Photographer (Minimal 1)</Label>
+                  <div className="flex items-center justify-between mb-2">
+                    <Label className="block">
+                      Pilih Photographer {selectedPackage && (selectedPackage.category === "MUA Only" || Number(selectedPackage.number_of_photographers) === 0) ? "(Opsional - Paket Khusus MUA)" : "(Minimal 1)"}
+                    </Label>
+                    {selectedPackage && (selectedPackage.category === "MUA Only" || Number(selectedPackage.number_of_photographers) === 0) && (
+                      <span className="text-[11px] text-pink-600 dark:text-pink-400 font-semibold">
+                        💄 Khusus MUA (Fotografer Opsional)
+                      </span>
+                    )}
+                  </div>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                     {photographers.map((p) => {
                       const conflict = checkPhotographerBusy(p.id);

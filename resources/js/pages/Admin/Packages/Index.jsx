@@ -63,7 +63,10 @@ export default function Index({ packages, filters, categories, muas }) {
     sort: filters?.sort ?? "all",
     direction: filters?.direction ?? "desc",
   };
-  const safeCategories = Array.isArray(categories) ? categories : [];
+  const rawCategories = Array.isArray(categories) ? categories : [];
+  const safeCategories = rawCategories.includes("MUA Only")
+    ? rawCategories
+    : [...rawCategories, "MUA Only"];
   const safeMuas = Array.isArray(muas) ? muas : [];
 
   const isNavigating = usePageLoading();
@@ -295,13 +298,24 @@ export default function Index({ packages, filters, categories, muas }) {
                   safePackages.data.map((pkg) => (
                     <TableRow key={pkg.id} className="border-border dark:border-slate-800">
                       <TableCell>
-                        <div className="font-bold text-slate-900 dark:text-white">{pkg.name}</div>
+                        <div className="font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                          <span>{pkg.name}</span>
+                          {(pkg.category === "MUA Only" || Number(pkg.number_of_photographers) === 0) && (
+                            <Badge variant="outline" className="text-[10px] py-0 px-1.5 border-pink-300 dark:border-pink-800 text-pink-700 dark:text-pink-300 bg-pink-50 dark:bg-pink-950/40 font-semibold">
+                              Khusus MUA
+                            </Badge>
+                          )}
+                        </div>
                         <div className="text-xs text-slate-400 dark:text-slate-500 flex items-center gap-2 mt-0.5">
                           <span className="font-medium text-slate-600 dark:text-slate-400">{pkg.category}</span>
                           <span>•</span>
                           <span>{pkg.duration_minutes} Menit</span>
                           <span>•</span>
-                          <span>{pkg.number_of_photos} Foto</span>
+                          {pkg.category === "MUA Only" || Number(pkg.number_of_photographers) === 0 ? (
+                            <span className="text-pink-600 dark:text-pink-400 font-medium">Tanpa Foto (0 FG)</span>
+                          ) : (
+                            <span>{pkg.number_of_photos} Foto ({pkg.number_of_photographers} FG)</span>
+                          )}
                         </div>
                       </TableCell>
 
@@ -324,7 +338,11 @@ export default function Index({ packages, filters, categories, muas }) {
                       </TableCell>
 
                       <TableCell className="text-center">
-                        {pkg.includes_mua ? (
+                        {pkg.category === "MUA Only" || Number(pkg.number_of_photographers) === 0 ? (
+                          <Badge variant="outline" className="text-pink-700 dark:text-pink-300 border-pink-300 dark:border-pink-700 bg-pink-50 dark:bg-pink-950/40 text-[10px] font-semibold">
+                            MUA Only
+                          </Badge>
+                        ) : pkg.includes_mua ? (
                           <Badge variant="outline" className="text-amber-700 dark:text-amber-300 border-amber-300 dark:border-amber-700 bg-amber-50 dark:bg-amber-950/30 text-[10px]">
                             MUA Inc.
                           </Badge>
@@ -418,7 +436,25 @@ export default function Index({ packages, filters, categories, muas }) {
                   <Label className="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">Kategori</Label>
                   <Select
                     value={form.data.category || ""}
-                    onValueChange={(val) => form.setData("category", val)}
+                    onValueChange={(val) => {
+                      if (val === "MUA Only") {
+                        form.setData({
+                          ...form.data,
+                          category: val,
+                          number_of_photographers: 0,
+                          number_of_photos: 0,
+                          includes_mua: true,
+                          estimated_photographer_cost: 0,
+                        });
+                      } else {
+                        form.setData({
+                          ...form.data,
+                          category: val,
+                          number_of_photographers: Number(form.data.number_of_photographers) === 0 ? 1 : form.data.number_of_photographers,
+                          number_of_photos: Number(form.data.number_of_photos) === 0 ? 25 : form.data.number_of_photos,
+                        });
+                      }
+                    }}
                   >
                     <SelectTrigger className="w-full text-xs sm:text-sm h-9 sm:h-10">
                       <SelectValue placeholder="Pilih Kategori" />
@@ -448,7 +484,16 @@ export default function Index({ packages, filters, categories, muas }) {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+              {(form.data.category === "MUA Only" || Number(form.data.number_of_photographers) === 0) && (
+                <div className="p-3 bg-pink-50 dark:bg-pink-950/30 border border-pink-200 dark:border-pink-800/60 rounded-xl text-xs text-pink-800 dark:text-pink-300 flex items-center gap-2">
+                  <Sparkles className="h-4 w-4 text-pink-600 dark:text-pink-400 shrink-0" />
+                  <div>
+                    <span className="font-bold">Paket Khusus MUA Saja:</span> Layanan make up artist / rias tanpa sesi foto. Jumlah fotografer dan foto diatur ke 0.
+                  </div>
+                </div>
+              )}
+
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
                 <div className="space-y-1.5 sm:space-y-2">
                   <Label className="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">Harga Jual (Rp)</Label>
                   <Input
@@ -481,6 +526,18 @@ export default function Index({ packages, filters, categories, muas }) {
                     required
                     value={form.data.number_of_photos}
                     onChange={(e) => form.setData("number_of_photos", e.target.value)}
+                    className="text-xs sm:text-sm h-9 sm:h-10"
+                  />
+                </div>
+
+                <div className="space-y-1.5 sm:space-y-2">
+                  <Label className="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">Jumlah FG</Label>
+                  <Input
+                    type="number"
+                    min="0"
+                    required
+                    value={form.data.number_of_photographers}
+                    onChange={(e) => form.setData("number_of_photographers", e.target.value)}
                     className="text-xs sm:text-sm h-9 sm:h-10"
                   />
                 </div>

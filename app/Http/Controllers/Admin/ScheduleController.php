@@ -93,7 +93,7 @@ class ScheduleController extends Controller
             'mua_location_radius' => 'nullable|integer|min:10|max:5000',
             'mua_location_notes' => 'nullable|string',
             'notes' => 'nullable|string',
-            'photographer_ids' => 'required|array|min:1',
+            'photographer_ids' => 'nullable|array',
             'photographer_ids.*' => 'exists:users,id',
             'mua_ids' => 'nullable|array',
             'mua_ids.*' => 'exists:muas,id',
@@ -102,6 +102,16 @@ class ScheduleController extends Controller
             'overtime_hours' => 'nullable|integer|min:0|max:24',
             'overtime_fee' => 'nullable|numeric|min:0',
         ]);
+
+        $package = PhotoPackage::findOrFail($validated['photo_package_id']);
+        $isMuaOnly = ($package->category === 'MUA Only' || (int) $package->number_of_photographers === 0);
+
+        $photographerIds = $validated['photographer_ids'] ?? [];
+        if (! $isMuaOnly && empty($photographerIds)) {
+            return back()->withErrors([
+                'photographer_ids' => 'Pilih minimal 1 fotografer untuk paket pemotretan ini.',
+            ]);
+        }
 
         $overtimeHours = (int) ($validated['overtime_hours'] ?? 0);
         $overtimeFee = (float) ($validated['overtime_fee'] ?? 0);
@@ -115,27 +125,27 @@ class ScheduleController extends Controller
         $muaLocationNotes = $muaSame ? ($validated['location_notes'] ?? null) : ($validated['mua_location_notes'] ?? null);
 
         // Validate Photographer availability (check for overlapping schedules)
-        foreach ($validated['photographer_ids'] as $photographerId) {
-            $conflict = Schedule::where('status', '!=', 'CANCELLED')
-                ->whereDate('date', $validated['date'])
-                ->where('start_time', '<', $validated['end_time'])
-                ->where('end_time', '>', $validated['start_time'])
-                ->whereHas('project.photographers', function ($q) use ($photographerId) {
-                    $q->where('users.id', $photographerId);
-                })
-                ->first();
+        if (! empty($photographerIds)) {
+            foreach ($photographerIds as $photographerId) {
+                $conflict = Schedule::where('status', '!=', 'CANCELLED')
+                    ->whereDate('date', $validated['date'])
+                    ->where('start_time', '<', $validated['end_time'])
+                    ->where('end_time', '>', $validated['start_time'])
+                    ->whereHas('project.photographers', function ($q) use ($photographerId) {
+                        $q->where('users.id', $photographerId);
+                    })
+                    ->first();
 
-            if ($conflict) {
-                $photographer = User::find($photographerId);
-                $startTimeStr = substr($conflict->start_time, 0, 5);
-                $endTimeStr = substr($conflict->end_time, 0, 5);
-                return back()->withErrors([
-                    'photographer_ids' => "Photographer '{$photographer->name}' tidak dapat dipilih karena sudah memiliki jadwal di waktu yang sama ({$startTimeStr} - {$endTimeStr}).",
-                ]);
+                if ($conflict) {
+                    $photographer = User::find($photographerId);
+                    $startTimeStr = substr($conflict->start_time, 0, 5);
+                    $endTimeStr = substr($conflict->end_time, 0, 5);
+                    return back()->withErrors([
+                        'photographer_ids' => "Photographer '{$photographer->name}' tidak dapat dipilih karena sudah memiliki jadwal di waktu yang sama ({$startTimeStr} - {$endTimeStr}).",
+                    ]);
+                }
             }
         }
-
-        $package = PhotoPackage::findOrFail($validated['photo_package_id']);
         $customer = Customer::findOrFail($validated['customer_id']);
 
         // Create Booking with Package Snapshot & Overtime
@@ -213,27 +223,35 @@ class ScheduleController extends Controller
             'work_end_time' => $validated['end_time'],
         ]);
 
-        // Attach Photographers
-        $project->photographers()->attach($validated['photographer_ids']);
-
-        // Create Photographer Salary per project
-        $photographerSalaryAmount = $validated['photographer_salary'] ?? $package->estimated_photographer_cost;
-        foreach ($validated['photographer_ids'] as $photographerId) {
-            $project->photographerSalaries()->create([
-                'photographer_id' => $photographerId,
-                'amount' => $photographerSalaryAmount,
-                'work_start_time' => $validated['start_time'],
-                'work_end_time' => $validated['end_time'],
-                'payment_status' => 'UNPAID',
-            ]);
-        }
-
         // Determine MUAs: take directly from package if set, else fallback to mua_ids
         $muaIds = [];
         if ($package->mua_id) {
             $muaIds[] = $package->mua_id;
         } elseif (! empty($validated['mua_ids'])) {
             $muaIds = $validated['mua_ids'];
+        }
+
+        if ($isMuaOnly && empty($muaIds)) {
+            return back()->withErrors([
+                'mua_ids' => 'Pilih minimal 1 MUA untuk paket khusus MUA ini.',
+            ]);
+        }
+
+        // Attach Photographers if provided
+        if (! empty($photographerIds)) {
+            $project->photographers()->attach($photographerIds);
+
+            // Create Photographer Salary per project
+            $photographerSalaryAmount = $validated['photographer_salary'] ?? $package->estimated_photographer_cost;
+            foreach ($photographerIds as $photographerId) {
+                $project->photographerSalaries()->create([
+                    'photographer_id' => $photographerId,
+                    'amount' => $photographerSalaryAmount,
+                    'work_start_time' => $validated['start_time'],
+                    'work_end_time' => $validated['end_time'],
+                    'payment_status' => 'UNPAID',
+                ]);
+            }
         }
 
         // Attach MUAs if applicable

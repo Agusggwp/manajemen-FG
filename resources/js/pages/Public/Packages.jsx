@@ -64,8 +64,12 @@ export default function Packages({ packages, categories, portfolios, settings, a
 
   const handleWhatsAppInquiry = (pkg) => {
     const cleanPhone = waNumber.replace(/[^0-9]/g, "");
+    const isMuaOnly =
+      pkg.category === "MUA Only" ||
+      (Number(pkg.number_of_photographers) === 0 && Boolean(pkg.includes_mua));
+    const term = isMuaOnly ? "layanan / paket MUA" : "paket foto";
     const message = encodeURIComponent(
-      `Halo ${companyName}! Saya berminat dengan paket foto "${pkg.name}" (${formatRupiah(pkg.price)}). Mohon info ketersediaan jadwal.`
+      `Halo ${companyName}! Saya berminat dengan ${term} "${pkg.name}" (${formatRupiah(pkg.price)}). Mohon info ketersediaan jadwal.`
     );
     window.open(`https://wa.me/${cleanPhone}?text=${message}`, "_blank");
   };
