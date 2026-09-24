@@ -38,9 +38,9 @@ class SecuritySqlInjectionTest extends TestCase
         ];
 
         foreach ($payloads as $payload) {
-            $response = $this->get('/?search=' . urlencode($payload));
+            $response = $this->getJson('/api/packages?search=' . urlencode($payload));
             $response->assertStatus(200);
-            $response->assertInertia(fn ($page) => $page->component('Public/Packages'));
+            $response->assertJsonStructure(['success', 'data', 'meta']);
         }
     }
 

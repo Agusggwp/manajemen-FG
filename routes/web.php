@@ -33,10 +33,23 @@ use App\Http\Controllers\Mua\FeeController as MuaFeeController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-// Public Root Route (Photo Packages Catalog)
-Route::get('/', [HomeController::class, 'index'])->name('home');
+// Root Route: Redirect to dashboard if logged in, otherwise to login
+Route::get('/', function () {
+    if (auth()->check()) {
+        $user = auth()->user();
+        if ($user->role === 'ADMIN') {
+            return redirect()->route('admin.dashboard');
+        } elseif ($user->role === 'PHOTOGRAPHER') {
+            return redirect()->route('photographer.dashboard');
+        } elseif ($user->role === 'MUA') {
+            return redirect()->route('mua.dashboard');
+        }
+    }
+    return redirect()->route('login');
+})->name('home');
+
 Route::get('/sitemap.xml', [HomeController::class, 'sitemap'])->name('sitemap');
-Route::post('/public/log-consent', [HomeController::class, 'logConsent'])->name('public.log-consent');
+Route::post('/public/log-consent', [\App\Http\Controllers\Api\PublicApiController::class, 'logConsent'])->name('public.log-consent');
 
 // Authentication Routes
 Route::redirect('/admin/login', '/login');
