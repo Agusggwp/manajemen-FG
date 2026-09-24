@@ -44,8 +44,22 @@ export default function AppSidebar({
     return name.substring(0, 2).toUpperCase();
   };
 
+  const { url } = usePage();
   const currentRoute = window.location.pathname;
-  const isActive = (path) => currentRoute.startsWith(path);
+
+  const isActive = (href) => {
+    if (href.includes("?")) {
+      const [path, query] = href.split("?");
+      return url.startsWith(path) && url.includes(query);
+    }
+    if (href === "/admin/packages?type=photo") {
+      return (
+        url.startsWith("/admin/packages") &&
+        (url.includes("type=photo") || (!url.includes("type=mua") && !url.includes("type=all")))
+      );
+    }
+    return url === href || (href !== "/admin/dashboard" && url.startsWith(href));
+  };
 
   const isMua =
     currentRoute.startsWith("/mua") || user?.role === "MUA" || user?.role === "mua";
@@ -74,7 +88,8 @@ export default function AppSidebar({
       items: [
         { name: "Fotografer", href: "/admin/photographers", icon: Camera },
         { name: "MUA", href: "/admin/muas", icon: Sparkles },
-        { name: "Paket Foto", href: "/admin/packages", icon: Package },
+        { name: "Paket Foto (+ MUA)", href: "/admin/packages?type=photo", icon: Package },
+        { name: "Paket Khusus MUA", href: "/admin/packages?type=mua", icon: Sparkles },
         { name: "Galeri Portofolio", href: "/admin/portfolios", icon: Image },
       ],
     },

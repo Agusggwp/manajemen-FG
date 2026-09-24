@@ -13,12 +13,30 @@ class PhotoPackageController extends Controller
 {
     public function index(Request $request)
     {
+        $type = $request->input('type', 'all');
+
+        $totalAll = PhotoPackage::count();
+        $totalPhoto = PhotoPackage::where('category', '!=', 'MUA Only')->where('number_of_photographers', '>', 0)->count();
+        $totalMua = PhotoPackage::where(function ($q) {
+            $q->where('category', 'MUA Only')->orWhere('number_of_photographers', 0);
+        })->count();
+
         $query = PhotoPackage::with('mua');
 
+        if ($type === 'photo') {
+            $query->where('category', '!=', 'MUA Only')->where('number_of_photographers', '>', 0);
+        } elseif ($type === 'mua') {
+            $query->where(function ($q) {
+                $q->where('category', 'MUA Only')->orWhere('number_of_photographers', 0);
+            });
+        }
+
         if ($search = $request->input('search')) {
-            $query->where('name', 'like', "%{$search}%")
-                ->orWhere('category', 'like', "%{$search}%")
-                ->orWhere('description', 'like', "%{$search}%");
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('category', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%");
+            });
         }
 
         if ($category = $request->input('category')) {
@@ -56,7 +74,13 @@ class PhotoPackageController extends Controller
 
         return Inertia::render('Admin/Packages/Index', [
             'packages' => $packages,
+            'counts' => [
+                'all' => $totalAll,
+                'photo' => $totalPhoto,
+                'mua' => $totalMua,
+            ],
             'filters' => [
+                'type' => (string) $type,
                 'search' => (string) $request->input('search', ''),
                 'category' => (string) $request->input('category', ''),
                 'status' => (string) $request->input('status', ''),
@@ -87,15 +111,19 @@ class PhotoPackageController extends Controller
             'status' => 'required|in:ACTIVE,INACTIVE',
         ]);
 
-        if ($validated['category'] === 'MUA Only') {
+        if ($validated['category'] === 'MUA Only' || $request->input('package_type') === 'mua') {
+            $validated['category'] = 'MUA Only';
             $validated['includes_mua'] = true;
+            $validated['number_of_photographers'] = 0;
+            $validated['number_of_photos'] = 0;
+            $validated['estimated_photographer_cost'] = 0;
         }
 
         $package = PhotoPackage::create($validated);
 
-        ActivityLogger::log('CREATED', 'PACKAGE', "Paket foto '{$package->name}' berhasil dibuat.", $package->id);
+        ActivityLogger::log('CREATED', 'PACKAGE', "Paket '{$package->name}' berhasil dibuat.", $package->id);
 
-        return back()->with('success', "Paket foto '{$package->name}' berhasil dibuat.");
+        return back()->with('success', "Paket '{$package->name}' berhasil dibuat.");
     }
 
     public function update(Request $request, PhotoPackage $package)
@@ -117,15 +145,19 @@ class PhotoPackageController extends Controller
             'status' => 'required|in:ACTIVE,INACTIVE',
         ]);
 
-        if ($validated['category'] === 'MUA Only') {
+        if ($validated['category'] === 'MUA Only' || $request->input('package_type') === 'mua') {
+            $validated['category'] = 'MUA Only';
             $validated['includes_mua'] = true;
+            $validated['number_of_photographers'] = 0;
+            $validated['number_of_photos'] = 0;
+            $validated['estimated_photographer_cost'] = 0;
         }
 
         $package->update($validated);
 
-        ActivityLogger::log('UPDATED', 'PACKAGE', "Paket foto '{$package->name}' diperbarui.", $package->id);
+        ActivityLogger::log('UPDATED', 'PACKAGE', "Paket '{$package->name}' diperbarui.", $package->id);
 
-        return back()->with('success', "Paket foto '{$package->name}' berhasil diperbarui.");
+        return back()->with('success', "Paket '{$package->name}' berhasil diperbarui.");
     }
 
     public function duplicate(PhotoPackage $package)
